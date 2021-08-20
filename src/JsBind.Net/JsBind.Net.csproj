@@ -1,0 +1,41 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Build properties. -->
+  <PropertyGroup>
+    <LangVersion>9</LangVersion>
+    <TargetFramework>net5.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <GenerateDependencyFile>false</GenerateDependencyFile>
+    <IsShippingPackage>true</IsShippingPackage>
+    <HasReferenceAssembly>false</HasReferenceAssembly>
+  </PropertyGroup>
+
+  <!-- Package properties. -->
+  <PropertyGroup>
+    <IsPackable>true</IsPackable>
+    <PackageOutputPath>..\PackageOutput</PackageOutputPath>
+    <Authors>mingyaulee</Authors>
+    <Description>A package for creating JS binding in .Net.</Description>
+    <RepositoryUrl>https://github.com/mingyaulee/JsBind.Net</RepositoryUrl>
+    <PackageTags>JavaScript .Net Binding JS Bind</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <!--<PackageIcon>Icon.png</PackageIcon>-->
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="build\**">
+      <Pack>true</Pack>
+      <PackagePath>build</PackagePath>
+    </None>
+    <None Include="content\**">
+      <Pack>true</Pack>
+      <PackagePath>content</PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.JSInterop" Version="5.0.0" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentAssertions" Version="5.*" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="5.0.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="5.0.7" PrivateAssets="all" />
+    <PackageReference Include="System.Net.Http.Json" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TestBindings\TestBindings.csproj" />
+
+    <!-- Import the project files as if it is imported by the TestBindings NuGet package -->
+    <StaticWebAsset Include="..\TestBindings\BindingTestLibrary.js">
+      <SourceType>Package</SourceType>
+      <SourceId>TestBindings</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\TestBindings</ContentRoot>
+      <BasePath>_content/TestBindings</BasePath>
+      <RelativePath>BindingTestLibrary.js</RelativePath>
+    </StaticWebAsset>
+  </ItemGroup>
+
+  <!-- Import the build files as if it is imported by the JsBind.Net NuGet package -->
+  <Import Project="..\..\src\JsBind.Net\build\JsBind.Net.props" />
+  <Import Project="..\..\src\JsBind.Net\build\JsBind.Net.targets" />
+  
+</Project>

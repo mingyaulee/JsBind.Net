@@ -1,0 +1,22 @@
+﻿<!-- build/JsBind.Net.targets -->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <JsBindAssetsContentsPath>$(MSBuildThisFileDirectory)..\content\JsBindScripts</JsBindAssetsContentsPath>
+    <JsBindAssetsTargetPath>$(JsBindAssetsPath)</JsBindAssetsTargetPath>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(IncludeJsBindAssets)' == 'true'">
+    <StaticWebAsset Condition="'$(LinkJsBindAssets)' == 'false'" Include="$(JsBindAssetsContentsPath)\**\*.*">
+      <SourceType>Package</SourceType>
+      <SourceId>JsBind.Net</SourceId>
+      <ContentRoot>$(JsBindAssetsContentsPath)</ContentRoot>
+      <BasePath>_content/JsBind.Net</BasePath>
+      <RelativePath>%(RecursiveDir)%(Filename)%(Extension)</RelativePath>
+    </StaticWebAsset>
+    <None Condition="'$(LinkJsBindAssets)' != 'false'" Include="$(JsBindAssetsContentsPath)\**\*.*" Link="$(JsBindAssetsTargetPath)\%(RecursiveDir)%(Filename)%(Extension)">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

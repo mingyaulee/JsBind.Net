@@ -1,0 +1,10 @@
+﻿<!-- build/JsBind.Net.props -->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <IncludeJsBindAssets Condition="'$(IncludeJsBindAssets)' == ''">true</IncludeJsBindAssets>
+    <LinkJsBindAssets Condition="'$(LinkJsBindAssets)' == ''">false</LinkJsBindAssets>
+    <JsBindAssetsPath Condition="'$(JsBindAssetsPath)' == ''">wwwroot\_content\JsBind.Net</JsBindAssetsPath>
+  </PropertyGroup>
+
+</Project>
