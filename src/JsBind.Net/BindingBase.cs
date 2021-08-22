@@ -10,6 +10,7 @@ namespace JsBind.Net
     /// </summary>
     public abstract class BindingBase : IAsyncDisposable
     {
+        private bool isInitialized;
         private IJsRuntimeAdapter? jsRuntime;
         private string? accessPath;
 
@@ -22,9 +23,19 @@ namespace JsBind.Net
         public string? __JsBindAccessPath { get => null; private set => accessPath = value; }
 
         /// <summary>
+        /// Checks whether the binding instance has been initialized.
+        /// </summary>
+        protected virtual bool IsInitialized => isInitialized;
+
+        /// <summary>
         /// Gets the JS runtime adapter instance.
         /// </summary>
         protected IJsRuntimeAdapter JsRuntime => jsRuntime ?? throw new InvalidOperationException("Object is not initialized with JsRuntime.");
+
+        /// <summary>
+        /// Gets the access path of the binding instance.
+        /// </summary>
+        protected virtual string AccessPath => accessPath ?? throw new InvalidOperationException("Object access path is not set.");
 
         internal void InternalInitialize(IJsRuntimeAdapter jsRuntime)
         {
@@ -48,6 +59,7 @@ namespace JsBind.Net
         /// <param name="jsRuntime">The JS runtime adapter.</param>
         protected virtual void Initialize(IJsRuntimeAdapter? jsRuntime)
         {
+            isInitialized = true;
             this.jsRuntime = jsRuntime;
         }
 
