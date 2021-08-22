@@ -1,4 +1,4 @@
-﻿import JsObjectHandler from "./JsObjectHandler.js";
+﻿import AccessPaths from "./AccessPaths.js";
 import { IsProxyFunction } from "./DotNetDelegateProxy.js";
 
 const AccessPathPropertyName = "__jsBindAccessPath";
@@ -49,7 +49,7 @@ function getObjectKeys(value) {
 function getArrayValueFromBinding(value, arrayItemBinding, accessPath) {
   if (value && typeof value[Symbol.iterator] === "function") {
     return [...value].map((arrayItem, index) => {
-      const arrayItemAccessPath = JsObjectHandler.combineAccessPaths(accessPath, index.toString());
+      const arrayItemAccessPath = AccessPaths.combine(accessPath, index.toString());
       return getValueFromBinding(arrayItem, arrayItemBinding, arrayItemAccessPath);
     });
   }
@@ -112,11 +112,11 @@ function getValueFromBinding(value, binding, accessPath) {
     const upperCasePropertyName = property.toUpperCase();
     if (includeProperties) {
       if (includeProperties.some(includeProperty => includeProperty === upperCasePropertyName || includeProperty === "*")) {
-        boundValue[property] = getValueFromBinding(value[property], getPropertyBinding(property), JsObjectHandler.combineAccessPaths(accessPath, property));
+        boundValue[property] = getValueFromBinding(value[property], getPropertyBinding(property), AccessPaths.combine(accessPath, property));
       }
     } else if (excludeProperties) {
       if (excludeProperties.every(excludeProperty => excludeProperty !== upperCasePropertyName)) {
-        boundValue[property] = getValueFromBinding(value[property], getPropertyBinding(property), JsObjectHandler.combineAccessPaths(accessPath, property));
+        boundValue[property] = getValueFromBinding(value[property], getPropertyBinding(property), AccessPaths.combine(accessPath, property));
       }
     }
   });

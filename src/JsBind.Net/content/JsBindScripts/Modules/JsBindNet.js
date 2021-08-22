@@ -1,4 +1,5 @@
-﻿import DelegateReferenceHandler from "./DelegateReferenceHandler.js";
+﻿import AccessPaths from "./AccessPaths.js";
+import DelegateReferenceHandler from "./DelegateReferenceHandler.js";
 import JsObjectHandler from "./JsObjectHandler.js";
 import ObjectBindingHandler from "./ObjectBindingHandler.js";
 import InvokeResult from "./InvokeResult.js";
@@ -73,7 +74,7 @@ export default class JsBindNet {
     }
     const returnValue = targetObject[getPropertyOption.propertyName];
     getPropertyOption.getReturnValueAccessPath = function () {
-      return JsObjectHandler.combineAccessPaths(getPropertyOption.accessPath, getPropertyOption.propertyName);
+      return AccessPaths.combine(getPropertyOption.accessPath, getPropertyOption.propertyName);
     };
     return this._getReturnValue(returnValue, getPropertyOption);
   }
@@ -88,7 +89,7 @@ export default class JsBindNet {
       const returnValue = this._invokeFunctionInternal(invokeFunctionOption);
       if (invokeFunctionOption.hasReturnValue) {
         invokeFunctionOption.getReturnValueAccessPath = function () {
-          return JsObjectHandler.getAccessPathFromReferenceId(invokeFunctionOption.returnValueReferenceId);
+          return AccessPaths.fromReferenceId(invokeFunctionOption.returnValueReferenceId);
         }
       }
       return this._getReturnValue(returnValue, invokeFunctionOption);
@@ -111,7 +112,7 @@ export default class JsBindNet {
       }
       if (invokeFunctionOption.hasReturnValue) {
         invokeFunctionOption.getReturnValueAccessPath = function () {
-          return JsObjectHandler.getAccessPathFromReferenceId(this.returnValueReferenceId);
+          return AccessPaths.fromReferenceId(this.returnValueReferenceId);
         };
       }
       return this._getReturnValue(returnValue, invokeFunctionOption);

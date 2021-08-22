@@ -1,27 +1,8 @@
-﻿const ReferenceIdPrefix = "#";
-const AccessPathSeparator = ".";
+﻿import AccessPaths from "./AccessPaths.js";
 
 class JsObjectHandlerClass {
   _objectReferences = {};
   _objectReferencesCount = 0;
-
-  /**
-   * Combine multiple access paths.
-   * @param {string[]} accessPaths
-   * @returns {string}
-   */
-  combineAccessPaths(...accessPaths) {
-    return accessPaths.filter(accessPath => typeof accessPath === "string" && accessPath.length).join(AccessPathSeparator);
-  }
-
-  /**
-   * Get access path from the specified reference identifier.
-   * @param {string} referenceId The object reference identifier.
-   * @returns {string} The access path.
-   */
-  getAccessPathFromReferenceId(referenceId) {
-    return ReferenceIdPrefix + referenceId;
-  }
 
   /**
    * Get an object from access path.
@@ -34,11 +15,12 @@ class JsObjectHandlerClass {
     }
 
     let targetObject = globalThis;
-    const accessPaths = accessPath.split(AccessPathSeparator);
+    const accessPaths = AccessPaths.split(accessPath);
 
     for (let i = 0; i < accessPaths.length; i++) {
-      if (i === 0 && accessPaths[i].startsWith(ReferenceIdPrefix)) {
-        targetObject = this._objectReferences[accessPaths[i].substring(1)];
+      if (i === 0 && AccessPaths.isReferenceId(accessPaths[i])) {
+        const referenceId = AccessPaths.getReferenceId(accessPaths[i]);
+        targetObject = this._objectReferences[referenceId];
       } else {
         targetObject = targetObject?.[accessPaths[i]];
       }

@@ -1,4 +1,5 @@
-﻿import JsObjectHandler from "./JsObjectHandler.js";
+﻿import AccessPaths from "./AccessPaths.js";
+import JsObjectHandler from "./JsObjectHandler.js";
 import ObjectBindingHandler from "./ObjectBindingHandler.js";
 
 /**
@@ -92,12 +93,12 @@ export default class DotNetDelegateProxy {
     let accessPath = null;
     if (this.delegateReference.storeArgumentsAsReference){
       const referenceId = this.delegateReference.argumentsReferenceId;
-      accessPath = JsObjectHandler.getAccessPathFromReferenceId(referenceId);
+      accessPath = AccessPaths.fromReferenceId(referenceId);
       JsObjectHandler.addObjectReference(referenceId, invokeArgs);
     }
 
     return invokeArgs.map((invokeArg, index) => {
-      const invokeArgAccessPath = accessPath ? JsObjectHandler.combineAccessPaths(accessPath, index.toString()) : null;
+      const invokeArgAccessPath = accessPath ? AccessPaths.combine(accessPath, index.toString()) : null;
       return ObjectBindingHandler.getValueFromBinding(invokeArg, bindings[index], invokeArgAccessPath);
     });
   }
