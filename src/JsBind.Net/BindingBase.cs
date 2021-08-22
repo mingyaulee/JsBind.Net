@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using JsBind.Net.Internal;
 using JsBind.Net.InvokeOptions;
 
 namespace JsBind.Net
