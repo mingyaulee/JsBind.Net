@@ -17,6 +17,11 @@ namespace JsBind.Net.BindingConfigurations
         /// <inheritdoc />
         public BindingConfiguration? Get(Type type)
         {
+            if (type.IsPrimitiveType() || type.IsValueType || type == typeof(object))
+            {
+                return null;
+            }
+
             if (!bindingConfigurations.ContainsKey(type))
             {
                 TryAddFromAttribute(type);
@@ -84,12 +89,12 @@ namespace JsBind.Net.BindingConfigurations
 
         private void TryAddFromAttribute(Type type)
         {
-            IEnumerable<BaseJsBindAttribute> bindAttributes = Enumerable.Empty<BaseJsBindAttribute>();
+            var bindAttributes = Enumerable.Empty<BaseJsBindAttribute>();
             if (type.IsDefined(typeof(BaseJsBindAttribute), false))
             {
                 bindAttributes = type.GetCustomAttributes<BaseJsBindAttribute>(false);
             }
-            else if (!type.IsIterableType() && !type.IsPrimitiveType())
+            else if (!type.IsIterableType())
             {
                 bindAttributes = new[] { new BindAllPropertiesAttribute() };
             }
