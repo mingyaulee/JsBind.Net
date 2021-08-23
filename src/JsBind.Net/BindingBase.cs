@@ -19,6 +19,7 @@ namespace JsBind.Net
         /// </summary>
         [JsonInclude]
         [JsonPropertyName("__jsBindAccessPath")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [Obsolete("Do not use this property. It is public for deserialization only.")]
         public string? __JsBindAccessPath { get => null; private set => accessPath = value; }
 
