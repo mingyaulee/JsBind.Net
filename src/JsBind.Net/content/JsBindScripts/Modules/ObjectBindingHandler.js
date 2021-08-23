@@ -75,6 +75,28 @@ function getFunctionValue(value, accessPath) {
 }
 
 /**
+ * Check if the value should be returned without binding.
+ * @param {any} value
+ * @param {ObjectBindingConfiguration} binding
+ * @param {string} [accessPath]
+ * @returns {boolean}
+ */
+function shouldReturnValueWithoutBinding(value, binding, accessPath) {
+  if (!shouldProcessObject(value) || !binding) {
+    return true;
+  }
+
+  if (!shouldProcessBinding(binding)) {
+    if (binding.setAccessPath) {
+      value[AccessPathPropertyName] = accessPath;
+    }
+    return true;
+  }
+
+  return false;
+}
+
+/**
  * Get the value based on the binding configuration.
  * @param {any} value
  * @param {ObjectBindingConfiguration} binding
@@ -86,12 +108,7 @@ function getValueFromBinding(value, binding, accessPath) {
     return getFunctionValue(value, accessPath);
   }
 
-  if (!shouldProcessObject(value)) {
-    return value;
-  }
-
-  if (!binding || !shouldProcessBinding(binding)) {
-    value[AccessPathPropertyName] = accessPath;
+  if (shouldReturnValueWithoutBinding(value, binding, accessPath)) {
     return value;
   }
 
@@ -106,8 +123,12 @@ function getValueFromBinding(value, binding, accessPath) {
   }
 
   const boundValue = {
-    [AccessPathPropertyName]: accessPath
   };
+
+  if (binding.setAccessPath) {
+    boundValue[AccessPathPropertyName] = accessPath;
+  }
+
   getObjectKeys(value).forEach(property => {
     const upperCasePropertyName = property.toUpperCase();
     if (includeProperties) {

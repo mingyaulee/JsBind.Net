@@ -5,6 +5,8 @@
   exclude;
   /** @type {Object<string, ObjectBindingConfiguration>} */
   propertyBindings;
+  /** @type {boolean} */
+  setAccessPath;
   /** @type {ObjectBindingConfiguration} */
   arrayItemBinding;
 }

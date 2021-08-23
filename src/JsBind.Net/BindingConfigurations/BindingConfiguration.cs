@@ -26,5 +26,10 @@ namespace JsBind.Net.BindingConfigurations
         /// The properties to exclude for binding.
         /// </summary>
         public IEnumerable<string>? ExcludeProperties { get; set; }
+
+        /// <summary>
+        /// Indicates whether the access path for this object should be set when binding.
+        /// </summary>
+        public bool SetAccessPath { get; set; }
     }
 }

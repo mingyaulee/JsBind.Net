@@ -115,6 +115,7 @@ namespace JsBind.Net.Internal.Extensions
             {
                 Include = bindingConfiguration.IncludeProperties,
                 Exclude = bindingConfiguration.ExcludeProperties,
+                SetAccessPath = bindingConfiguration.SetAccessPath,
                 PropertyBindings = bindingConfiguration.PropertyBindings?.ToDictionary(keyValuePair => keyValuePair.Key, keyValuePair => MapFromBindingConfiguration(keyValuePair.Value))
             };
         }

@@ -27,6 +27,12 @@ namespace JsBind.Net.InvokeOptions
         public IDictionary<string, ObjectBindingConfiguration?>? PropertyBindings { get; set; }
 
         /// <summary>
+        /// Indicates whether the access path for this object should be set when binding.
+        /// </summary>
+        [JsonPropertyName("setAccessPath")]
+        public bool SetAccessPath { get; set; }
+
+        /// <summary>
         /// The binding for the items in the array like object.
         /// </summary>
         [JsonPropertyName("arrayItemBinding")]
