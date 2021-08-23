@@ -5,12 +5,36 @@ import ObjectBindingHandler from "./ObjectBindingHandler.js";
 /**
  * @typedef {import("./References/DelegateReference.js").default} DelegateReference
  * @typedef {import("./References/DelegateReference.js").DotNetObjectReference} DotNetObjectReference
+ * @typedef {import("./References/DelegateReference.js").TaskInvokeResult} TaskInvokeResult
+ * @typedef {import("./InvokeResult.js").default} InvokeResult
  */
 
 /**
  * @typedef {Object} ProxyFunction
  * @property {DotNetDelegateProxy} delegateProxy
  */
+
+/**
+ * Checks if an object is TaskInvokeResult.
+ * @param {any} obj
+ * @returns {obj is TaskInvokeResult}
+ */
+function isTaskInvokeResult(obj) {
+  return obj && !obj.hasOwnProperty("isError") && obj.hasOwnProperty("result");
+}
+
+/**
+ * Unwrap the result if it is contained in a Task object.
+ * @param {InvokeResult | TaskInvokeResult} asyncResult
+ * @returns {InvokeResult}
+ */
+function unwrapAsyncResult(asyncResult) {
+  if (isTaskInvokeResult(asyncResult)) {
+    // unwrap from a Task object
+    return asyncResult.result;
+  }
+  return asyncResult;
+}
 
 /**
  * A DotNet delegate proxy to be invoked in JS.
@@ -54,7 +78,7 @@ export default class DotNetDelegateProxy {
   _invokeDelegateInternal(delegateInvoker, invokeArgs) {
     const invokeResult = delegateInvoker.invokeMethod("InvokeDelegateFromJs", invokeArgs);
     if (invokeResult && invokeResult.isError && invokeResult.errorMessage) {
-      throw new Error(invokeResult.ErrorMessage);
+      throw new Error(invokeResult.errorMessage);
     }
 
     return invokeResult?.value;
@@ -67,14 +91,11 @@ export default class DotNetDelegateProxy {
    * @returns {Promise<any>} 
    */
   async _invokeDelegateAsyncInternal(delegateInvoker, invokeArgs) {
-    let invokeResult = await delegateInvoker.invokeMethodAsync("InvokeDelegateFromJsAsync", invokeArgs);
-    if (invokeResult && !invokeResult.hasOwnProperty("isError") && invokeResult.hasOwnProperty("result")) {
-      // unwrap from a Task object
-      invokeResult = invokeResult.result;
-    }
+    let invokeAsyncResult = await delegateInvoker.invokeMethodAsync("InvokeDelegateFromJsAsync", invokeArgs);
+    let invokeResult = unwrapAsyncResult(invokeAsyncResult);
 
     if (invokeResult && invokeResult.isError && invokeResult.errorMessage) {
-      throw new Error(invokeResult.ErrorMessage);
+      throw new Error(invokeResult.errorMessage);
     }
 
     return invokeResult?.value;

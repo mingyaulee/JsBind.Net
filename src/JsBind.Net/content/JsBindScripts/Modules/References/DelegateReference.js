@@ -3,20 +3,26 @@ import ReferenceType from "./ReferenceType.js";
 
 /**
  * @typedef {import("../InvokeOptions/ObjectBindingConfiguration.js").default} ObjectBindingConfiguration
+ * @typedef {import("../InvokeResult.js").default} InvokeResult
  */
 
 /**
  * @callback InvokeMethodFunction
  * @param {string} methodName The method name.
  * @param {any[]} args The arguments.
- * @returns {any}
+ * @returns {InvokeResult}
+ */
+
+/**
+ * @typedef {object} TaskInvokeResult
+ * @property {InvokeResult} result
  */
 
 /**
  * @callback InvokeMethodAsyncFunction
  * @param {string} methodName The method name.
  * @param {any[]} args The arguments.
- * @returns {Promise<any>}
+ * @returns {Promise<InvokeResult> | Promise<TaskInvokeResult>}
  */
 
 /**

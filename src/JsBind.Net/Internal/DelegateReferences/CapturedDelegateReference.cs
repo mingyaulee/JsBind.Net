@@ -99,10 +99,9 @@ namespace JsBind.Net.Internal.DelegateReferences
             return new()
             {
                 JsRuntime = jsRuntime,
-                Result = new
+                Result = new InvokeResultWithValue<object>()
                 {
-                    isError = false,
-                    value = result,
+                    Value = result
                 }
             };
         }
@@ -112,10 +111,10 @@ namespace JsBind.Net.Internal.DelegateReferences
             return new()
             {
                 JsRuntime = jsRuntime,
-                Result = new
+                Result = new InvokeResultWithValue<object>()
                 {
-                    isError = true,
-                    errorMessage = exception.Message
+                    IsError = true,
+                    ErrorMessage = exception.Message
                 }
             };
         }
