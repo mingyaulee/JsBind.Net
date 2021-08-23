@@ -1,5 +1,4 @@
 ﻿using JsBind.Net.BindingConfigurations;
-using JsBind.Net.Internal;
 
 namespace JsBind.Net.Configurations
 {
