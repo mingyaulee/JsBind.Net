@@ -1,5 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Text.Json;
 using System.Threading.Tasks;
+using JsBind.Net.Internal.Extensions;
+using JsBind.Net.Internal.JsonConverters;
 using JsBind.Net.Internal.References;
 using JsBind.Net.InvokeOptions;
 using Microsoft.JSInterop;
@@ -12,12 +18,14 @@ namespace JsBind.Net.Internal.DelegateReferences
     internal class CapturedDelegateReference : IAsyncDisposable
     {
         private readonly IJsRuntimeAdapter jsRuntime;
+        private readonly MethodInfo invokeMethod;
 
         public CapturedDelegateReference(DelegateReference delegateReference, Delegate delegateObject, IJsRuntimeAdapter jsRuntime)
         {
             DelegateReference = delegateReference;
             DelegateObject = delegateObject;
             this.jsRuntime = jsRuntime;
+            invokeMethod = DelegateObject.GetType().GetMethod("Invoke") ?? throw new InvalidOperationException("Delegate must have invoke method.");
         }
 
         public DelegateReference DelegateReference { get; }
@@ -34,7 +42,7 @@ namespace JsBind.Net.Internal.DelegateReferences
             try
             {
                 var invokeArgs = GetInvokeArgs(invokeWrapper);
-                var returnValue = DelegateReferenceManager.InvokeDelegateFromJs(this, invokeArgs);
+                var returnValue = InvokeDelegateInternal(invokeArgs);
                 return GetReturnValue(returnValue);
             }
             catch (Exception exception)
@@ -54,7 +62,7 @@ namespace JsBind.Net.Internal.DelegateReferences
             try
             {
                 var invokeArgs = GetInvokeArgs(invokeWrapper);
-                var returnValue = await DelegateReferenceManager.InvokeDelegateFromJsAsync(this, invokeArgs).ConfigureAwait(false);
+                var returnValue = await AsyncResultHelper.GetAsyncResultObject(InvokeDelegateInternal(invokeArgs)).ConfigureAwait(false);
                 return GetReturnValue(returnValue);
             }
             catch (Exception exception)
@@ -69,24 +77,74 @@ namespace JsBind.Net.Internal.DelegateReferences
             await jsRuntime.InvokeVoidAsync(DisposeDelegateOption.Identifier, new DisposeDelegateOption(DelegateReference.DelegateId)).ConfigureAwait(false);
         }
 
-        private object?[]? GetInvokeArgs(DelegateInvokeWrapper? invokeWrapper)
+        /// <summary>
+        /// Invokes a delegate instance with the arguments.
+        /// </summary>
+        /// <param name="args">The arguments to invoke the delegate.</param>
+        /// <returns>The result of the delegate invocation.</returns>
+        private object? InvokeDelegateInternal(object?[] args)
         {
-            if (invokeWrapper?.References is null)
+            return invokeMethod.Invoke(DelegateObject, args);
+        }
+
+        private object?[] GetInvokeArgs(DelegateInvokeWrapper? invokeWrapper)
+        {
+            if (invokeWrapper is null)
             {
-                return invokeWrapper?.Args;
+                throw new InvalidOperationException("Delegate invoke wrapper should not be null.");
             }
 
-            foreach (var reference in invokeWrapper.References)
+            var argumentTypes = invokeMethod.GetParameters().Select(p => p.ParameterType).ToArray();
+            if (invokeWrapper.Args is null || !invokeWrapper.Args.Any())
             {
-                if (reference is null)
+                return argumentTypes.Select(argumentType => argumentType.GetDefaultValue()).ToArray();
+            }
+
+
+            var options = invokeWrapper.JsonSerializerOptions!;
+            var cloneOptions = new JsonSerializerOptions(options);
+            var references = new List<BindingBase?>();
+            ConvertersFactory.AddReadConverters(options, cloneOptions, references);
+            var args = invokeWrapper.Args.Cast<object?>().ToArray();
+            var processedArgs = argumentTypes.Select((argumentType, index) =>
+            {
+                if (index < args.Length)
                 {
-                    continue;
+                    // make sure the object type is matching
+                    return ProcessInvokeArg(args[index], argumentType, cloneOptions);
                 }
 
-                reference.InternalInitialize(jsRuntime);
+                // fill missing arguments with their default values
+                return argumentType.GetDefaultValue();
+            }).ToArray();
+
+            foreach (var reference in references)
+            {
+                if (reference is not null)
+                {
+                    reference.InternalInitialize(jsRuntime);
+                }
             }
 
-            return invokeWrapper.Args;
+            return processedArgs;
+        }
+
+        private static object? ProcessInvokeArg(object? invokeArg, Type argumentType, JsonSerializerOptions options)
+        {
+            if (invokeArg is JsonElement jsonElement)
+            {
+                var json = jsonElement.GetRawText();
+                try
+                {
+                    return JsonSerializer.Deserialize(json, argumentType, options);
+                }
+                catch (JsonException jsonException)
+                {
+                    throw new JsonException($"Error when deserializing JSON: {json}", jsonException);
+                }
+            }
+
+            return invokeArg;
         }
 
         private DelegateResultWrapper? GetReturnValue(object? result)

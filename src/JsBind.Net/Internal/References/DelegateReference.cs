@@ -24,7 +24,7 @@ namespace JsBind.Net.Internal.References
         public IEnumerable<ObjectBindingConfiguration?>? ArgumentBindings { get; }
 
         [JsonPropertyName("storeArgumentsAsReference")]
-        public bool StoreArgumentsAsReference => ArgumentBindings is not null && ArgumentBindings.Any();
+        public bool StoreArgumentsAsReference => ArgumentBindings is not null && ArgumentBindings.Any(binding => binding is not null);
 
         [JsonPropertyName("argumentsReferenceId")]
         public string? ArgumentsReferenceId

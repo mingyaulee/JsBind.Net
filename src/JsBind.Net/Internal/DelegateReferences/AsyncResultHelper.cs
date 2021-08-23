@@ -9,7 +9,10 @@ namespace JsBind.Net.Internal.DelegateReferences
     /// </summary>
     internal static class AsyncResultHelper
     {
-        private static readonly MethodInfo GetObjectMethodInfo = typeof(DelegateReferenceManager).GetMethod(nameof(GetObject), BindingFlags.Static)!;
+#pragma warning disable S3011 // Reflection should not be used to increase accessibility of classes, methods, or fields
+        private static readonly MethodInfo GetObjectFromValueTaskMethodInfo = typeof(AsyncResultHelper).GetMethod(nameof(GetObjectFromValueTask), BindingFlags.NonPublic | BindingFlags.Static)!;
+        private static readonly MethodInfo GetObjectFromTaskMethodInfo = typeof(AsyncResultHelper).GetMethod(nameof(GetObjectFromTask), BindingFlags.NonPublic | BindingFlags.Static)!;
+#pragma warning restore S3011 // Reflection should not be used to increase accessibility of classes, methods, or fields
 
         /// <summary>
         /// Gets the result object and waits if the result is <see cref="Task" /> or <see cref="ValueTask" />.
@@ -26,7 +29,16 @@ namespace JsBind.Net.Internal.DelegateReferences
             var resultType = result.GetType();
             if (resultType.IsGenericType && resultType.IsTaskOrValueTask())
             {
-                var objectTask = (Task<object>)GetObjectMethodInfo.MakeGenericMethod(resultType.GetGenericArguments()[0]).Invoke(null, new[] { result })!;
+                Task<object> objectTask;
+                if (typeof(Task).IsAssignableFrom(resultType))
+                {
+                    objectTask=(Task<object>)GetObjectFromTaskMethodInfo.MakeGenericMethod(resultType.GetGenericArguments()[0]).Invoke(null, new[] { result })!;
+                }
+                else
+                {
+                    objectTask = (Task<object>)GetObjectFromValueTaskMethodInfo.MakeGenericMethod(resultType.GetGenericArguments()[0]).Invoke(null, new[] { result })!;
+                }
+
                 return await objectTask.ConfigureAwait(false);
             }
 
@@ -44,12 +56,12 @@ namespace JsBind.Net.Internal.DelegateReferences
             return result;
         }
 
-        private static async Task<object?> GetObject<TResult>(ValueTask<TResult> resultTask)
+        private static async Task<object?> GetObjectFromValueTask<TResult>(ValueTask<TResult> resultTask)
         {
             return await resultTask.AsTask().ConfigureAwait(false);
         }
 
-        private static async Task<object?> GetObject<TResult>(Task<TResult> resultTask)
+        private static async Task<object?> GetObjectFromTask<TResult>(Task<TResult> resultTask)
         {
             return await resultTask.ConfigureAwait(false);
         }

@@ -13,13 +13,10 @@ namespace JsBind.Net.Internal.JsonConverters
     {
         public override DelegateInvokeWrapper? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            var cloneOptions = new JsonSerializerOptions(options);
-            var references = new List<BindingBase?>();
-            ConvertersFactory.AddReadConverters(options, cloneOptions, references);
             var invokeWrapper = new DelegateInvokeWrapper()
             {
-                Args = JsonSerializer.Deserialize<object?[]?>(ref reader, cloneOptions),
-                References = references
+                Args = JsonSerializer.Deserialize<IEnumerable<JsonElement>?>(ref reader, options),
+                JsonSerializerOptions = options
             };
             return invokeWrapper;
         }

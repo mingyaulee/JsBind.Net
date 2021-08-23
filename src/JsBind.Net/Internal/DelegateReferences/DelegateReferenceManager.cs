@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using JsBind.Net.Configurations;
 using JsBind.Net.Internal.Extensions;
 using JsBind.Net.Internal.References;
@@ -16,29 +15,6 @@ namespace JsBind.Net.Internal.DelegateReferences
     internal static class DelegateReferenceManager
     {
         private static readonly Dictionary<Guid, CapturedDelegateReference> delegateReferences = new();
-
-        /// <summary>
-        /// Invoke a delegate from JavaScript.
-        /// </summary>
-        /// <param name="capturedDelegateReference">The delegate.</param>
-        /// <param name="args">The arguments to invoke the delegate.</param>
-        /// <returns>The result of the delegate invocation.</returns>
-        public static object? InvokeDelegateFromJs(CapturedDelegateReference capturedDelegateReference, object?[]? args)
-        {
-            return InvokeDelegateInternal(capturedDelegateReference.DelegateObject, args);
-        }
-
-        /// <summary>
-        /// Invoke a delegate from JavaScript asynchronously.
-        /// </summary>
-        /// <param name="capturedDelegateReference">The delegate.</param>
-        /// <param name="args">The arguments to invoke the delegate.</param>
-        /// <returns>The result of the delegate invocation.</returns>
-        public static ValueTask<object?> InvokeDelegateFromJsAsync(CapturedDelegateReference capturedDelegateReference, object?[]? args)
-        {
-            var result = InvokeDelegateInternal(capturedDelegateReference.DelegateObject, args);
-            return AsyncResultHelper.GetAsyncResultObject(result);
-        }
 
         /// <summary>
         /// Gets an instance of <see cref="DelegateReference" /> representing the delegate.
@@ -78,44 +54,6 @@ namespace JsBind.Net.Internal.DelegateReferences
             }
 
             throw new InvalidOperationException($"Delegate with ID '{delegateId}' does not exist.");
-        }
-
-        /// <summary>
-        /// Invokes a delegate instance with the arguments.
-        /// </summary>
-        /// <param name="delegateInstance">The delegate.</param>
-        /// <param name="args">The arguments to invoke the delegate.</param>
-        /// <returns>The result of the delegate invocation.</returns>
-        private static object? InvokeDelegateInternal(Delegate delegateInstance, object?[]? args)
-        {
-            var invokeMethod = delegateInstance.GetType().GetMethod("Invoke");
-            if (invokeMethod is null)
-            {
-                throw new InvalidOperationException("Delegate must have invoke method.");
-            }
-
-            var argumentTypes = invokeMethod.GetParameters().Select(p => p.ParameterType).ToArray();
-            object?[] processedArgs;
-            if (args is null)
-            {
-                processedArgs = Array.Empty<object>();
-            }
-            else
-            {
-                processedArgs = args;
-                if (args.Length < argumentTypes.Length)
-                {
-                    processedArgs = argumentTypes.Select((argumentType, index) =>
-                    {
-                        if (index < args.Length)
-                        {
-                            return args[index];
-                        }
-                        return argumentType.GetDefaultValue();
-                    }).ToArray();
-                }
-            }
-            return invokeMethod.Invoke(delegateInstance, processedArgs);
         }
 
         private static void ProcessDelegateArgumentTypesAndReturnType(Type delegateType, out IEnumerable<ObjectBindingConfiguration?>? argumentBindings, out bool isAsync)

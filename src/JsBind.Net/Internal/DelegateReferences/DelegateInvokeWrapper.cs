@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using JsBind.Net.Internal.JsonConverters;
 
@@ -10,7 +11,7 @@ namespace JsBind.Net.Internal.DelegateReferences
     [JsonConverter(typeof(DelegateInvokeConverter))]
     internal class DelegateInvokeWrapper
     {
-        public object?[]? Args { get; set; }
-        public IEnumerable<BindingBase?>? References { get; set; }
+        public IEnumerable<JsonElement>? Args { get; set; }
+        public JsonSerializerOptions? JsonSerializerOptions { get; set; }
     }
 }
