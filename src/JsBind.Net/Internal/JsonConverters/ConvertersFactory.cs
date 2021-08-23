@@ -13,7 +13,7 @@ namespace JsBind.Net.Internal.JsonConverters
 
         public static void AddWriteConverters(JsonSerializerOptions cloneOptions, IJsRuntimeAdapter jsRuntime)
         {
-            cloneOptions.Converters.Add(new WriteObjectReferenceConverter());
+            cloneOptions.Converters.Add(new WriteObjectReferenceConverterFactory());
             cloneOptions.Converters.Add(new WriteDelegateReferenceConverter(jsRuntime));
         }
     }
