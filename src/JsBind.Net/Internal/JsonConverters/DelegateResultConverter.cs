@@ -25,8 +25,7 @@ namespace JsBind.Net.Internal.JsonConverters
 
             var jsRuntime = value.JsRuntime ?? throw new InvalidOperationException("DelegateResultWrapper should have JS runtime adapter.");
             var cloneOptions = new JsonSerializerOptions(options);
-            cloneOptions.Converters.Add(new WriteObjectReferenceConverter());
-            cloneOptions.Converters.Add(new WriteDelegateReferenceConverter(jsRuntime));
+            ConvertersFactory.AddWriteConverters(cloneOptions, jsRuntime);
             JsonSerializer.Serialize(writer, value.Result, cloneOptions);
         }
     }

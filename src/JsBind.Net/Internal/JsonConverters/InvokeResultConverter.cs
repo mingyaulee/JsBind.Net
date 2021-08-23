@@ -19,8 +19,7 @@ namespace JsBind.Net.Internal.JsonConverters
         {
             var cloneOptions = new JsonSerializerOptions(options);
             var references = new List<BindingBase?>();
-            cloneOptions.Converters.Add(new ReadObjectReferenceConverterFactory(references, options));
-            cloneOptions.Converters.Add(new ReadDelegateReferenceConverter(references, options));
+            ConvertersFactory.AddReadConverters(options, cloneOptions, references);
             var invokeResult = JsonSerializer.Deserialize<InvokeResultWithValue<TValue>>(ref reader, cloneOptions);
             if (invokeResult is not null)
             {
