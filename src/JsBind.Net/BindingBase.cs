@@ -36,7 +36,7 @@ namespace JsBind.Net
         /// <summary>
         /// Gets the access path of the binding instance.
         /// </summary>
-        protected virtual string AccessPath => accessPath ?? throw new InvalidOperationException("Object access path is not set.");
+        protected virtual string? AccessPath => accessPath;
 
         internal void InternalInitialize(IJsRuntimeAdapter jsRuntime)
         {
