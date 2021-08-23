@@ -12,6 +12,8 @@ namespace TestBindings.WebAssembly.BindingTestLibrary
             Initialize(jsRuntime);
         }
 
+        public bool IsPlainObjectPassed(TestBoundClass obj) => Invoke<bool>("isPlainObjectPassed", obj);
+
         public TestBoundClass GetTestObjectReviverInstanceFromFunction() => Invoke<TestBoundClass>("getTestObjectReviverInstanceFromFunction");
         public TestBoundClass TestObjectReviverInstanceFromProperty => GetProperty<TestBoundClass>("testObjectReviverInstanceFromProperty");
         public bool IsObjectReferenceRevived(TestBoundClass obj) => Invoke<bool>("isObjectReferenceRevived", obj);

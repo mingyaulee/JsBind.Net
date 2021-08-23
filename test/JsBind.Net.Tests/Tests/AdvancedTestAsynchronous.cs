@@ -19,6 +19,22 @@ namespace JsBind.Net.Tests.Tests
             this.window = window;
         }
 
+        [Fact(Description = "Plain object binding can be passed as argument")]
+        public async Task PlainObjectBindingCanBePassedAsArgument()
+        {
+            // Arrange
+            var obj = new TestBoundClass()
+            {
+                IsTestClass = true
+            };
+
+            // Act
+            var result = await bindingTestLibrary.IsPlainObjectPassed(obj);
+
+            // Assert
+            result.Should().BeTrue();
+        }
+
         [Fact(Description = "Object reference from function should be revived in JS")]
         public async Task ObjectReferenceFromFunctionShouldBeRevived()
         {

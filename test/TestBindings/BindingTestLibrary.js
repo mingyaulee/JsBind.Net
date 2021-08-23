@@ -9,6 +9,8 @@
     }
   }
 
+  bindingTestLibrary.isPlainObjectPassed = (obj) => { return obj?.isTestClass === true || false };
+
   const testObjectReferenceReviverInstance = new TestClass();
   bindingTestLibrary.getTestObjectReviverInstanceFromFunction = () => testObjectReferenceReviverInstance;
   bindingTestLibrary.testObjectReviverInstanceFromProperty = testObjectReferenceReviverInstance;

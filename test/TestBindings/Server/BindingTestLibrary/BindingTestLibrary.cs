@@ -12,6 +12,8 @@ namespace TestBindings.Server.BindingTestLibrary
             Initialize(jsRuntime);
         }
 
+        public ValueTask<bool> IsPlainObjectPassed(TestBoundClass obj) => InvokeAsync<bool>("isPlainObjectPassed", obj);
+
         public ValueTask<TestBoundClass> GetTestObjectReviverInstanceFromFunction() => InvokeAsync<TestBoundClass>("getTestObjectReviverInstanceFromFunction");
         public ValueTask<TestBoundClass> GetTestObjectReviverInstanceFromProperty() => GetPropertyAsync<TestBoundClass>("testObjectReviverInstanceFromProperty");
         public ValueTask<bool> IsObjectReferenceRevived(TestBoundClass obj) => InvokeAsync<bool>("isObjectReferenceRevived", obj);
