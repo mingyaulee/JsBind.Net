@@ -28,9 +28,9 @@
       <Pack>true</Pack>
       <PackagePath>build</PackagePath>
     </None>
-    <None Include="content\**">
+    <None Include="content\dist\**">
       <Pack>true</Pack>
-      <PackagePath>content</PackagePath>
+      <PackagePath>content\JsBindScripts</PackagePath>
     </None>
   </ItemGroup>
 

@@ -25,14 +25,8 @@ function attachDotNetRevivers() {
 }
 
 export default class JsBindNet {
-  isReady = true;
-
   constructor() {
     attachDotNetRevivers();
-  }
-
-  onReady(callback) {
-    callback();
   }
 
   /**
