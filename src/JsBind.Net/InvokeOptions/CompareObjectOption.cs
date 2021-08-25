@@ -3,7 +3,7 @@
 namespace JsBind.Net.InvokeOptions
 {
     /// <summary>
-    /// Invoke option to compare objects. In sync with JsBindScripts\Modules\InvokeOptions\CompareObjectOptions.js
+    /// Invoke option to compare objects. In sync with Modules\InvokeOptions\CompareObjectOptions.js
     /// </summary>
     internal class CompareObjectOption : InvokeOptionWithReturnValue
     {

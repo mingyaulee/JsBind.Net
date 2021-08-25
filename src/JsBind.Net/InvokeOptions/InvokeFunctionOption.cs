@@ -7,7 +7,7 @@ using JsBind.Net.Internal.JsonConverters;
 namespace JsBind.Net.InvokeOptions
 {
     /// <summary>
-    /// Invoke option to invoke function without return value. In sync with JsBindScripts\Modules\InvokeOptions\InvokeFunctionOption.js
+    /// Invoke option to invoke function without return value. In sync with Modules\InvokeOptions\InvokeFunctionOption.js
     /// </summary>
     internal class InvokeFunctionOption : InvokeOption
     {
@@ -40,7 +40,7 @@ namespace JsBind.Net.InvokeOptions
     }
 
     /// <summary>
-    /// Invoke option to invoke function with return value. In sync with JsBindScripts\Modules\InvokeOptions\InvokeFunctionOption.js
+    /// Invoke option to invoke function with return value. In sync with Modules\InvokeOptions\InvokeFunctionOption.js
     /// </summary>
     internal class InvokeFunctionOption<TValue> : InvokeOptionWithReturnValue
     {

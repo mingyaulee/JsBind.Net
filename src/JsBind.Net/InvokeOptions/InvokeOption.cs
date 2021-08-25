@@ -3,7 +3,7 @@
 namespace JsBind.Net.InvokeOptions
 {
     /// <summary>
-    /// Base invoke option without return value. In sync with JsBindScripts\Modules\InvokeOptions\InvokeOption.js
+    /// Base invoke option without return value. In sync with Modules\InvokeOptions\InvokeOption.js
     /// </summary>
     public abstract class InvokeOption
     {

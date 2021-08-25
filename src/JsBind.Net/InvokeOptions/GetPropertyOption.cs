@@ -3,7 +3,7 @@
 namespace JsBind.Net.InvokeOptions
 {
     /// <summary>
-    /// Invoke option to get property value. In sync with JsBindScripts\Modules\InvokeOptions\GetPropertyOption.js
+    /// Invoke option to get property value. In sync with Modules\InvokeOptions\GetPropertyOption.js
     /// </summary>
     internal class GetPropertyOption : InvokeOptionWithReturnValue
     {

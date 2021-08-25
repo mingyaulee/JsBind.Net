@@ -3,7 +3,7 @@
 namespace JsBind.Net.InvokeOptions
 {
     /// <summary>
-    /// Invoke option to dispose object. In sync with JsBindScripts\Modules\InvokeOptions\DisposeObjectOption.js
+    /// Invoke option to dispose object. In sync with Modules\InvokeOptions\DisposeObjectOption.js
     /// </summary>
     internal class DisposeObjectOption : InvokeOption
     {

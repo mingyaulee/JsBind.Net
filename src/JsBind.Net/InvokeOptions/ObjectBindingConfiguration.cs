@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 namespace JsBind.Net.InvokeOptions
 {
     /// <summary>
-    /// The binding configuration for an object. In sync with JsBindScripts\Modules\InvokeOptions\ObjectBindingConfiguration.js
+    /// The binding configuration for an object. In sync with Modules\InvokeOptions\ObjectBindingConfiguration.js
     /// </summary>
     public class ObjectBindingConfiguration
     {

@@ -3,7 +3,7 @@
 namespace JsBind.Net.InvokeOptions
 {
     /// <summary>
-    /// Invoke option to dispose delegate. In sync with JsBindScripts\Modules\InvokeOptions\DisposeDelegateOption.js
+    /// Invoke option to dispose delegate. In sync with Modules\InvokeOptions\DisposeDelegateOption.js
     /// </summary>
     internal class DisposeDelegateOption : InvokeOption
     {

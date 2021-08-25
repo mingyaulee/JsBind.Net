@@ -4,5 +4,5 @@
     "module": "esnext",
     "checkJs": true
   },
-  "include": [ "content/JsBindScripts/**/*.js" ]
+  "include": [ "src/**/*.js" ]
 }
