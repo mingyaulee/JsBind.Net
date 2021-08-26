@@ -13,7 +13,7 @@ namespace JsBind.Net
         private static readonly int ReferenceIdLength = ReferenceIdPrefix.Length + Guid.Empty.ToString().Length;
 
         /// <summary>
-        /// Checks if the is a reference identifier.
+        /// Checks if the access path is a reference identifier.
         /// </summary>
         /// <param name="accessPath">The access path.</param>
         /// <returns><c>true</c> if the access path is a reference identifier, <c>false</c> otherwise.</returns>
@@ -41,6 +41,41 @@ namespace JsBind.Net
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Gets the access path from the reference identifier.
+        /// </summary>
+        /// <param name="referenceId">The reference identifier.</param>
+        /// <returns>The access path.</returns>
+        public static string? FromReferenceId(Guid? referenceId)
+        {
+            if (referenceId is null)
+            {
+                return null;
+            }
+
+            return ReferenceIdPrefix + referenceId.Value.ToString();
+        }
+
+        /// <summary>
+        /// Gets the access path from the reference identifier.
+        /// </summary>
+        /// <param name="referenceId">The reference identifier.</param>
+        /// <returns>The access path.</returns>
+        public static string? FromReferenceId(string? referenceId)
+        {
+            if (referenceId is null)
+            {
+                return null;
+            }
+
+            if (referenceId.Length != Guid.Empty.ToString().Length)
+            {
+                throw new InvalidOperationException($"{referenceId} is not a valid reference identifier.");
+            }
+
+            return ReferenceIdPrefix + referenceId;
         }
 
         /// <summary>
