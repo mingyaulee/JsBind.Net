@@ -1,22 +1,29 @@
 ﻿<!-- build/JsBind.Net.targets -->
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
+  <!-- Region
+    Adds the content JavaScript files from the NuGet package to the project
+  -->
   <PropertyGroup>
-    <JsBindAssetsContentsPath>$(MSBuildThisFileDirectory)..\content\JsBindScripts</JsBindAssetsContentsPath>
-    <JsBindAssetsTargetPath>$(JsBindAssetsPath)</JsBindAssetsTargetPath>
+    <_JsBind_Package_Contents_Scripts_Directory Condition="'$(_JsBind_Package_Contents_Scripts_Directory)' == ''">$(MSBuildThisFileDirectory)..\content\JsBindScripts</_JsBind_Package_Contents_Scripts_Directory>
+    <_JsBind_Project_Link_Scripts_Directory>$(LinkJsBindAssetsPath)</_JsBind_Project_Link_Scripts_Directory>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(IncludeJsBindAssets)' == 'true'">
-    <StaticWebAsset Condition="'$(LinkJsBindAssets)' == 'false'" Include="$(JsBindAssetsContentsPath)\**\*.*">
+    <StaticWebAsset Condition="'$(LinkJsBindAssets)' == 'false'"
+                    Include="$(_JsBind_Package_Contents_Scripts_Directory)\**\*.*">
       <SourceType>Package</SourceType>
       <SourceId>JsBind.Net</SourceId>
-      <ContentRoot>$(JsBindAssetsContentsPath)</ContentRoot>
+      <ContentRoot>$(_JsBind_Package_Contents_Scripts_Directory)</ContentRoot>
       <BasePath>_content/JsBind.Net</BasePath>
       <RelativePath>%(RecursiveDir)%(Filename)%(Extension)</RelativePath>
     </StaticWebAsset>
-    <None Condition="'$(LinkJsBindAssets)' != 'false'" Include="$(JsBindAssetsContentsPath)\**\*.*" Link="$(JsBindAssetsTargetPath)\%(RecursiveDir)%(Filename)%(Extension)">
+    <None Condition="'$(LinkJsBindAssets)' != 'false'"
+          Include="$(_JsBind_Package_Contents_Scripts_Directory)\**\*.*"
+          Link="$(_JsBind_Project_Link_Scripts_Directory)\%(RecursiveDir)%(Filename)%(Extension)">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+  <!-- EndRegion -->
 
 </Project>

@@ -107,8 +107,8 @@ public class LocalStorage : ObjectBindingBase
 
 The following MSBuild properties can be specified in your project file or when running `dotnet build` command.
 
-| Property            | Default value                | Description                                                                               |
-| ------------------- | ---------------------------- | ----------------------------------------------------------------------------------------- |
-| IncludeJsBindAssets | true                         | If set to false, the JavaScript files will not be added as to the project.                |
-| LinkJsBindAssets    | false                        | If set to false, the JavaScript files added as static web assets instead of linked files. |
-| JsBindAssetsPath    | wwwroot\\_content\JsBind.Net | The root folder where the JavaScript files should be added as link.                       |
+| Property             | Default value                | Description                                                                                   |
+| -------------------- | ---------------------------- | --------------------------------------------------------------------------------------------- |
+| IncludeJsBindAssets  | true                         | If set to false, the JavaScript files will not be added to the project.                       |
+| LinkJsBindAssets     | false                        | If set to false, the JavaScript files are added as static web assets instead of linked files. |
+| LinkJsBindAssetsPath | wwwroot\\_content\JsBind.Net | The root folder where the JavaScript files should be added as link.                           |

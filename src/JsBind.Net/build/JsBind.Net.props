@@ -4,7 +4,7 @@
   <PropertyGroup>
     <IncludeJsBindAssets Condition="'$(IncludeJsBindAssets)' == ''">true</IncludeJsBindAssets>
     <LinkJsBindAssets Condition="'$(LinkJsBindAssets)' == ''">false</LinkJsBindAssets>
-    <JsBindAssetsPath Condition="'$(JsBindAssetsPath)' == ''">wwwroot\_content\JsBind.Net</JsBindAssetsPath>
+    <LinkJsBindAssetsPath Condition="'$(LinkJsBindAssetsPath)' == ''">wwwroot\_content\JsBind.Net</LinkJsBindAssetsPath>
   </PropertyGroup>
 
 </Project>
