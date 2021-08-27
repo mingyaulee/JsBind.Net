@@ -59,7 +59,7 @@ When you want to interop to the JavaScript libraries in your project from .Net, 
 ## For projects using the binding
 The projects using the binding from a binding library or from the project itself will need to include the JavaScript file from `JsBind.Net` with
 ```html
-<script src="_content/JSBind.Net/JSBindNet.js"></script>
+<script src="_content/JsBind.Net/JsBindNet.js"></script>
 ```
 
 ## How to create bindings
@@ -112,3 +112,6 @@ The following MSBuild properties can be specified in your project file or when r
 | IncludeJsBindAssets  | true                         | If set to false, the JavaScript files will not be added to the project.                       |
 | LinkJsBindAssets     | false                        | If set to false, the JavaScript files are added as static web assets instead of linked files. |
 | LinkJsBindAssetsPath | wwwroot\\_content\JsBind.Net | The root folder where the JavaScript files should be added as link.                           |
+
+## Example projects
+- [WebExtensions.Net](https://github.com/mingyaulee/WebExtensions.Net) - browser extensions API
