@@ -40,17 +40,13 @@ function unwrapAsyncResult(asyncResult) {
  * A DotNet delegate proxy to be invoked in JS.
  */
 export default class DotNetDelegateProxy {
-  /** @type {DelegateReference} */
-  delegateReference;
-  /** @type {ProxyFunction} A function, when invoked executes the DotNet delegate. */
-  proxyFunction;
-
   /**
    * Creates a new instance of the DotNetDelegateProxy class.
    * @param {DelegateReference} delegateReference The delegate reference.
    */
   constructor(delegateReference) {
     this.delegateReference = delegateReference;
+    /** @type {ProxyFunction} A function, when invoked executes the DotNet delegate. */
     this.proxyFunction = this._dynamicInvoke.bind(this);
     this.proxyFunction.delegateProxy = this;
   }

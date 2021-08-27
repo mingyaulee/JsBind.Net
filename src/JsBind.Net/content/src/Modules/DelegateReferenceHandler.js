@@ -5,8 +5,10 @@
  */
 
 class DelegateReferenceHandlerClass {
-  /** @type {Object<string, DotNetDelegateProxy>} */
-  _delegateReferences = {};
+  constructor() {
+    /** @type {Object<string, DotNetDelegateProxy>} */
+    this._delegateReferences = {};
+  }
 
   /**
    * Get or create the delegate proxy from the delegate reference.

@@ -54,8 +54,10 @@
   const AccessPaths = new AccessPathsClass();
 
   class JsObjectHandlerClass {
-    _objectReferences = {};
-    _objectReferencesCount = 0;
+    constructor() {
+      this._objectReferences = {};
+      this._objectReferencesCount = 0;
+    }
 
     /**
      * Get an object from access path.
@@ -317,17 +319,13 @@
    * A DotNet delegate proxy to be invoked in JS.
    */
   class DotNetDelegateProxy {
-    /** @type {DelegateReference} */
-    delegateReference;
-    /** @type {ProxyFunction} A function, when invoked executes the DotNet delegate. */
-    proxyFunction;
-
     /**
      * Creates a new instance of the DotNetDelegateProxy class.
      * @param {DelegateReference} delegateReference The delegate reference.
      */
     constructor(delegateReference) {
       this.delegateReference = delegateReference;
+      /** @type {ProxyFunction} A function, when invoked executes the DotNet delegate. */
       this.proxyFunction = this._dynamicInvoke.bind(this);
       this.proxyFunction.delegateProxy = this;
     }
@@ -416,8 +414,10 @@
    */
 
   class DelegateReferenceHandlerClass {
-    /** @type {Object<string, DotNetDelegateProxy>} */
-    _delegateReferences = {};
+    constructor() {
+      /** @type {Object<string, DotNetDelegateProxy>} */
+      this._delegateReferences = {};
+    }
 
     /**
      * Get or create the delegate proxy from the delegate reference.
@@ -451,13 +451,6 @@
   const DelegateReferenceHandler = new DelegateReferenceHandlerClass();
 
   class InvokeResult {
-    /** @type{any} */
-    value;
-    /** @type{boolean} */
-    isError;
-    /** @type{string} */
-    errorMessage;
-
     /**
      * Creates a new instance of InvokeResult.
      * @param {any} value

@@ -1,8 +1,10 @@
 ﻿import AccessPaths from "./AccessPaths.js";
 
 class JsObjectHandlerClass {
-  _objectReferences = {};
-  _objectReferencesCount = 0;
+  constructor() {
+    this._objectReferences = {};
+    this._objectReferencesCount = 0;
+  }
 
   /**
    * Get an object from access path.
