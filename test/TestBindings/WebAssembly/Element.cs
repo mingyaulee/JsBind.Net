@@ -3,7 +3,7 @@
 namespace TestBindings.WebAssembly
 {
     [BindDeclaredProperties]
-    public class Element : ObjectBindingBase<Element>
+    public class Element : ObjectBindingBase
     {
         // Property that is loaded when initialized from JSON deserializer
         public string Id { get; set; }

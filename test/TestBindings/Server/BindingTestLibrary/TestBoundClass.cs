@@ -3,7 +3,7 @@ using JsBind.Net;
 
 namespace TestBindings.Server.BindingTestLibrary
 {
-    public class TestBoundClass : ObjectBindingBase<TestBoundClass>
+    public class TestBoundClass : ObjectBindingBase
     {
         [JsonPropertyName("isTestClass")]
         public bool IsTestClass { get; set; }

@@ -81,24 +81,11 @@ namespace JsBind.Net
                 accessPath = null;
             }
         }
-    }
 
-    /// <summary>
-    /// Base JavaScript binding class with equality comparer.
-    /// </summary>
-    public abstract class BindingBase<T> : BindingBase, IEquatable<T>
-        where T : BindingBase
-    {
         /// <inheritdoc />
         public override bool Equals(object? obj)
         {
-            return Equals(obj as T);
-        }
-
-        /// <inheritdoc />
-        public virtual bool Equals(T? other)
-        {
-            return Equals(this as T, other);
+            return Equals(this, obj as BindingBase);
         }
 
         /// <summary>
@@ -106,14 +93,14 @@ namespace JsBind.Net
         /// </summary>
         /// <param name="other">An object to compare with this object.</param>
         /// <returns><c>true</c> if the current object is the same instance as the other object in JavaScript.</returns>
-        public virtual bool InstanceEquals(T? other)
+        public virtual bool InstanceEquals(object? other)
         {
-            if (Equals(this as T, other))
+            if (Equals(this, other as BindingBase))
             {
                 return true;
             }
 
-            return JsRuntime.Invoke<bool>(CompareObjectOption.Identifier, new CompareObjectOption(InternalGetAccessPath(), other?.InternalGetAccessPath()));
+            return JsRuntime.Invoke<bool>(CompareObjectOption.Identifier, new CompareObjectOption(InternalGetAccessPath(), (other as BindingBase)?.InternalGetAccessPath()));
         }
 
         /// <summary>
@@ -121,28 +108,28 @@ namespace JsBind.Net
         /// </summary>
         /// <param name="other">An object to compare with this object.</param>
         /// <returns><c>true</c> if the current object is the same instance as the other object in JavaScript.</returns>
-        public virtual async ValueTask<bool> InstanceEqualsAsync(T? other)
+        public virtual async ValueTask<bool> InstanceEqualsAsync(object? other)
         {
-            if (Equals(this as T, other))
+            if (Equals(this, other as BindingBase))
             {
                 return true;
             }
 
-            return await JsRuntime.InvokeAsync<bool>(CompareObjectOption.Identifier, new CompareObjectOption(InternalGetAccessPath(), other?.InternalGetAccessPath())).ConfigureAwait(false);
+            return await JsRuntime.InvokeAsync<bool>(CompareObjectOption.Identifier, new CompareObjectOption(InternalGetAccessPath(), (other as BindingBase)?.InternalGetAccessPath())).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
         public override int GetHashCode()
         {
-            return GetHashCode(this as T);
+            return GetHashCode(this);
         }
 
-        private static bool Equals(T? x, T? y)
+        private static bool Equals(BindingBase? x, BindingBase? y)
         {
             return x?.InternalGetAccessPath() == y?.InternalGetAccessPath();
         }
 
-        private static int GetHashCode(T? obj)
+        private static int GetHashCode(BindingBase? obj)
         {
             return obj?.InternalGetAccessPath()?.GetHashCode() ?? "globalThis".GetHashCode();
         }

@@ -15,8 +15,7 @@ namespace JsBind.Net
     /// <summary>
     /// Base JavaScript object binding.
     /// </summary>
-    public abstract class ObjectBindingBase<T> : BindingBase<T>, IObjectBindingBase
-        where T : BindingBase
+    public abstract class ObjectBindingBase : BindingBase, IObjectBindingBase
     {
         /// <summary>
         /// Contains any additional data within this object instance.

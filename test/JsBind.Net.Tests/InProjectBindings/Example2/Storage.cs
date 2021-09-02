@@ -1,6 +1,6 @@
 ﻿namespace JsBind.Net.Tests.InProjectBindings.Example2
 {
-    public class Storage : ObjectBindingBase<Storage>
+    public class Storage : ObjectBindingBase
     {
         public Storage(IJsRuntimeAdapter jsRuntime, string accessPath)
         {

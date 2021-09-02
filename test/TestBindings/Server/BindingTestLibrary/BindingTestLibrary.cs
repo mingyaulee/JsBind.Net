@@ -4,7 +4,7 @@ using JsBind.Net;
 
 namespace TestBindings.Server.BindingTestLibrary
 {
-    public class BindingTestLibrary : ObjectBindingBase<BindingTestLibrary>
+    public class BindingTestLibrary : ObjectBindingBase
     {
         public BindingTestLibrary(IJsRuntimeAdapter jsRuntime)
         {

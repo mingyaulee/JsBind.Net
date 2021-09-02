@@ -6,7 +6,7 @@ namespace JsBind.Net
     /// <summary>
     /// Base JavaScript function binding.
     /// </summary>
-    public class FunctionBindingBase : BindingBase<FunctionBindingBase>
+    public class FunctionBindingBase : BindingBase
     {
         /// <summary>
         /// Invokes the JavaScript function synchronously.

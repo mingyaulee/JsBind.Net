@@ -4,7 +4,7 @@ using JsBind.Net;
 namespace TestBindings.WebAssembly
 {
     [BindDeclaredProperties]
-    public class Document : ObjectBindingBase<Document>
+    public class Document : ObjectBindingBase
     {
         /// <summary>Parameterless constructor for when the instance is created by the JSON deserializer.</summary>
         public Document() { }

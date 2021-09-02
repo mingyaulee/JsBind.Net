@@ -1,6 +1,6 @@
 ﻿namespace JsBind.Net.Tests.InProjectBindings.Example1
 {
-    public abstract class Storage : ObjectBindingBase<Storage>
+    public abstract class Storage : ObjectBindingBase
     {
         public string GetItem(string key) => Invoke<string>("getItem", key);
         public string SetItem(string key, string value) => Invoke<string>("setItem", key, value);
