@@ -31,6 +31,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsBind.Net.Tests", "test\Js
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestBindings", "test\TestBindings\TestBindings.csproj", "{6954DFDF-90F9-462B-AD49-A5B4F7C4B3D2}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsBind.Net.TestsRunner", "test\JsBind.Net.TestsRunner\JsBind.Net.TestsRunner.csproj", "{33896501-65D5-4F26-9115-36CD922C94D3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,6 +55,10 @@ Global
 		{6954DFDF-90F9-462B-AD49-A5B4F7C4B3D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6954DFDF-90F9-462B-AD49-A5B4F7C4B3D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6954DFDF-90F9-462B-AD49-A5B4F7C4B3D2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{33896501-65D5-4F26-9115-36CD922C94D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{33896501-65D5-4F26-9115-36CD922C94D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{33896501-65D5-4F26-9115-36CD922C94D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{33896501-65D5-4F26-9115-36CD922C94D3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -62,6 +68,7 @@ Global
 		{5AEE886C-9662-4A8F-817E-D226D8559474} = {9F4E4566-0C1D-4AF5-A740-0301261C91AD}
 		{F4E0A803-EEA1-4999-A815-B2F90656B992} = {E87622DD-4B6E-4DC7-9858-B56167959C51}
 		{6954DFDF-90F9-462B-AD49-A5B4F7C4B3D2} = {E87622DD-4B6E-4DC7-9858-B56167959C51}
+		{33896501-65D5-4F26-9115-36CD922C94D3} = {E87622DD-4B6E-4DC7-9858-B56167959C51}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D8579199-313A-44D8-A7D9-01E7527AA3D0}
