@@ -37,5 +37,7 @@ namespace TestBindings.Server
 
         public ValueTask<TValue> GetVariableValue<TValue>(string variableName) => GetPropertyAsync<TValue>(variableName);
         public ValueTask SetVariableValue(string variableName, object variableValue) => SetPropertyAsync(variableName, variableValue);
+
+        public ValueTask<TValue> ToType<TValue>() => ConvertToTypeAsync<TValue>();
     }
 }

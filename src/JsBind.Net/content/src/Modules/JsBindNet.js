@@ -9,6 +9,7 @@ import ObjectReferenceReviver from "./JsonRevivers/ObjectReferenceReviver.js";
 /**
  * @typedef {import("./InvokeOptions/InvokeOption.js").default} InvokeOption
  * @typedef {import("./InvokeOptions/CompareObjectOption.js").default} CompareObjectOption
+ * @typedef {import("./InvokeOptions/ConvertObjectTypeOption.js").default} ConvertObjectTypeOption
  * @typedef {import("./InvokeOptions/DisposeDelegateOption.js").default} DisposeDelegateOption
  * @typedef {import("./InvokeOptions/DisposeObjectOption.js").default} DisposeObjectOption
  * @typedef {import("./InvokeOptions/GetPropertyOption.js").default} GetPropertyOption
@@ -39,6 +40,16 @@ export default class JsBindNet {
     const obj1 = JsObjectHandler.getObjectFromAccessPath(compareObjectOption.object1AccessPath);
     const obj2 = JsObjectHandler.getObjectFromAccessPath(compareObjectOption.object2AccessPath);
     return this._getReturnValue(obj1 === obj2, compareObjectOption);
+  }
+
+  /**
+   * Convert object type.
+   * @param {ConvertObjectTypeOption} convertObjectTypeOption
+   * @returns {InvokeResult}
+   */
+  ConvertObjectType(convertObjectTypeOption) {
+    const obj = JsObjectHandler.getObjectFromAccessPath(convertObjectTypeOption.accessPath);
+    return this._getReturnValue(obj, convertObjectTypeOption);
   }
 
   /**

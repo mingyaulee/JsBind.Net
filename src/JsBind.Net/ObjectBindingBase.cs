@@ -83,5 +83,19 @@ namespace JsBind.Net
         /// <returns>A <see cref="ValueTask" /> that represents the asynchronous invocation operation.</returns>
         protected ValueTask InvokeVoidAsync(string? functionName, params object?[] args)
             => JsRuntime.InvokeVoidAsync(InvokeFunctionOption.AsyncIdentifier, new InvokeFunctionOption(InternalGetAccessPath(), functionName, args));
+
+        /// <summary>
+        /// Converts the object to a different type synchronously.
+        /// </summary>
+        /// <returns>An instance of <typeparamref name="TValue" /> obtained by JSON-deserializing the return value.</returns>
+        protected TValue? ConvertToType<TValue>()
+            => JsRuntime.Invoke<TValue>(ConvertObjectTypeOption.Identifier, new ConvertObjectTypeOption(InternalGetAccessPath()));
+
+        /// <summary>
+        /// Converts the object to a different type asynchronously.
+        /// </summary>
+        /// <returns>An instance of <typeparamref name="TValue" /> obtained by JSON-deserializing the return value.</returns>
+        protected ValueTask<TValue?> ConvertToTypeAsync<TValue>()
+            => JsRuntime.InvokeAsync<TValue>(ConvertObjectTypeOption.Identifier, new ConvertObjectTypeOption(InternalGetAccessPath()));
     }
 }

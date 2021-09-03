@@ -150,5 +150,32 @@ namespace JsBind.Net.Tests.Tests
             actualValue.Should().NotBeNull();
             actualValue.InstanceEquals(document).Should().BeTrue();
         }
+
+        [Fact(Description = "Convert reference value type")]
+        public void ConvertReferenceValueType()
+        {
+            // Arrange
+            var customPropertyValue = Guid.NewGuid().ToString();
+            window.SetVariableValue("customProperty", customPropertyValue);
+
+            // Act
+            var windowWithCustomProperty = window.ToType<WindowWithCustomProperty>();
+
+            // Assert
+            windowWithCustomProperty.Should().NotBeNull();
+            windowWithCustomProperty.CustomProperty.Should().Be(customPropertyValue);
+        }
+
+        [Fact(Description = "Convert reference value type with nested reference value")]
+        public void ConvertReferenceValueTypeWithNestedReferenceValue()
+        {
+            // Act
+            var windowWithLocation = window.ToType<WindowWithLocation>();
+
+            // Assert
+            windowWithLocation.Should().NotBeNull();
+            windowWithLocation.Location.Should().NotBeNull();
+            windowWithLocation.Location.Href.Should().NotBeNull();
+        }
     }
 }
