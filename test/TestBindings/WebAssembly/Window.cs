@@ -33,5 +33,8 @@ namespace TestBindings.WebAssembly
 
         // Invoke function on this object
         public int ParseInt(string value) => Invoke<int>("parseInt", value);
+
+        public TValue GetVariableValue<TValue>(string variableName) => GetProperty<TValue>(variableName);
+        public void SetVariableValue(string variableName, object variableValue) => SetProperty(variableName, variableValue);
     }
 }

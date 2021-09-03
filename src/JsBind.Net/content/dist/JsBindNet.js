@@ -556,6 +556,7 @@
    * @typedef {import("./InvokeOptions/DisposeObjectOption.js").default} DisposeObjectOption
    * @typedef {import("./InvokeOptions/GetPropertyOption.js").default} GetPropertyOption
    * @typedef {import("./InvokeOptions/InvokeFunctionOption.js").default} InvokeFunctionOption
+   * @typedef {import("./InvokeOptions/SetPropertyOption.js").default} SetPropertyOption
    */
 
   function attachDotNetRevivers() {
@@ -614,6 +615,20 @@
         return AccessPaths.combine(getPropertyOption.accessPath, getPropertyOption.propertyName);
       };
       return this._getReturnValue(returnValue, getPropertyOption);
+    }
+
+    /**
+     * Set the property value of an object.
+     * @param {SetPropertyOption} setPropertyOption
+     * @returns {InvokeResult}
+     */
+    SetProperty(setPropertyOption) {
+      const targetObject = JsObjectHandler.getObjectFromAccessPath(setPropertyOption.accessPath);
+      if (targetObject === undefined || targetObject === null) {
+        return this._getErrorReturnValue("Target object is null or undefined.");
+      }
+      targetObject[setPropertyOption.propertyName] = setPropertyOption.propertyValue;
+      return null;
     }
 
     /**

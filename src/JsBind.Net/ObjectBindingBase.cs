@@ -40,6 +40,23 @@ namespace JsBind.Net
             => JsRuntime.InvokeAsync<TValue>(GetPropertyOption.Identifier, new GetPropertyOption(InternalGetAccessPath(), propertyName));
 
         /// <summary>
+        /// Sets the property value of the object synchronously.
+        /// </summary>
+        /// <param name="propertyName">The property name to set.</param>
+        /// <param name="propertyValue">The property value to set.</param>
+        protected void SetProperty(string? propertyName, object? propertyValue)
+            => JsRuntime.InvokeVoid(SetPropertyOption.Identifier, new SetPropertyOption(InternalGetAccessPath(), propertyName, propertyValue));
+
+        /// <summary>
+        /// Sets the property value of the object asynchronously.
+        /// </summary>
+        /// <param name="propertyName">The property name to set.</param>
+        /// <param name="propertyValue">The property value to set.</param>
+        /// <returns>A <see cref="ValueTask" /> that represents the asynchronous invocation operation.</returns>
+        protected ValueTask SetPropertyAsync(string? propertyName, object? propertyValue)
+            => JsRuntime.InvokeVoidAsync(SetPropertyOption.Identifier, new SetPropertyOption(InternalGetAccessPath(), propertyName, propertyValue));
+
+        /// <summary>
         /// Invokes the specified JavaScript function synchronously.
         /// </summary>
         /// <param name="functionName">The function name to invoke.</param>

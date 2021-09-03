@@ -34,5 +34,8 @@ namespace TestBindings.Server
 
         // Invoke function on this object (needs to be changed to async method)
         public ValueTask<int> ParseInt(string value) => InvokeAsync<int>("parseInt", value);
+
+        public ValueTask<TValue> GetVariableValue<TValue>(string variableName) => GetPropertyAsync<TValue>(variableName);
+        public ValueTask SetVariableValue(string variableName, object variableValue) => SetPropertyAsync(variableName, variableValue);
     }
 }

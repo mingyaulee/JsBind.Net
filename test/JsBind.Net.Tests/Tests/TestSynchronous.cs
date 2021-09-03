@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using FluentAssertions;
 using JsBind.Net.Tests.Infrastructure;
 using TestBindings.WebAssembly;
@@ -117,6 +118,37 @@ namespace JsBind.Net.Tests.Tests
 
             // Assert
             result.Should().Be("app");
+        }
+
+        [Fact(Description = "Set property value with primitive value")]
+        public void SetPropertyValueWithPrimitiveValue()
+        {
+            // Arrange
+            var variableName = "v_" + Guid.NewGuid().ToString().Substring(0, 8);
+            var variableValue = 3000;
+
+            // Act
+            window.SetVariableValue(variableName, variableValue);
+
+            // Assert
+            var actualValue = window.GetVariableValue<int>(variableName);
+            actualValue.Should().Be(variableValue);
+        }
+
+        [Fact(Description = "Set property value with reference value")]
+        public void SetPropertyValueWithReferenceValue()
+        {
+            // Arrange
+            var variableName = "v_" + Guid.NewGuid().ToString().Substring(0, 8);
+            var variableValue = document;
+
+            // Act
+            window.SetVariableValue(variableName, variableValue);
+
+            // Assert
+            var actualValue = window.GetVariableValue<Document>(variableName);
+            actualValue.Should().NotBeNull();
+            actualValue.InstanceEquals(document).Should().BeTrue();
         }
     }
 }
