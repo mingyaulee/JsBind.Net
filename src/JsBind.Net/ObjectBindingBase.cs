@@ -6,16 +6,9 @@ using JsBind.Net.InvokeOptions;
 namespace JsBind.Net
 {
     /// <summary>
-    /// Base JavaScript object binding interface.
-    /// </summary>
-    public interface IObjectBindingBase
-    {
-    }
-
-    /// <summary>
     /// Base JavaScript object binding.
     /// </summary>
-    public abstract class ObjectBindingBase : BindingBase, IObjectBindingBase
+    public abstract class ObjectBindingBase : BindingBase
     {
         /// <summary>
         /// Contains any additional data within this object instance.

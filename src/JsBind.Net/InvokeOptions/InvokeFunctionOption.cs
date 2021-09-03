@@ -72,7 +72,7 @@ namespace JsBind.Net.InvokeOptions
 
         /// <inheritdoc />
         [JsonPropertyName("returnValueIsReference")]
-        public override bool ReturnValueIsReference => typeof(IObjectBindingBase).IsAssignableFrom(typeof(TValue)) || typeof(TValue).IsIterableType() || typeof(Delegate).IsAssignableFrom(typeof(TValue));
+        public override bool ReturnValueIsReference => typeof(ObjectBindingBase).IsAssignableFrom(typeof(TValue)) || typeof(TValue).IsIterableType() || typeof(Delegate).IsAssignableFrom(typeof(TValue));
 
         /// <inheritdoc />
         [JsonPropertyName("returnValueReferenceId")]

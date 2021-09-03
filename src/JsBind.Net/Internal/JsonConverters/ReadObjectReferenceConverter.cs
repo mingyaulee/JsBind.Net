@@ -22,7 +22,7 @@ namespace JsBind.Net.Internal.JsonConverters
 
         public override bool CanConvert(Type typeToConvert)
         {
-            return typeof(IObjectBindingBase).IsAssignableFrom(typeToConvert);
+            return typeof(ObjectBindingBase).IsAssignableFrom(typeToConvert);
         }
 
         public override T? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
