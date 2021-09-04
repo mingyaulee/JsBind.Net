@@ -48,6 +48,14 @@ namespace JsBind.Net
             {
                 invokeResult = ((IJSInProcessRuntime)jsRuntime).Invoke<InvokeResult?>(identifier, invokeOption);
             }
+            else if (invokeOption is DisposeObjectOption)
+            {
+                // If we are disposing without using in process JS runtime, invoke asynchronously but do not wait for it.
+#pragma warning disable CA2012 // Use ValueTasks correctly
+                jsRuntime.InvokeAsync<InvokeResult?>(identifier, invokeOption);
+#pragma warning restore CA2012 // Use ValueTasks correctly
+                return;
+            }
             else
             {
                 invokeResult = jsRuntime.InvokeAsync<InvokeResult?>(identifier, invokeOption).AsTask().ConfigureAwait(false).GetAwaiter().GetResult();

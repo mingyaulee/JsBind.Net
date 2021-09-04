@@ -9,7 +9,7 @@ namespace JsBind.Net
     /// <summary>
     /// Base JavaScript binding class.
     /// </summary>
-    public abstract class BindingBase : IAsyncDisposable
+    public abstract class BindingBase : IDisposable, IAsyncDisposable
     {
         private bool isInitialized;
         private IJsRuntimeAdapter? jsRuntime;
@@ -66,23 +66,83 @@ namespace JsBind.Net
             this.jsRuntime = jsRuntime;
         }
 
+        #region Dispose methods
+
         /// <summary>
-        /// Disposes this instance of object.
+        /// Disposes this instance of object in JavaScript synchronously, if any.
         /// </summary>
-        /// <returns>A <see cref="ValueTask" /> that represents the asynchronous invocation operation.</returns>
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// Disposes this instance of object in JavaScript asynchronously, if any.
+        /// </summary>
+        /// <returns>A <see cref="ValueTask" /> that represents the asynchronous dispose operation.</returns>
         public async ValueTask DisposeAsync()
         {
-            if (!string.IsNullOrEmpty(accessPath) && jsRuntime != null)
-            {
-                if (AccessPaths.IsReferenceId(accessPath))
-                {
-                    var referenceId = AccessPaths.GetReferenceId(accessPath) ?? throw new InvalidOperationException($"Reference ID in access path '{accessPath}' is invalid.");
-                    await jsRuntime.InvokeVoidAsync(DisposeObjectOption.Identifier, new DisposeObjectOption(referenceId.ToString())).ConfigureAwait(false);
-                }
-                jsRuntime = null;
-                accessPath = null;
-            }
+            await DisposeAsyncCore();
+
+            Dispose(disposing: false);
+#pragma warning disable CA1816 // Dispose methods should call SuppressFinalize
+            GC.SuppressFinalize(this);
+#pragma warning restore CA1816 // Dispose methods should call SuppressFinalize
         }
+
+        /// <summary>
+        /// Finalizer to dispose JavaScript reference, if any.
+        /// </summary>
+        ~BindingBase()
+        {
+            Dispose(disposing: false);
+        }
+
+        /// <summary>
+        /// Disposes this instance of object in JavaScript, if any.
+        /// </summary>
+        /// <param name="disposing">Disposing from <see cref="IDisposable.Dispose" />.</param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!string.IsNullOrEmpty(accessPath) && jsRuntime != null && AccessPaths.IsReferenceId(accessPath))
+            {
+                var referenceId = AccessPaths.GetReferenceId(accessPath) ?? throw new InvalidOperationException($"Reference ID in access path '{accessPath}' is invalid.");
+                if (disposing)
+                {
+                    jsRuntime.InvokeVoid(DisposeObjectOption.Identifier, new DisposeObjectOption(referenceId.ToString()));
+                }
+                else
+                {
+#pragma warning disable CA2012 // Use ValueTasks correctly
+                    jsRuntime.InvokeVoidAsync(DisposeObjectOption.Identifier, new DisposeObjectOption(referenceId.ToString()));
+#pragma warning restore CA2012 // Use ValueTasks correctly
+                }
+            }
+
+            jsRuntime = null;
+            accessPath = null;
+        }
+
+        /// <summary>
+        /// Disposes this instance of object in JavaScript asynchronously, if any.
+        /// </summary>
+        /// <returns>A <see cref="ValueTask" /> that represents the asynchronous dispose operation.</returns>
+        protected virtual async ValueTask DisposeAsyncCore()
+        {
+            if (!string.IsNullOrEmpty(accessPath) && jsRuntime != null && AccessPaths.IsReferenceId(accessPath))
+            {
+                var referenceId = AccessPaths.GetReferenceId(accessPath) ?? throw new InvalidOperationException($"Reference ID in access path '{accessPath}' is invalid.");
+                await jsRuntime.InvokeVoidAsync(DisposeObjectOption.Identifier, new DisposeObjectOption(referenceId.ToString())).ConfigureAwait(false);
+            }
+
+            jsRuntime = null;
+            accessPath = null;
+        }
+
+        #endregion Dispose methods
+
+        #region Equality check methods
 
         /// <inheritdoc />
         public override bool Equals(object? obj)
@@ -135,5 +195,7 @@ namespace JsBind.Net
         {
             return obj?.InternalGetAccessPath()?.GetHashCode() ?? "globalThis".GetHashCode();
         }
+
+        #endregion Equality check methods
     }
 }
