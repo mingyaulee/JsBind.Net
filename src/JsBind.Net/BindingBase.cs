@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using JsBind.Net.InvokeOptions;
@@ -21,6 +22,7 @@ namespace JsBind.Net
         [JsonPropertyName("__jsBindAccessPath")]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [Obsolete("Do not use this property. It is public for deserialization only.")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public string? __JsBindAccessPath { get => null; private set => accessPath = value; }
 
         /// <summary>
