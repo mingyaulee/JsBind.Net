@@ -22,6 +22,11 @@ namespace JsBind.Net.BindingConfigurations
                 return null;
             }
 
+            if (type.IsIterableType())
+            {
+                return GetArrayBindingConfiguration(type.GetIterableItemType());
+            }
+
             if (!bindingConfigurations.ContainsKey(type))
             {
                 TryAddFromAttribute(type);
@@ -85,6 +90,19 @@ namespace JsBind.Net.BindingConfigurations
                     propertyInfo => propertyInfo,
                     StringComparer.OrdinalIgnoreCase
                 );
+        }
+
+        private BindingConfiguration? GetArrayBindingConfiguration(Type? type)
+        {
+            if (type is null)
+            {
+                return null;
+            }
+
+            return new BindingConfiguration()
+            {
+                ArrayItemBinding = Get(type)
+            };
         }
 
         private void TryAddFromAttribute(Type type)

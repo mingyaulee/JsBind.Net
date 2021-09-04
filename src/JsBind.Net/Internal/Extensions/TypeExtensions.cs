@@ -82,26 +82,8 @@ namespace JsBind.Net.Internal.Extensions
         /// <returns>The mapped object binding configuration for the type.</returns>
         public static ObjectBindingConfiguration? GetBindingConfiguration(this Type type, IBindingConfigurationProvider bindingConfigurationProvider)
         {
-            if (type.IsIterableType())
-            {
-                return GetArrayReturnValueConfiguration(type.GetIterableItemType(), bindingConfigurationProvider);
-            }
-
             var bindingConfiguration = bindingConfigurationProvider.Get(type);
             return MapFromBindingConfiguration(bindingConfiguration);
-        }
-
-        private static ObjectBindingConfiguration? GetArrayReturnValueConfiguration(Type? type, IBindingConfigurationProvider bindingConfigurationProvider)
-        {
-            if (type is null)
-            {
-                return null;
-            }
-
-            return new ObjectBindingConfiguration()
-            {
-                ArrayItemBinding = GetBindingConfiguration(type, bindingConfigurationProvider)
-            };
         }
 
         private static ObjectBindingConfiguration? MapFromBindingConfiguration(BindingConfiguration? bindingConfiguration)
@@ -116,7 +98,8 @@ namespace JsBind.Net.Internal.Extensions
                 Include = bindingConfiguration.IncludeProperties,
                 Exclude = bindingConfiguration.ExcludeProperties,
                 SetAccessPath = bindingConfiguration.SetAccessPath,
-                PropertyBindings = bindingConfiguration.PropertyBindings?.ToDictionary(keyValuePair => keyValuePair.Key, keyValuePair => MapFromBindingConfiguration(keyValuePair.Value))
+                PropertyBindings = bindingConfiguration.PropertyBindings?.ToDictionary(keyValuePair => keyValuePair.Key, keyValuePair => MapFromBindingConfiguration(keyValuePair.Value)),
+                ArrayItemBinding = MapFromBindingConfiguration(bindingConfiguration.ArrayItemBinding)
             };
         }
     }

@@ -31,5 +31,10 @@ namespace JsBind.Net.BindingConfigurations
         /// Indicates whether the access path for this object should be set when binding.
         /// </summary>
         public bool SetAccessPath { get; set; }
+
+        /// <summary>
+        /// The binding for each of the item in the array-like value that is bound.
+        /// </summary>
+        public BindingConfiguration? ArrayItemBinding { get; set; }
     }
 }
