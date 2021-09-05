@@ -15,10 +15,11 @@ namespace JsBind.Net.Internal.DelegateReferences
     /// <summary>
     /// Contains the delegate object and the delegate reference and is passed to JavaScript as <see cref="DotNetObjectReference" /> to be invoked from JavaScript.
     /// </summary>
-    internal class CapturedDelegateReference : IAsyncDisposable
+    internal class CapturedDelegateReference : IDisposable, IAsyncDisposable
     {
         private readonly IJsRuntimeAdapter jsRuntime;
         private readonly MethodInfo invokeMethod;
+        private bool disposed;
 
         public CapturedDelegateReference(DelegateReference delegateReference, Delegate delegateObject, IJsRuntimeAdapter jsRuntime)
         {
@@ -71,11 +72,85 @@ namespace JsBind.Net.Internal.DelegateReferences
             }
         }
 
+        #region Dispose methods
+
+        /// <summary>
+        /// Disposes this instance of object in JavaScript synchronously, if any.
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// Disposes this instance of object in JavaScript asynchronously, if any.
+        /// </summary>
+        /// <returns>A <see cref="ValueTask" /> that represents the asynchronous dispose operation.</returns>
         public async ValueTask DisposeAsync()
         {
-            DelegateReference.DelegateInvoker?.Dispose();
+            await DisposeAsyncCore();
+
+            Dispose(disposing: false);
+#pragma warning disable CA1816 // Dispose methods should call SuppressFinalize
+            GC.SuppressFinalize(this);
+#pragma warning restore CA1816 // Dispose methods should call SuppressFinalize
+        }
+
+        /// <summary>
+        /// Finalizer to dispose JavaScript reference, if any.
+        /// </summary>
+        ~CapturedDelegateReference()
+        {
+            Dispose(disposing: false);
+        }
+
+        /// <summary>
+        /// Disposes this instance of object in JavaScript, if any.
+        /// </summary>
+        /// <param name="disposing">Disposing from <see cref="IDisposable.Dispose" />.</param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (DelegateReference.DelegateInvoker is not null)
+            {
+                DelegateReference.DelegateInvoker.Dispose();
+                DelegateReference.DelegateInvoker = null;
+            }
+
+            if (disposed)
+            {
+                return;
+            }
+            disposed = true;
+
+            if (disposing)
+            {
+                jsRuntime.InvokeVoid(DisposeDelegateOption.Identifier, new DisposeDelegateOption(DelegateReference.DelegateId));
+            }
+            else
+            {
+#pragma warning disable CA2012 // Use ValueTasks correctly
+                jsRuntime.InvokeVoidAsync(DisposeDelegateOption.Identifier, new DisposeDelegateOption(DelegateReference.DelegateId)).ConfigureAwait(false);
+#pragma warning restore CA2012 // Use ValueTasks correctly
+            }
+        }
+
+        /// <summary>
+        /// Disposes this instance of object in JavaScript asynchronously, if any.
+        /// </summary>
+        /// <returns>A <see cref="ValueTask" /> that represents the asynchronous dispose operation.</returns>
+        protected virtual async ValueTask DisposeAsyncCore()
+        {
+            if (disposed)
+            {
+                return;
+            }
+
+            disposed = true;
             await jsRuntime.InvokeVoidAsync(DisposeDelegateOption.Identifier, new DisposeDelegateOption(DelegateReference.DelegateId)).ConfigureAwait(false);
         }
+
+        #endregion Dispose methods
 
         /// <summary>
         /// Invokes a delegate instance with the arguments.
@@ -84,6 +159,11 @@ namespace JsBind.Net.Internal.DelegateReferences
         /// <returns>The result of the delegate invocation.</returns>
         private object? InvokeDelegateInternal(object?[] args)
         {
+            if (disposed)
+            {
+                throw new InvalidOperationException("Delegate reference has been disposed.");
+            }
+
             return invokeMethod.Invoke(DelegateObject, args);
         }
 
