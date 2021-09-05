@@ -386,15 +386,15 @@
         return invokeArgs;
       }
 
-      let accessPath = null;
-      if (this.delegateReference.storeArgumentsAsReference){
-        const referenceId = this.delegateReference.argumentsReferenceId;
-        accessPath = AccessPaths.fromReferenceId(referenceId);
-        JsObjectHandler.addObjectReference(referenceId, invokeArgs);
-      }
-
       return invokeArgs.map((invokeArg, index) => {
-        const invokeArgAccessPath = accessPath ? AccessPaths.combine(accessPath, index.toString()) : null;
+        let invokeArgAccessPath = null;
+
+        if (this.delegateReference.storeArgumentsAsReferences[index]) {
+          const referenceId = this.delegateReference.argumentsReferenceIds[index];
+          invokeArgAccessPath = AccessPaths.fromReferenceId(referenceId);
+          JsObjectHandler.addObjectReference(referenceId, invokeArg);
+        }
+
         return ObjectBindingHandler.getValueFromBinding(invokeArg, bindings[index], invokeArgAccessPath);
       });
     }

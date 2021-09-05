@@ -13,7 +13,7 @@ namespace JsBind.Net.Internal.References
     /// </summary>
     internal class DelegateReference : ReferenceBase
     {
-        private string? argumentsReferenceId;
+        private IEnumerable<string?>? argumentsReferenceIds;
 
         public override ReferenceType ReferenceType => ReferenceType.Delegate;
 
@@ -23,19 +23,19 @@ namespace JsBind.Net.Internal.References
         [JsonPropertyName("argumentBindings")]
         public IEnumerable<ObjectBindingConfiguration?>? ArgumentBindings { get; }
 
-        [JsonPropertyName("storeArgumentsAsReference")]
-        public bool StoreArgumentsAsReference => ArgumentBindings is not null && ArgumentBindings.Any(binding => binding is not null);
+        [JsonPropertyName("storeArgumentsAsReferences")]
+        public IEnumerable<bool>? StoreArgumentsAsReferences => ArgumentBindings is not null ? ArgumentBindings.Select(binding => binding is not null) : null;
 
-        [JsonPropertyName("argumentsReferenceId")]
-        public string? ArgumentsReferenceId
+        [JsonPropertyName("argumentsReferenceIds")]
+        public IEnumerable<string?>? ArgumentsReferenceIds
         {
             get
             {
-                if (StoreArgumentsAsReference && argumentsReferenceId is null)
+                if (StoreArgumentsAsReferences is not null && argumentsReferenceIds is null)
                 {
-                    argumentsReferenceId = Guid.NewGuid().ToString();
+                    argumentsReferenceIds = StoreArgumentsAsReferences.Select(storeArgumentAsReference => storeArgumentAsReference ? Guid.NewGuid().ToString() : null).ToList();
                 }
-                return argumentsReferenceId;
+                return argumentsReferenceIds;
             }
         }
 

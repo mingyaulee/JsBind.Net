@@ -36,10 +36,10 @@ export default class DelegateReference extends ReferenceBase {
   delegateId;
   /** @type {ObjectBindingConfiguration[]} */
   argumentBindings;
-  /** @type {boolean} */
-  storeArgumentsAsReference;
-  /** @type {string} */
-  argumentsReferenceId;
+  /** @type {boolean[]} */
+  storeArgumentsAsReferences;
+  /** @type {string[]} */
+  argumentsReferenceIds;
   /** @type {boolean} */
   isAsync;
   /** @type {DotNetObjectReference} */
