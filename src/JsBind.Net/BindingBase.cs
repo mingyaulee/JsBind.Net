@@ -46,6 +46,7 @@ namespace JsBind.Net
         }
 
         internal string? InternalGetAccessPath() => accessPath;
+        internal IJsRuntimeAdapter? InternalGetJsRuntime() => jsRuntime;
 
         /// <summary>
         /// Sets the access path of the binding instance.

@@ -35,7 +35,7 @@ namespace JsBind.Net.Internal.JsonConverters
                 return;
             }
 
-            var delegateReference = DelegateReferenceManager.GetDelegateReference(value, jsRuntime);
+            var delegateReference = DelegateReferenceManager.GetOrCreateDelegateReference(value, jsRuntime);
             JsonSerializer.Serialize(writer, delegateReference, options);
         }
     }

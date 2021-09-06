@@ -17,34 +17,48 @@ namespace JsBind.Net.Internal.DelegateReferences
         private static readonly Dictionary<Guid, CapturedDelegateReference> delegateReferences = new();
 
         /// <summary>
-        /// Gets an instance of <see cref="DelegateReference" /> representing the delegate.
+        /// Gets or creates an instance of <see cref="DelegateReference" /> representing the delegate.
         /// </summary>
         /// <param name="delegateObject">The delegate.</param>
         /// <param name="jsRuntime">The JS runtime adapter.</param>
         /// <returns>An instance of <see cref="DelegateReference" /> representing the delegate.</returns>
-        public static DelegateReference GetDelegateReference(Delegate delegateObject, IJsRuntimeAdapter jsRuntime)
+        public static DelegateReference GetOrCreateDelegateReference(Delegate delegateObject, IJsRuntimeAdapter jsRuntime)
         {
-            var existingCapturedDelegateReference = delegateReferences.Values.FirstOrDefault(delegateReference => delegateReference.DelegateObject.Equals(delegateObject));
+            var existingCapturedDelegateReference = GetCapturedDelegateReference(delegateObject);
             if (existingCapturedDelegateReference is not null)
             {
                 return existingCapturedDelegateReference.DelegateReference;
             }
-            else
-            {
-                var delegateReferenceId = Guid.NewGuid();
-                ProcessDelegateArgumentTypesAndReturnType(delegateObject.GetType(), out var argumentBindings, out var isAsync);
-                var delegateReference = new DelegateReference(delegateReferenceId.ToString(), argumentBindings, isAsync);
-                var capturedDelegateReference = new CapturedDelegateReference(delegateReference, delegateObject, jsRuntime);
-                delegateReference.DelegateInvoker = DotNetObjectReference.Create(capturedDelegateReference);
-                delegateReferences.Add(delegateReferenceId, capturedDelegateReference);
-                return delegateReference;
-            }
+
+            var delegateReferenceId = Guid.NewGuid();
+            ProcessDelegateArgumentTypesAndReturnType(delegateObject.GetType(), out var argumentBindings, out var isAsync);
+            var delegateReference = new DelegateReference(delegateReferenceId.ToString(), argumentBindings, isAsync);
+            var capturedDelegateReference = new CapturedDelegateReference(delegateReference, delegateObject, jsRuntime);
+            delegateReference.DelegateInvoker = DotNetObjectReference.Create(capturedDelegateReference);
+            delegateReferences.Add(delegateReferenceId, capturedDelegateReference);
+            return delegateReference;
         }
 
         /// <summary>
         /// Gets an instance of <see cref="CapturedDelegateReference" /> representing the captured delegate.
         /// </summary>
-        /// <param name="delegateId">The delegate.</param>
+        /// <param name="delegateObject">The delegate.</param>
+        /// <returns>An instance of <see cref="CapturedDelegateReference" /> representing the captured delegate.</returns>
+        public static CapturedDelegateReference? GetCapturedDelegateReference(Delegate delegateObject)
+        {
+            var existingCapturedDelegateReference = delegateReferences.Values.FirstOrDefault(delegateReference => delegateReference.DelegateObject.Equals(delegateObject));
+            if (existingCapturedDelegateReference is not null)
+            {
+                return existingCapturedDelegateReference;
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Gets an instance of <see cref="CapturedDelegateReference" /> representing the captured delegate.
+        /// </summary>
+        /// <param name="delegateId">The delegate identifier.</param>
         /// <returns>An instance of <see cref="CapturedDelegateReference" /> representing the captured delegate.</returns>
         public static CapturedDelegateReference GetCapturedDelegateReference(Guid delegateId)
         {
@@ -54,6 +68,15 @@ namespace JsBind.Net.Internal.DelegateReferences
             }
 
             throw new InvalidOperationException($"Delegate with ID '{delegateId}' does not exist.");
+        }
+
+        /// <summary>
+        /// Removes the captured delegate.
+        /// </summary>
+        /// <param name="delegateId">The delegate identifier.</param>
+        public static void RemoveCapturedDelegateReference(Guid delegateId)
+        {
+            delegateReferences.Remove(delegateId);
         }
 
         private static void ProcessDelegateArgumentTypesAndReturnType(Type delegateType, out IEnumerable<ObjectBindingConfiguration?>? argumentBindings, out bool isAsync)
