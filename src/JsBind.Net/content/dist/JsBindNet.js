@@ -53,6 +53,37 @@
 
   const AccessPaths = new AccessPathsClass();
 
+  class JsBindError extends Error {
+    /**
+     * Creates a new instance of JsBindError.
+     * @param {string} message
+     * @param {string} [stackTrace]
+     */
+    constructor(message, stackTrace) {
+      super(message);
+
+      // Check if the stack trace is in the message
+      let currentStackTrace = "";
+      if (this.stack) {
+        currentStackTrace = this.stack;
+      } else {
+        let stackTraceIndex = this.message.indexOf(message) + message.length;
+        if (this.message.length > stackTraceIndex) {
+          currentStackTrace = this.message.substring(stackTraceIndex);
+          this.message = this.message.substring(0, stackTraceIndex);
+        }
+      }
+
+      stackTrace = stackTrace || "";
+      currentStackTrace = currentStackTrace ? "JavaScript stack trace: \n" + currentStackTrace : "";
+      if (stackTrace && currentStackTrace) {
+        this.stack = stackTrace + "\n\n" + currentStackTrace;
+      } else {
+        this.stack = stackTrace || currentStackTrace;
+      }
+    }
+  }
+
   class JsObjectHandlerClass {
     constructor() {
       this._objectReferences = {};
@@ -356,7 +387,7 @@
     _invokeDelegateInternal(delegateInvoker, invokeArgs) {
       const invokeResult = delegateInvoker.invokeMethod("InvokeDelegateFromJs", invokeArgs);
       if (invokeResult && invokeResult.isError && invokeResult.errorMessage) {
-        throw new Error(invokeResult.errorMessage);
+        throw new JsBindError(invokeResult.errorMessage, invokeResult.stackTrace);
       }
 
       return invokeResult?.value;
@@ -373,7 +404,7 @@
       let invokeResult = unwrapAsyncResult(invokeAsyncResult);
 
       if (invokeResult && invokeResult.isError && invokeResult.errorMessage) {
-        throw new Error(invokeResult.errorMessage);
+        throw new JsBindError(invokeResult.errorMessage, invokeResult.stackTrace);
       }
 
       return invokeResult?.value;
@@ -459,11 +490,13 @@
      * @param {any} value
      * @param {boolean} [isError]
      * @param {string} [errorMessage]
+     * @param {string} [stackTrace]
      */
-    constructor(value, isError, errorMessage) {
+    constructor(value, isError, errorMessage, stackTrace) {
       this.value = value;
       this.isError = isError;
       this.errorMessage = errorMessage;
+      this.stackTrace = stackTrace;
     }
   }
 
@@ -622,7 +655,7 @@
     GetProperty(getPropertyOption) {
       const targetObject = JsObjectHandler.getObjectFromAccessPath(getPropertyOption.accessPath);
       if (targetObject === undefined || targetObject === null) {
-        return this._getErrorReturnValue("Target object is null or undefined.");
+        return this._getErrorReturnValue(`Target object '${getPropertyOption.accessPath}' is null or undefined.`);
       }
       const returnValue = targetObject[getPropertyOption.propertyName];
       getPropertyOption.getReturnValueAccessPath = function () {
@@ -639,7 +672,7 @@
     SetProperty(setPropertyOption) {
       const targetObject = JsObjectHandler.getObjectFromAccessPath(setPropertyOption.accessPath);
       if (targetObject === undefined || targetObject === null) {
-        return this._getErrorReturnValue("Target object is null or undefined.");
+        return this._getErrorReturnValue(`Target object '${setPropertyOption.accessPath}' is null or undefined.`);
       }
       targetObject[setPropertyOption.propertyName] = setPropertyOption.propertyValue;
       return null;
@@ -661,7 +694,7 @@
         return this._getReturnValue(returnValue, invokeFunctionOption);
       } catch (error) {
         console.error(error);
-        return this._getErrorReturnValue(error.message);
+        return this._getErrorReturnValue(error.message, error.stack);
       }
     }
 
@@ -684,7 +717,7 @@
         return this._getReturnValue(returnValue, invokeFunctionOption);
       } catch (error) {
         console.error(error);
-        return this._getErrorReturnValue(error.message);
+        return this._getErrorReturnValue(error.message, error.stack);
       }
     }
 
@@ -726,10 +759,11 @@
     /**
      * Get the error wrapped in InvokeResult.
      * @param {string} errorMessage
+     * @param {string} [stackTrace]
      * @returns {InvokeResult}
      */
-    _getErrorReturnValue(errorMessage) {
-      return new InvokeResult(null, true, errorMessage);
+    _getErrorReturnValue(errorMessage, stackTrace) {
+      return new InvokeResult(null, true, errorMessage, stackTrace);
     }
 
     /**

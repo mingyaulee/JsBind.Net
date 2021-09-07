@@ -1,4 +1,5 @@
 ﻿import AccessPaths from "./AccessPaths.js";
+import JsBindError from "./JsBindError.js";
 import JsObjectHandler from "./JsObjectHandler.js";
 import ObjectBindingHandler from "./ObjectBindingHandler.js";
 
@@ -74,7 +75,7 @@ export default class DotNetDelegateProxy {
   _invokeDelegateInternal(delegateInvoker, invokeArgs) {
     const invokeResult = delegateInvoker.invokeMethod("InvokeDelegateFromJs", invokeArgs);
     if (invokeResult && invokeResult.isError && invokeResult.errorMessage) {
-      throw new Error(invokeResult.errorMessage);
+      throw new JsBindError(invokeResult.errorMessage, invokeResult.stackTrace);
     }
 
     return invokeResult?.value;
@@ -91,7 +92,7 @@ export default class DotNetDelegateProxy {
     let invokeResult = unwrapAsyncResult(invokeAsyncResult);
 
     if (invokeResult && invokeResult.isError && invokeResult.errorMessage) {
-      throw new Error(invokeResult.errorMessage);
+      throw new JsBindError(invokeResult.errorMessage, invokeResult.stackTrace);
     }
 
     return invokeResult?.value;

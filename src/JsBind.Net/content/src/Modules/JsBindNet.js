@@ -76,7 +76,7 @@ export default class JsBindNet {
   GetProperty(getPropertyOption) {
     const targetObject = JsObjectHandler.getObjectFromAccessPath(getPropertyOption.accessPath);
     if (targetObject === undefined || targetObject === null) {
-      return this._getErrorReturnValue("Target object is null or undefined.");
+      return this._getErrorReturnValue(`Target object '${getPropertyOption.accessPath}' is null or undefined.`);
     }
     const returnValue = targetObject[getPropertyOption.propertyName];
     getPropertyOption.getReturnValueAccessPath = function () {
@@ -93,7 +93,7 @@ export default class JsBindNet {
   SetProperty(setPropertyOption) {
     const targetObject = JsObjectHandler.getObjectFromAccessPath(setPropertyOption.accessPath);
     if (targetObject === undefined || targetObject === null) {
-      return this._getErrorReturnValue("Target object is null or undefined.");
+      return this._getErrorReturnValue(`Target object '${setPropertyOption.accessPath}' is null or undefined.`);
     }
     targetObject[setPropertyOption.propertyName] = setPropertyOption.propertyValue;
     return null;
@@ -115,7 +115,7 @@ export default class JsBindNet {
       return this._getReturnValue(returnValue, invokeFunctionOption);
     } catch (error) {
       console.error(error);
-      return this._getErrorReturnValue(error.message);
+      return this._getErrorReturnValue(error.message, error.stack);
     }
   }
 
@@ -138,7 +138,7 @@ export default class JsBindNet {
       return this._getReturnValue(returnValue, invokeFunctionOption);
     } catch (error) {
       console.error(error);
-      return this._getErrorReturnValue(error.message);
+      return this._getErrorReturnValue(error.message, error.stack);
     }
   }
 
@@ -180,10 +180,11 @@ export default class JsBindNet {
   /**
    * Get the error wrapped in InvokeResult.
    * @param {string} errorMessage
+   * @param {string} [stackTrace]
    * @returns {InvokeResult}
    */
-  _getErrorReturnValue(errorMessage) {
-    return new InvokeResult(null, true, errorMessage);
+  _getErrorReturnValue(errorMessage, stackTrace) {
+    return new InvokeResult(null, true, errorMessage, stackTrace);
   }
 
   /**

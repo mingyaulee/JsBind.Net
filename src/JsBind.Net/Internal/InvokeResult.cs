@@ -13,6 +13,9 @@ namespace JsBind.Net.Internal
 
         [JsonPropertyName("errorMessage")]
         public string? ErrorMessage { get; set; }
+
+        [JsonPropertyName("stackTrace")]
+        public string? StackTrace { get; set; }
     }
 
     /// <summary>

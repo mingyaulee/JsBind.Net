@@ -63,7 +63,7 @@ namespace JsBind.Net
 
             if (invokeResult is not null && invokeResult.IsError && invokeResult.ErrorMessage is not null)
             {
-                throw new JSException(invokeResult.ErrorMessage);
+                throw new JsBindException(invokeResult.ErrorMessage, invokeResult.StackTrace);
             }
         }
 
@@ -74,7 +74,7 @@ namespace JsBind.Net
             var invokeResult = await jsRuntime.InvokeAsync<InvokeResult?>(identifier, invokeOption).ConfigureAwait(false);
             if (invokeResult is not null && invokeResult.IsError && invokeResult.ErrorMessage is not null)
             {
-                throw new JSException(invokeResult.ErrorMessage);
+                throw new JsBindException(invokeResult.ErrorMessage, invokeResult.StackTrace);
             }
         }
 
@@ -94,7 +94,7 @@ namespace JsBind.Net
 
             if (invokeResult is not null && invokeResult.IsError && invokeResult.ErrorMessage is not null)
             {
-                throw new JSException(invokeResult.ErrorMessage);
+                throw new JsBindException(invokeResult.ErrorMessage, invokeResult.StackTrace);
             }
 
             return GetInvokeResultObject(invokeResult, type);
@@ -107,7 +107,7 @@ namespace JsBind.Net
             var invokeResult = await jsRuntime.InvokeAsync<InvokeResult<TValue>?>(identifier, invokeOption).ConfigureAwait(false);
             if (invokeResult is not null && invokeResult.IsError && invokeResult.ErrorMessage is not null)
             {
-                throw new JSException(invokeResult.ErrorMessage);
+                throw new JsBindException(invokeResult.ErrorMessage, invokeResult.StackTrace);
             }
 
             return GetInvokeResultObject(invokeResult, type);

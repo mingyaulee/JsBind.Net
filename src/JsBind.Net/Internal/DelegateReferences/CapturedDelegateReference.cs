@@ -247,7 +247,8 @@ namespace JsBind.Net.Internal.DelegateReferences
                 Result = new InvokeResultWithValue<object>()
                 {
                     IsError = true,
-                    ErrorMessage = exception.Message
+                    ErrorMessage = exception.Message,
+                    StackTrace = $"DotNet stack trace: {Environment.NewLine}{exception.StackTrace}"
                 }
             };
         }
