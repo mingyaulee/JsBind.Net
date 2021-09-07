@@ -97,17 +97,10 @@ namespace JsBind.Net
         /// <param name="jsRuntime">The JS runtime instance to identify session.</param>
         public static void DisposeDelegateReference(Delegate delegateObject, IJsRuntimeAdapter jsRuntime)
         {
-            var capturedDelegateReference = DelegateReferenceManager.GetCapturedDelegateReference(delegateObject, jsRuntime);
-            if (capturedDelegateReference is null)
+            if (TryDisposeDelegateReferenceInDotNet(delegateObject, jsRuntime, out var capturedDelegateReference))
             {
-                return;
+                capturedDelegateReference!.Dispose();
             }
-
-            if (Guid.TryParse(capturedDelegateReference.DelegateReference.DelegateId, out var delegateId))
-            {
-                DelegateReferenceManager.RemoveCapturedDelegateReference(delegateId);
-            }
-            capturedDelegateReference.Dispose();
         }
 
         /// <summary>
@@ -118,17 +111,41 @@ namespace JsBind.Net
         /// <returns>A <see cref="ValueTask" /> that represents the asynchronous dispose operation.</returns>
         public static async ValueTask DisposeDelegateReferenceAsync(Delegate delegateObject, IJsRuntimeAdapter jsRuntime)
         {
-            var capturedDelegateReference = DelegateReferenceManager.GetCapturedDelegateReference(delegateObject, jsRuntime);
-            if (capturedDelegateReference is null)
+            if (TryDisposeDelegateReferenceInDotNet(delegateObject, jsRuntime, out var capturedDelegateReference))
             {
-                return;
+                await capturedDelegateReference!.DisposeAsync().ConfigureAwait(false);
             }
+        }
 
-            if (Guid.TryParse(capturedDelegateReference.DelegateReference.DelegateId, out var delegateId))
+        /// <summary>
+        /// Disposes all references in the session.
+        /// </summary>
+        /// <param name="jsRuntime">The JS runtime instance to identify session.</param>
+        /// <param name="disposeJsReferences">If <c>true</c>, disposes all references in JavaScript.</param>
+        public static void DisposeSession(IJsRuntimeAdapter jsRuntime, bool disposeJsReferences = false)
+        {
+            DisposeSessionDelegateReferencesInDotNet(jsRuntime);
+
+            if (disposeJsReferences)
             {
-                DelegateReferenceManager.RemoveCapturedDelegateReference(delegateId);
+                jsRuntime.InvokeVoid(DisposeSessionOption.Identifier, new DisposeSessionOption());
             }
-            await capturedDelegateReference.DisposeAsync().ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Disposes all references in the session.
+        /// </summary>
+        /// <param name="jsRuntime">The JS runtime instance to identify session.</param>
+        /// <param name="disposeJsReferences">If <c>true</c>, disposes all references in JavaScript.</param>
+        /// <returns>A <see cref="ValueTask" /> that represents the asynchronous dispose operation.</returns>
+        public static async ValueTask DisposeSessionAsync(IJsRuntimeAdapter jsRuntime, bool disposeJsReferences = false)
+        {
+            DisposeSessionDelegateReferencesInDotNet(jsRuntime);
+
+            if (disposeJsReferences)
+            {
+                await jsRuntime.InvokeVoidAsync(DisposeSessionOption.Identifier, new DisposeSessionOption()).ConfigureAwait(false);
+            }
         }
 
         private static bool IsArrayItemRootObjectReference(BindingBase? arrayItem)
@@ -153,6 +170,34 @@ namespace JsBind.Net
 
             referenceId = AccessPaths.GetReferenceId(rootAccessPath).ToString();
             return true;
+        }
+
+        private static bool TryDisposeDelegateReferenceInDotNet(Delegate delegateObject, IJsRuntimeAdapter jsRuntime, out CapturedDelegateReference? capturedDelegateReference)
+        {
+            capturedDelegateReference = DelegateReferenceManager.GetCapturedDelegateReference(delegateObject, jsRuntime);
+            if (capturedDelegateReference is null)
+            {
+                return false;
+            }
+
+            if (Guid.TryParse(capturedDelegateReference.DelegateReference.DelegateId, out var delegateId))
+            {
+                DelegateReferenceManager.RemoveCapturedDelegateReference(delegateId);
+            }
+
+            return true;
+        }
+
+        private static void DisposeSessionDelegateReferencesInDotNet(IJsRuntimeAdapter jsRuntime)
+        {
+            var capturedDelegateReferences = DelegateReferenceManager.GetCapturedDelegateReferences(jsRuntime);
+            foreach (var capturedDelegateReference in capturedDelegateReferences)
+            {
+                if (Guid.TryParse(capturedDelegateReference.DelegateReference.DelegateId, out var delegateId))
+                {
+                    DelegateReferenceManager.RemoveCapturedDelegateReference(delegateId);
+                }
+            }
         }
     }
 }

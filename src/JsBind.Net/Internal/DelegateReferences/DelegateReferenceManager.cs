@@ -38,6 +38,18 @@ namespace JsBind.Net.Internal.DelegateReferences
         }
 
         /// <summary>
+        /// Gets all instances of <see cref="CapturedDelegateReference" /> in the session.
+        /// </summary>
+        /// <param name="jsRuntime">The JS runtime instance to identify session.</param>
+        /// <returns>All instances of <see cref="CapturedDelegateReference" /> in the session.</returns>
+        public static IEnumerable<CapturedDelegateReference> GetCapturedDelegateReferences(IJsRuntimeAdapter jsRuntime)
+        {
+            return delegateReferences.Values
+                .Where(delegateReference => delegateReference.JsRuntime.IsJsRuntimeEqual(jsRuntime))
+                .ToList();
+        }
+
+        /// <summary>
         /// Gets an instance of <see cref="CapturedDelegateReference" /> representing the captured delegate.
         /// </summary>
         /// <param name="delegateObject">The delegate.</param>

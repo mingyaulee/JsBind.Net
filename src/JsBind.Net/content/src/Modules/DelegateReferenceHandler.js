@@ -37,6 +37,13 @@ class DelegateReferenceHandlerClass {
       } catch { }
     }
   }
+
+  /**
+   * Remove all the delegate references.
+   */
+  clearDelegateReferences() {
+    this._delegateReferences = {};
+  }
 }
 
 const DelegateReferenceHandler = new DelegateReferenceHandlerClass();

@@ -69,6 +69,14 @@ export default class JsBindNet {
   }
 
   /**
+   * Dispose session.
+   */
+  DisposeSession() {
+    JsObjectHandler.clearObjectReferences();
+    DelegateReferenceHandler.clearDelegateReferences();
+  }
+
+  /**
    * Get the property value of an object.
    * @param {GetPropertyOption} getPropertyOption
    * @returns {InvokeResult}

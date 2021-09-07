@@ -142,6 +142,14 @@
     }
 
     /**
+     * Remove all the object references.
+     */
+    clearObjectReferences() {
+      this._objectReferences = {};
+      this._objectReferencesCount = 0;
+    }
+
+    /**
      * Get the object references.
      * @returns {object} The object references.
      */
@@ -479,6 +487,13 @@
         } catch { }
       }
     }
+
+    /**
+     * Remove all the delegate references.
+     */
+    clearDelegateReferences() {
+      this._delegateReferences = {};
+    }
   }
 
   const DelegateReferenceHandler = new DelegateReferenceHandlerClass();
@@ -644,6 +659,14 @@
      */
     DisposeObject(disposeObjectOption) {
       JsObjectHandler.removeObjectReference(disposeObjectOption.referenceId);
+    }
+
+    /**
+     * Dispose session.
+     */
+    DisposeSession() {
+      JsObjectHandler.clearObjectReferences();
+      DelegateReferenceHandler.clearDelegateReferences();
     }
 
     /**

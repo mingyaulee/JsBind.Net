@@ -58,6 +58,14 @@ class JsObjectHandlerClass {
   }
 
   /**
+   * Remove all the object references.
+   */
+  clearObjectReferences() {
+    this._objectReferences = {};
+    this._objectReferencesCount = 0;
+  }
+
+  /**
    * Get the object references.
    * @returns {object} The object references.
    */
