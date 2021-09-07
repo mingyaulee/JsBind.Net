@@ -236,6 +236,11 @@ namespace JsBind.Net.Internal.DelegateReferences
 
         private DelegateResultWrapper? GetErrorReturnValue(Exception exception)
         {
+            if (exception is TargetInvocationException targetInvocationException && targetInvocationException.InnerException is not null)
+            {
+                exception = targetInvocationException.InnerException;
+            }
+
             return new()
             {
                 JsRuntime = jsRuntime,
