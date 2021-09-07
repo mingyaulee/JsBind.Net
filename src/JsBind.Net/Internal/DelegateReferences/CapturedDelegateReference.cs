@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json;
@@ -183,8 +182,7 @@ namespace JsBind.Net.Internal.DelegateReferences
 
             var options = invokeWrapper.JsonSerializerOptions!;
             var cloneOptions = new JsonSerializerOptions(options);
-            var references = new List<BindingBase?>();
-            ConvertersFactory.AddReadConverters(options, cloneOptions, references);
+            ConvertersFactory.AddReadConverters(options, cloneOptions, jsRuntime);
             var args = invokeWrapper.Args.Cast<object?>().ToArray();
             var processedArgs = argumentTypes.Select((argumentType, index) =>
             {
@@ -197,14 +195,6 @@ namespace JsBind.Net.Internal.DelegateReferences
                 // fill missing arguments with their default values
                 return argumentType.GetDefaultValue();
             }).ToArray();
-
-            foreach (var reference in references)
-            {
-                if (reference is not null)
-                {
-                    reference.InternalInitialize(jsRuntime);
-                }
-            }
 
             return processedArgs;
         }

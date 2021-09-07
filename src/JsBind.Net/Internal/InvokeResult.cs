@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 using JsBind.Net.Internal.JsonConverters;
 
 namespace JsBind.Net.Internal
@@ -22,7 +21,7 @@ namespace JsBind.Net.Internal
     internal abstract class InvokeResultWithValue : InvokeResult
     {
         [JsonIgnore]
-        public IList<BindingBase?>? References { get; set; }
+        public ProxyJsRuntimeAdapter? ProxyJsRuntime { get; set; }
     }
 
     /// <summary>

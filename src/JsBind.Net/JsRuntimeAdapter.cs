@@ -116,22 +116,12 @@ namespace JsBind.Net
         private object? GetInvokeResultObject<TValue>(InvokeResult<TValue>? invokeResult, Type type)
         {
             var invokeResultObject = invokeResult is null ? type.GetDefaultValue() : invokeResult.Value;
-            if (invokeResult is null || invokeResult.References is null)
+            if (invokeResult is null || invokeResult.ProxyJsRuntime is null)
             {
                 return invokeResultObject;
             }
 
-
-            foreach (var reference in invokeResult.References)
-            {
-                if (reference is null)
-                {
-                    continue;
-                }
-
-                reference.InternalInitialize(this);
-            }
-
+            invokeResult.ProxyJsRuntime.JsRuntime = this;
             return invokeResultObject;
         }
     }

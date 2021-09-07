@@ -18,12 +18,22 @@ namespace JsBind.Net
         /// <summary>
         /// Do not use this property. It is public for deserialization only.
         /// </summary>
-        [JsonInclude]
         [JsonPropertyName("__jsBindAccessPath")]
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [Obsolete("Do not use this property. It is public for deserialization only.")]
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public string? __JsBindAccessPath { get => null; private set => accessPath = value; }
+#pragma warning disable S2376 // Write-only properties should not be used
+        public string? __JsBindAccessPath { set => accessPath = value; }
+#pragma warning restore S2376 // Write-only properties should not be used
+
+        /// <summary>
+        /// Do not use this property. It is public for deserialization only.
+        /// </summary>
+        [JsonPropertyName("__jsBindJsRuntime")]
+        [Obsolete("Do not use this property. It is public for deserialization only.")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
+#pragma warning disable S2376 // Write-only properties should not be used
+        public IJsRuntimeAdapter? __JsBindJsRuntime { set => Initialize(value); }
+#pragma warning restore S2376 // Write-only properties should not be used
 
         /// <summary>
         /// Checks whether the binding instance has been initialized.
@@ -40,10 +50,6 @@ namespace JsBind.Net
         /// </summary>
         protected virtual string? AccessPath => accessPath;
 
-        internal void InternalInitialize(IJsRuntimeAdapter jsRuntime)
-        {
-            Initialize(jsRuntime);
-        }
 
         internal string? InternalGetAccessPath() => accessPath;
         internal IJsRuntimeAdapter? InternalGetJsRuntime() => jsRuntime;
@@ -63,8 +69,11 @@ namespace JsBind.Net
         /// <param name="jsRuntime">The JS runtime adapter.</param>
         protected virtual void Initialize(IJsRuntimeAdapter? jsRuntime)
         {
-            isInitialized = true;
-            this.jsRuntime = jsRuntime;
+            if (jsRuntime is not null)
+            {
+                isInitialized = true;
+                this.jsRuntime = jsRuntime;
+            }
         }
 
         #region Dispose methods

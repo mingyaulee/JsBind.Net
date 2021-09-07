@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using JsBind.Net.Internal.DelegateReferences;
@@ -12,12 +11,12 @@ namespace JsBind.Net.Internal.JsonConverters
     /// </summary>
     internal class ReadDelegateReferenceConverter : JsonConverter<Delegate?>
     {
-        private readonly IList<BindingBase?> references;
+        private readonly IJsRuntimeAdapter jsRuntime;
         private readonly JsonSerializerOptions jsonSerializerOptions;
 
-        public ReadDelegateReferenceConverter(IList<BindingBase?> references, JsonSerializerOptions jsonSerializerOptions)
+        public ReadDelegateReferenceConverter(IJsRuntimeAdapter jsRuntime, JsonSerializerOptions jsonSerializerOptions)
         {
-            this.references = references;
+            this.jsRuntime = jsRuntime;
             this.jsonSerializerOptions = jsonSerializerOptions;
         }
 
@@ -36,8 +35,7 @@ namespace JsBind.Net.Internal.JsonConverters
 
             if (!string.IsNullOrEmpty(jsDelegateReference?.AccessPath))
             {
-                var functionBinding = new JsFunctionProxy(jsDelegateReference.AccessPath);
-                references.Add(functionBinding);
+                var functionBinding = new JsFunctionProxy(jsRuntime, jsDelegateReference.AccessPath);
                 return functionBinding.GetDelegate(typeToConvert);
             }
 

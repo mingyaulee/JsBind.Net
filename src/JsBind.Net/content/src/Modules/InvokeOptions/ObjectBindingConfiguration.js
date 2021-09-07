@@ -6,7 +6,7 @@
   /** @type {Object<string, ObjectBindingConfiguration>} */
   propertyBindings;
   /** @type {boolean} */
-  setAccessPath;
+  isBindingBase;
   /** @type {ObjectBindingConfiguration} */
   arrayItemBinding;
 }

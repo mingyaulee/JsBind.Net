@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -18,12 +17,12 @@ namespace JsBind.Net.Internal.JsonConverters
         public override InvokeResult<TValue>? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             var cloneOptions = new JsonSerializerOptions(options);
-            var references = new List<BindingBase?>();
-            ConvertersFactory.AddReadConverters(options, cloneOptions, references);
+            var proxyJsRuntime = new ProxyJsRuntimeAdapter();
+            ConvertersFactory.AddReadConverters(options, cloneOptions, proxyJsRuntime);
             var invokeResult = JsonSerializer.Deserialize<InvokeResultWithValue<TValue>>(ref reader, cloneOptions);
             if (invokeResult is not null)
             {
-                invokeResult.References = references;
+                invokeResult.ProxyJsRuntime = proxyJsRuntime;
             }
             return invokeResult;
         }

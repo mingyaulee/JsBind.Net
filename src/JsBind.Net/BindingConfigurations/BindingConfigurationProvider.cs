@@ -156,7 +156,7 @@ namespace JsBind.Net.BindingConfigurations
             {
                 IncludeProperties = attributeBindingConfigurations.SelectMany(bc => bc.IncludeProperties ?? Enumerable.Empty<string>()),
                 ExcludeProperties = attributeBindingConfigurations.SelectMany(bc => bc.ExcludeProperties ?? Enumerable.Empty<string>()),
-                SetAccessPath = typeof(BindingBase).IsAssignableFrom(type)
+                IsBindingBase = typeof(BindingBase).IsAssignableFrom(type)
             };
             Add(type, bindingConfiguration);
         }

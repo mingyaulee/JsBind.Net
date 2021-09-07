@@ -29,8 +29,8 @@ namespace JsBind.Net.InvokeOptions
         /// <summary>
         /// Indicates whether the access path for this object should be set when binding.
         /// </summary>
-        [JsonPropertyName("setAccessPath")]
-        public bool SetAccessPath { get; set; }
+        [JsonPropertyName("isBindingBase")]
+        public bool IsBindingBase { get; set; }
 
         /// <summary>
         /// The binding for the items in the array like object.

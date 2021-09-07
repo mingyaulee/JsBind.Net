@@ -2,6 +2,7 @@
 import { IsProxyFunction } from "./DotNetDelegateProxy.js";
 
 const AccessPathPropertyName = "__jsBindAccessPath";
+const JsRuntimePropertyName = "__jsBindJsRuntime";
 
 /**
  * @typedef {import("./InvokeOptions/ObjectBindingConfiguration.js").default} ObjectBindingConfiguration
@@ -87,8 +88,9 @@ function shouldReturnValueWithoutBinding(value, binding, accessPath) {
   }
 
   if (!shouldProcessBinding(binding)) {
-    if (binding.setAccessPath) {
+    if (binding.isBindingBase) {
       value[AccessPathPropertyName] = accessPath;
+      value[JsRuntimePropertyName] = 0;
     }
     return true;
   }
@@ -125,8 +127,9 @@ function getValueFromBinding(value, binding, accessPath) {
   const boundValue = {
   };
 
-  if (binding.setAccessPath) {
+  if (binding.isBindingBase) {
     boundValue[AccessPathPropertyName] = accessPath;
+    boundValue[JsRuntimePropertyName] = 0;
   }
 
   getObjectKeys(value).forEach(property => {

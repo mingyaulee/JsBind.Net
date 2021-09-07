@@ -126,6 +126,7 @@
   const JsObjectHandler = new JsObjectHandlerClass();
 
   const AccessPathPropertyName = "__jsBindAccessPath";
+  const JsRuntimePropertyName = "__jsBindJsRuntime";
 
   /**
    * @typedef {import("./InvokeOptions/ObjectBindingConfiguration.js").default} ObjectBindingConfiguration
@@ -211,8 +212,9 @@
     }
 
     if (!shouldProcessBinding(binding)) {
-      if (binding.setAccessPath) {
+      if (binding.isBindingBase) {
         value[AccessPathPropertyName] = accessPath;
+        value[JsRuntimePropertyName] = 0;
       }
       return true;
     }
@@ -249,8 +251,9 @@
     const boundValue = {
     };
 
-    if (binding.setAccessPath) {
+    if (binding.isBindingBase) {
       boundValue[AccessPathPropertyName] = accessPath;
+      boundValue[JsRuntimePropertyName] = 0;
     }
 
     getObjectKeys(value).forEach(property => {

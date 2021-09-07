@@ -20,10 +20,12 @@ namespace JsBind.Net.Internal.DelegateReferences
         /// <summary>
         /// Creates a new instance of the <see cref="JsFunctionProxy" /> class.
         /// </summary>
+        /// <param name="jsRuntime">The JS runtime.</param>
         /// <param name="accessPath">The access path.</param>
-        public JsFunctionProxy(string accessPath)
+        public JsFunctionProxy(IJsRuntimeAdapter jsRuntime, string accessPath)
         {
             SetAccessPath(accessPath);
+            Initialize(jsRuntime);
         }
 
         /// <summary>
