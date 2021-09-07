@@ -167,12 +167,13 @@ namespace JsBind.Net
         /// <returns><c>true</c> if the current object is the same instance as the other object in JavaScript.</returns>
         public virtual bool InstanceEquals(object? other)
         {
-            if (Equals(this, other as BindingBase))
+            var otherBindingBase = other as BindingBase;
+            if (Equals(this, otherBindingBase))
             {
                 return true;
             }
 
-            return JsRuntime.Invoke<bool>(CompareObjectOption.Identifier, new CompareObjectOption(InternalGetAccessPath(), (other as BindingBase)?.InternalGetAccessPath()));
+            return GetJsRuntimeToCompare(otherBindingBase).Invoke<bool>(CompareObjectOption.Identifier, new CompareObjectOption(InternalGetAccessPath(), otherBindingBase?.InternalGetAccessPath()));
         }
 
         /// <summary>
@@ -182,12 +183,29 @@ namespace JsBind.Net
         /// <returns><c>true</c> if the current object is the same instance as the other object in JavaScript.</returns>
         public virtual async ValueTask<bool> InstanceEqualsAsync(object? other)
         {
-            if (Equals(this, other as BindingBase))
+            var otherBindingBase = other as BindingBase;
+            if (Equals(this, otherBindingBase))
             {
                 return true;
-            }
+            }            
 
-            return await JsRuntime.InvokeAsync<bool>(CompareObjectOption.Identifier, new CompareObjectOption(InternalGetAccessPath(), (other as BindingBase)?.InternalGetAccessPath())).ConfigureAwait(false);
+            return await GetJsRuntimeToCompare(otherBindingBase).InvokeAsync<bool>(CompareObjectOption.Identifier, new CompareObjectOption(InternalGetAccessPath(), otherBindingBase?.InternalGetAccessPath())).ConfigureAwait(false);
+        }
+
+        private IJsRuntimeAdapter GetJsRuntimeToCompare(BindingBase? other)
+        {
+            if (isInitialized)
+            {
+                return JsRuntime;
+            }
+            else if (other is not null && other.isInitialized)
+            {
+                return other.JsRuntime;
+            }
+            else
+            {
+                throw new InvalidOperationException("Unable to get JsRuntime from either one of the objects to compare equality.");
+            }
         }
 
         /// <inheritdoc />
