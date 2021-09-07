@@ -9,12 +9,12 @@ using Microsoft.JSInterop;
 namespace JsBind.Net
 {
     /// <summary>
-    /// Adapter for IJSRuntime
+    /// Adapter for <see cref="IJSRuntime" />.
     /// </summary>
     public class JsRuntimeAdapter : IJsRuntimeAdapter
     {
-        private readonly IJSRuntime jsRuntime;
-        private readonly IJsBindOptions jsBindOptions;
+        private readonly IJSRuntime? jsRuntime;
+        private readonly IJsBindOptions? jsBindOptions;
 
         /// <summary>
         /// Creates a new instance of <see cref="JsRuntimeAdapter" /> to be used for binding interop.
@@ -26,6 +26,23 @@ namespace JsBind.Net
             this.jsRuntime = jsRuntime;
             this.jsBindOptions = jsBindOptions;
         }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="JsRuntimeAdapter" /> to be used for binding interop.
+        /// </summary>
+        protected JsRuntimeAdapter()
+        {
+        }
+
+        /// <summary>
+        /// Gets the underlying JS runtime instance.
+        /// </summary>
+        public virtual IJSRuntime JsRuntime => jsRuntime ?? throw new InvalidOperationException("Inheriting classed must override the JSRuntime property.");
+
+        /// <summary>
+        /// Gets the JsBind options.
+        /// </summary>
+        public virtual IJsBindOptions JsBindOptions => jsBindOptions ?? throw new InvalidOperationException("Inheriting classed must override the JsBindOptions property.");
 
         /// <inheritdoc />
         public TValue? Invoke<TValue>(string identifier, InvokeOptionWithReturnValue invokeOption)
@@ -44,21 +61,21 @@ namespace JsBind.Net
         {
             invokeOption.JsRuntime = this;
             InvokeResult? invokeResult;
-            if (jsBindOptions.UseInProcessJsRuntime)
+            if (JsBindOptions.UseInProcessJsRuntime)
             {
-                invokeResult = ((IJSInProcessRuntime)jsRuntime).Invoke<InvokeResult?>(identifier, invokeOption);
+                invokeResult = ((IJSInProcessRuntime)JsRuntime).Invoke<InvokeResult?>(identifier, invokeOption);
             }
             else if (invokeOption is DisposeObjectOption || invokeOption is DisposeDelegateOption)
             {
                 // If we are disposing without using in process JS runtime, invoke asynchronously but do not wait for it.
 #pragma warning disable CA2012 // Use ValueTasks correctly
-                jsRuntime.InvokeAsync<InvokeResult?>(identifier, invokeOption);
+                JsRuntime.InvokeAsync<InvokeResult?>(identifier, invokeOption);
 #pragma warning restore CA2012 // Use ValueTasks correctly
                 return;
             }
             else
             {
-                invokeResult = jsRuntime.InvokeAsync<InvokeResult?>(identifier, invokeOption).AsTask().ConfigureAwait(false).GetAwaiter().GetResult();
+                invokeResult = JsRuntime.InvokeAsync<InvokeResult?>(identifier, invokeOption).AsTask().ConfigureAwait(false).GetAwaiter().GetResult();
             }
 
             if (invokeResult is not null && invokeResult.IsError && invokeResult.ErrorMessage is not null)
@@ -71,25 +88,36 @@ namespace JsBind.Net
         public async ValueTask InvokeVoidAsync(string identifier, InvokeOption invokeOption)
         {
             invokeOption.JsRuntime = this;
-            var invokeResult = await jsRuntime.InvokeAsync<InvokeResult?>(identifier, invokeOption).ConfigureAwait(false);
+            var invokeResult = await JsRuntime.InvokeAsync<InvokeResult?>(identifier, invokeOption).ConfigureAwait(false);
             if (invokeResult is not null && invokeResult.IsError && invokeResult.ErrorMessage is not null)
             {
                 throw new JsBindException(invokeResult.ErrorMessage, invokeResult.StackTrace);
             }
         }
 
+        /// <inheritdoc />
+        public bool IsJsRuntimeEqual(IJsRuntimeAdapter other)
+        {
+            if (other is JsRuntimeAdapter otherJsRuntime)
+            {
+                return JsRuntime.Equals(otherJsRuntime.JsRuntime);
+            }
+
+            return false;
+        }
+
         private object? InvokeInternal<TValue>(string identifier, InvokeOptionWithReturnValue invokeOption, Type type)
         {
-            invokeOption.ReturnValueBinding = type.GetBindingConfiguration(jsBindOptions.BindingConfigurationProvider);
+            invokeOption.ReturnValueBinding = type.GetBindingConfiguration(JsBindOptions.BindingConfigurationProvider);
             invokeOption.JsRuntime = this;
             InvokeResult<TValue>? invokeResult;
-            if (jsBindOptions.UseInProcessJsRuntime)
+            if (JsBindOptions.UseInProcessJsRuntime)
             {
-                invokeResult = ((IJSInProcessRuntime)jsRuntime).Invoke<InvokeResult<TValue>?>(identifier, invokeOption);
+                invokeResult = ((IJSInProcessRuntime)JsRuntime).Invoke<InvokeResult<TValue>?>(identifier, invokeOption);
             }
             else
             {
-                invokeResult = jsRuntime.InvokeAsync<InvokeResult<TValue>?>(identifier, invokeOption).AsTask().ConfigureAwait(false).GetAwaiter().GetResult();
+                invokeResult = JsRuntime.InvokeAsync<InvokeResult<TValue>?>(identifier, invokeOption).AsTask().ConfigureAwait(false).GetAwaiter().GetResult();
             }
 
             if (invokeResult is not null && invokeResult.IsError && invokeResult.ErrorMessage is not null)
@@ -102,9 +130,9 @@ namespace JsBind.Net
 
         private async ValueTask<object?> InvokeAsyncInternal<TValue>(string identifier, InvokeOptionWithReturnValue invokeOption, Type type)
         {
-            invokeOption.ReturnValueBinding = type.GetBindingConfiguration(jsBindOptions.BindingConfigurationProvider);
+            invokeOption.ReturnValueBinding = type.GetBindingConfiguration(JsBindOptions.BindingConfigurationProvider);
             invokeOption.JsRuntime = this;
-            var invokeResult = await jsRuntime.InvokeAsync<InvokeResult<TValue>?>(identifier, invokeOption).ConfigureAwait(false);
+            var invokeResult = await JsRuntime.InvokeAsync<InvokeResult<TValue>?>(identifier, invokeOption).ConfigureAwait(false);
             if (invokeResult is not null && invokeResult.IsError && invokeResult.ErrorMessage is not null)
             {
                 throw new JsBindException(invokeResult.ErrorMessage, invokeResult.StackTrace);
@@ -121,7 +149,7 @@ namespace JsBind.Net
                 return invokeResultObject;
             }
 
-            invokeResult.ProxyJsRuntime.JsRuntime = this;
+            invokeResult.ProxyJsRuntime.SetJsRuntime(this);
             return invokeResultObject;
         }
     }

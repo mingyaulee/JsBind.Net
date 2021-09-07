@@ -94,9 +94,10 @@ namespace JsBind.Net
         /// Disposes the delegate reference in JavaScript synchronously, if any.
         /// </summary>
         /// <param name="delegateObject">The delegate reference to dispose.</param>
-        public static void DisposeDelegateReference(Delegate delegateObject)
+        /// <param name="jsRuntime">The JS runtime instance to identify session.</param>
+        public static void DisposeDelegateReference(Delegate delegateObject, IJsRuntimeAdapter jsRuntime)
         {
-            var capturedDelegateReference = DelegateReferenceManager.GetCapturedDelegateReference(delegateObject);
+            var capturedDelegateReference = DelegateReferenceManager.GetCapturedDelegateReference(delegateObject, jsRuntime);
             if (capturedDelegateReference is null)
             {
                 return;
@@ -113,10 +114,11 @@ namespace JsBind.Net
         /// Disposes the delegate reference in JavaScript asynchronously, if any.
         /// </summary>
         /// <param name="delegateObject">The delegate reference to dispose.</param>
+        /// <param name="jsRuntime">The JS runtime instance to identify session.</param>
         /// <returns>A <see cref="ValueTask" /> that represents the asynchronous dispose operation.</returns>
-        public static async ValueTask DisposeDelegateReferenceAsync(Delegate delegateObject)
+        public static async ValueTask DisposeDelegateReferenceAsync(Delegate delegateObject, IJsRuntimeAdapter jsRuntime)
         {
-            var capturedDelegateReference = DelegateReferenceManager.GetCapturedDelegateReference(delegateObject);
+            var capturedDelegateReference = DelegateReferenceManager.GetCapturedDelegateReference(delegateObject, jsRuntime);
             if (capturedDelegateReference is null)
             {
                 return;

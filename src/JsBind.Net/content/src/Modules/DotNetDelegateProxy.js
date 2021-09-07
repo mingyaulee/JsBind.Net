@@ -5,7 +5,6 @@ import ObjectBindingHandler from "./ObjectBindingHandler.js";
 
 /**
  * @typedef {import("./References/DelegateReference.js").default} DelegateReference
- * @typedef {import("./References/DelegateReference.js").DotNetObjectReference} DotNetObjectReference
  * @typedef {import("./References/DelegateReference.js").TaskInvokeResult} TaskInvokeResult
  * @typedef {import("./InvokeResult.js").default} InvokeResult
  */
@@ -60,20 +59,20 @@ export default class DotNetDelegateProxy {
   _dynamicInvoke(...invokeArgs) {
     const processedInvokeArgs = this._processInvokeArgs(invokeArgs);
     if (this.delegateReference.isAsync) {
-      return this._invokeDelegateAsyncInternal(this.delegateReference.delegateInvoker, processedInvokeArgs);
+      return this._invokeDelegateAsyncInternal(this.delegateReference.delegateId, processedInvokeArgs);
     } else {
-      return this._invokeDelegateInternal(this.delegateReference.delegateInvoker, processedInvokeArgs);
+      return this._invokeDelegateInternal(this.delegateReference.delegateId, processedInvokeArgs);
     }
   }
 
   /**
    * Invoke the DotNet delegate synchronously.
-   * @param {DotNetObjectReference} delegateInvoker
+   * @param {string} delegateId
    * @param {any[]} invokeArgs
    * @returns {any} 
    */
-  _invokeDelegateInternal(delegateInvoker, invokeArgs) {
-    const invokeResult = delegateInvoker.invokeMethod("InvokeDelegateFromJs", invokeArgs);
+  _invokeDelegateInternal(delegateId, invokeArgs) {
+    const invokeResult = globalThis.DotNet.invokeMethod("JsBind.Net", "InvokeDelegateFromJs", delegateId, invokeArgs);
     if (invokeResult && invokeResult.isError && invokeResult.errorMessage) {
       throw new JsBindError(invokeResult.errorMessage, invokeResult.stackTrace);
     }
@@ -83,12 +82,12 @@ export default class DotNetDelegateProxy {
 
   /**
    * Invoke the DotNet delegate asynchronously.
-   * @param {DotNetObjectReference} delegateInvoker
+   * @param {string} delegateId
    * @param {any[]} invokeArgs
    * @returns {Promise<any>} 
    */
-  async _invokeDelegateAsyncInternal(delegateInvoker, invokeArgs) {
-    let invokeAsyncResult = await delegateInvoker.invokeMethodAsync("InvokeDelegateFromJsAsync", invokeArgs);
+  async _invokeDelegateAsyncInternal(delegateId, invokeArgs) {
+    let invokeAsyncResult = await globalThis.DotNet.invokeMethodAsync("JsBind.Net", "InvokeDelegateFromJsAsync", delegateId, invokeArgs);
     let invokeResult = unwrapAsyncResult(invokeAsyncResult);
 
     if (invokeResult && invokeResult.isError && invokeResult.errorMessage) {

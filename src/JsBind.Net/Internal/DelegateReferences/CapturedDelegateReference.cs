@@ -3,20 +3,19 @@ using System.Linq;
 using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
+using JsBind.Net.DelegateReferences;
 using JsBind.Net.Internal.Extensions;
 using JsBind.Net.Internal.JsonConverters;
 using JsBind.Net.Internal.References;
 using JsBind.Net.InvokeOptions;
-using Microsoft.JSInterop;
 
 namespace JsBind.Net.Internal.DelegateReferences
 {
     /// <summary>
-    /// Contains the delegate object and the delegate reference and is passed to JavaScript as <see cref="DotNetObjectReference" /> to be invoked from JavaScript.
+    /// Contains the delegate object and the delegate reference.
     /// </summary>
     internal class CapturedDelegateReference : IDisposable, IAsyncDisposable
     {
-        private readonly IJsRuntimeAdapter jsRuntime;
         private readonly MethodInfo invokeMethod;
         private bool disposed;
 
@@ -24,19 +23,19 @@ namespace JsBind.Net.Internal.DelegateReferences
         {
             DelegateReference = delegateReference;
             DelegateObject = delegateObject;
-            this.jsRuntime = jsRuntime;
+            JsRuntime = jsRuntime;
             invokeMethod = DelegateObject.GetType().GetMethod("Invoke") ?? throw new InvalidOperationException("Delegate must have invoke method.");
         }
 
         public DelegateReference DelegateReference { get; }
         public Delegate DelegateObject { get; }
+        public IJsRuntimeAdapter JsRuntime { get; }
 
         /// <summary>
         /// Invoke a delegate reference from JavaScript.
         /// </summary>
         /// <param name="invokeWrapper">Contains the arguments to invoke the delegate.</param>
         /// <returns>The result of the delegate invocation.</returns>
-        [JSInvokable("InvokeDelegateFromJs")]
         public object? InvokeDelegateFromJs(DelegateInvokeWrapper? invokeWrapper)
         {
             try
@@ -56,7 +55,6 @@ namespace JsBind.Net.Internal.DelegateReferences
         /// </summary>
         /// <param name="invokeWrapper">Contains the arguments to invoke the delegate.</param>
         /// <returns>The result of the delegate invocation.</returns>
-        [JSInvokable("InvokeDelegateFromJsAsync")]
         public async ValueTask<object?> InvokeDelegateFromJsAsync(DelegateInvokeWrapper? invokeWrapper)
         {
             try
@@ -110,12 +108,6 @@ namespace JsBind.Net.Internal.DelegateReferences
         /// <param name="disposing">Disposing from <see cref="IDisposable.Dispose" />.</param>
         protected virtual void Dispose(bool disposing)
         {
-            if (DelegateReference.DelegateInvoker is not null)
-            {
-                DelegateReference.DelegateInvoker.Dispose();
-                DelegateReference.DelegateInvoker = null;
-            }
-
             if (disposed)
             {
                 return;
@@ -124,12 +116,12 @@ namespace JsBind.Net.Internal.DelegateReferences
 
             if (disposing)
             {
-                jsRuntime.InvokeVoid(DisposeDelegateOption.Identifier, new DisposeDelegateOption(DelegateReference.DelegateId));
+                JsRuntime.InvokeVoid(DisposeDelegateOption.Identifier, new DisposeDelegateOption(DelegateReference.DelegateId));
             }
             else
             {
 #pragma warning disable CA2012 // Use ValueTasks correctly
-                jsRuntime.InvokeVoidAsync(DisposeDelegateOption.Identifier, new DisposeDelegateOption(DelegateReference.DelegateId)).ConfigureAwait(false);
+                JsRuntime.InvokeVoidAsync(DisposeDelegateOption.Identifier, new DisposeDelegateOption(DelegateReference.DelegateId)).ConfigureAwait(false);
 #pragma warning restore CA2012 // Use ValueTasks correctly
             }
         }
@@ -146,7 +138,7 @@ namespace JsBind.Net.Internal.DelegateReferences
             }
 
             disposed = true;
-            await jsRuntime.InvokeVoidAsync(DisposeDelegateOption.Identifier, new DisposeDelegateOption(DelegateReference.DelegateId)).ConfigureAwait(false);
+            await JsRuntime.InvokeVoidAsync(DisposeDelegateOption.Identifier, new DisposeDelegateOption(DelegateReference.DelegateId)).ConfigureAwait(false);
         }
 
         #endregion Dispose methods
@@ -179,10 +171,9 @@ namespace JsBind.Net.Internal.DelegateReferences
                 return argumentTypes.Select(argumentType => argumentType.GetDefaultValue()).ToArray();
             }
 
-
             var options = invokeWrapper.JsonSerializerOptions!;
             var cloneOptions = new JsonSerializerOptions(options);
-            ConvertersFactory.AddReadConverters(options, cloneOptions, jsRuntime);
+            ConvertersFactory.AddReadConverters(options, cloneOptions, JsRuntime);
             var args = invokeWrapper.Args.Cast<object?>().ToArray();
             var processedArgs = argumentTypes.Select((argumentType, index) =>
             {
@@ -226,7 +217,7 @@ namespace JsBind.Net.Internal.DelegateReferences
 
             return new()
             {
-                JsRuntime = jsRuntime,
+                JsRuntime = JsRuntime,
                 Result = new InvokeResultWithValue<object>()
                 {
                     Value = result
@@ -243,7 +234,7 @@ namespace JsBind.Net.Internal.DelegateReferences
 
             return new()
             {
-                JsRuntime = jsRuntime,
+                JsRuntime = JsRuntime,
                 Result = new InvokeResultWithValue<object>()
                 {
                     IsError = true,

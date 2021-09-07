@@ -40,5 +40,12 @@ namespace JsBind.Net
         /// <param name="invokeOption">The option for invocation.</param>
         /// <returns>A <see cref="ValueTask" /> that represents the asynchronous invocation operation.</returns>
         ValueTask InvokeVoidAsync(string identifier, InvokeOption invokeOption);
+
+        /// <summary>
+        /// Checks if the instance of JS runtime is equal to the instance of JS runtime for the other adapter.
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        bool IsJsRuntimeEqual(IJsRuntimeAdapter other);
     }
 }

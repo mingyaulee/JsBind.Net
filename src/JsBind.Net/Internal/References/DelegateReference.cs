@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
-using JsBind.Net.Internal.DelegateReferences;
 using JsBind.Net.InvokeOptions;
-using Microsoft.JSInterop;
 
 namespace JsBind.Net.Internal.References
 {
@@ -41,9 +39,6 @@ namespace JsBind.Net.Internal.References
 
         [JsonPropertyName("isAsync")]
         public bool IsAsync { get; }
-
-        [JsonPropertyName("delegateInvoker")]
-        public DotNetObjectReference<CapturedDelegateReference>? DelegateInvoker { get; set; }
 
         public DelegateReference(string? delegateId, IEnumerable<ObjectBindingConfiguration?>? argumentBindings, bool isAsync)
         {

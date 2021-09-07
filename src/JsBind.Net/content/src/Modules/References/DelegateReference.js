@@ -7,28 +7,8 @@ import ReferenceType from "./ReferenceType.js";
  */
 
 /**
- * @callback InvokeMethodFunction
- * @param {string} methodName The method name.
- * @param {any[]} args The arguments.
- * @returns {InvokeResult}
- */
-
-/**
  * @typedef {object} TaskInvokeResult
  * @property {InvokeResult} result
- */
-
-/**
- * @callback InvokeMethodAsyncFunction
- * @param {string} methodName The method name.
- * @param {any[]} args The arguments.
- * @returns {Promise<InvokeResult> | Promise<TaskInvokeResult>}
- */
-
-/**
- * @typedef {object} DotNetObjectReference 
- * @property {InvokeMethodFunction} invokeMethod
- * @property {InvokeMethodAsyncFunction} invokeMethodAsync
  */
 
 export default class DelegateReference extends ReferenceBase {
@@ -42,8 +22,6 @@ export default class DelegateReference extends ReferenceBase {
   argumentsReferenceIds;
   /** @type {boolean} */
   isAsync;
-  /** @type {DotNetObjectReference} */
-  delegateInvoker;
 }
 
 /**

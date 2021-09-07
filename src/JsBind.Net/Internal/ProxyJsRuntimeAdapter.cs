@@ -1,41 +1,21 @@
-﻿using System;
-using System.Threading.Tasks;
-using JsBind.Net.InvokeOptions;
+﻿using JsBind.Net.Configurations;
+using Microsoft.JSInterop;
 
 namespace JsBind.Net.Internal
 {
     /// <summary>
     /// Proxy adapter for JS runtime. Used for deserialization when the real JS runtime is not available yet.
     /// </summary>
-    internal class ProxyJsRuntimeAdapter : IJsRuntimeAdapter
+    internal class ProxyJsRuntimeAdapter : JsRuntimeAdapter
     {
-        private IJsRuntimeAdapter? jsRuntime;
-        public IJsRuntimeAdapter JsRuntime
+        private JsRuntimeAdapter? jsRuntime;
+
+        public override IJsBindOptions JsBindOptions => jsRuntime!.JsBindOptions;
+        public override IJSRuntime JsRuntime => jsRuntime!.JsRuntime;
+
+        public void SetJsRuntime(JsRuntimeAdapter jsRuntime)
         {
-            get
-            {
-                return jsRuntime ?? throw new InvalidOperationException("Proxy JsRuntime has not been set.");
-            }
-            set
-            {
-                jsRuntime = value;
-            }
+            this.jsRuntime = jsRuntime;
         }
-
-        /// <inheritdoc />
-        public TValue? Invoke<TValue>(string identifier, InvokeOptionWithReturnValue invokeOption)
-            => JsRuntime.Invoke<TValue>(identifier, invokeOption);
-
-        /// <inheritdoc />
-        public ValueTask<TValue?> InvokeAsync<TValue>(string identifier, InvokeOptionWithReturnValue invokeOption)
-            => JsRuntime.InvokeAsync<TValue>(identifier, invokeOption);
-
-        /// <inheritdoc />
-        public void InvokeVoid(string identifier, InvokeOption invokeOption)
-            => JsRuntime.InvokeVoid(identifier, invokeOption);
-
-        /// <inheritdoc />
-        public ValueTask InvokeVoidAsync(string identifier, InvokeOption invokeOption)
-            => JsRuntime.InvokeVoidAsync(identifier, invokeOption);
     }
 }

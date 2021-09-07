@@ -5,7 +5,6 @@ using JsBind.Net.Configurations;
 using JsBind.Net.Internal.Extensions;
 using JsBind.Net.Internal.References;
 using JsBind.Net.InvokeOptions;
-using Microsoft.JSInterop;
 
 namespace JsBind.Net.Internal.DelegateReferences
 {
@@ -24,7 +23,7 @@ namespace JsBind.Net.Internal.DelegateReferences
         /// <returns>An instance of <see cref="DelegateReference" /> representing the delegate.</returns>
         public static DelegateReference GetOrCreateDelegateReference(Delegate delegateObject, IJsRuntimeAdapter jsRuntime)
         {
-            var existingCapturedDelegateReference = GetCapturedDelegateReference(delegateObject);
+            var existingCapturedDelegateReference = GetCapturedDelegateReference(delegateObject, jsRuntime);
             if (existingCapturedDelegateReference is not null)
             {
                 return existingCapturedDelegateReference.DelegateReference;
@@ -34,7 +33,6 @@ namespace JsBind.Net.Internal.DelegateReferences
             ProcessDelegateArgumentTypesAndReturnType(delegateObject.GetType(), out var argumentBindings, out var isAsync);
             var delegateReference = new DelegateReference(delegateReferenceId.ToString(), argumentBindings, isAsync);
             var capturedDelegateReference = new CapturedDelegateReference(delegateReference, delegateObject, jsRuntime);
-            delegateReference.DelegateInvoker = DotNetObjectReference.Create(capturedDelegateReference);
             delegateReferences.Add(delegateReferenceId, capturedDelegateReference);
             return delegateReference;
         }
@@ -43,16 +41,15 @@ namespace JsBind.Net.Internal.DelegateReferences
         /// Gets an instance of <see cref="CapturedDelegateReference" /> representing the captured delegate.
         /// </summary>
         /// <param name="delegateObject">The delegate.</param>
+        /// <param name="jsRuntime">The JS runtime instance to identify session.</param>
         /// <returns>An instance of <see cref="CapturedDelegateReference" /> representing the captured delegate.</returns>
-        public static CapturedDelegateReference? GetCapturedDelegateReference(Delegate delegateObject)
+        public static CapturedDelegateReference? GetCapturedDelegateReference(Delegate delegateObject, IJsRuntimeAdapter jsRuntime)
         {
-            var existingCapturedDelegateReference = delegateReferences.Values.FirstOrDefault(delegateReference => delegateReference.DelegateObject.Equals(delegateObject));
-            if (existingCapturedDelegateReference is not null)
-            {
-                return existingCapturedDelegateReference;
-            }
-
-            return null;
+            return delegateReferences.Values
+                .FirstOrDefault(delegateReference =>
+                    delegateReference.DelegateObject.Equals(delegateObject) &&
+                    delegateReference.JsRuntime.IsJsRuntimeEqual(jsRuntime)
+                );
         }
 
         /// <summary>

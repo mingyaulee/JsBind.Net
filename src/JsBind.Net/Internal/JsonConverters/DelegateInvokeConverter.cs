@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using JsBind.Net.Internal.DelegateReferences;
+using JsBind.Net.DelegateReferences;
 
 namespace JsBind.Net.Internal.JsonConverters
 {
