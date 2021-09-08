@@ -83,6 +83,11 @@ namespace JsBind.Net.BindingConfigurations
                         }
                     }
 
+                    if (propertyInfo.IsDefined(typeof(BindIgnoreAttribute)))
+                    {
+                        return false;
+                    }
+
                     return true;
                 })
                 .ToDictionary(

@@ -18,6 +18,7 @@ namespace JsBind.Net
         /// <summary>
         /// Do not use this property. It is public for deserialization only.
         /// </summary>
+        [BindIgnore]
         [JsonPropertyName("__jsBindAccessPath")]
         [Obsolete("Do not use this property. It is public for deserialization only.")]
         [EditorBrowsable(EditorBrowsableState.Never)]
@@ -28,6 +29,7 @@ namespace JsBind.Net
         /// <summary>
         /// Do not use this property. It is public for deserialization only.
         /// </summary>
+        [BindIgnore]
         [JsonPropertyName("__jsBindJsRuntime")]
         [Obsolete("Do not use this property. It is public for deserialization only.")]
         [EditorBrowsable(EditorBrowsableState.Never)]
