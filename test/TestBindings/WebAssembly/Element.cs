@@ -1,12 +1,17 @@
-﻿using JsBind.Net;
+﻿using System.Text.Json.Serialization;
+using JsBind.Net;
 
 namespace TestBindings.WebAssembly
 {
     [BindDeclaredProperties]
     public class Element : ObjectBindingBase
     {
-        // Property that is loaded when initialized from JSON deserializer
+        // Properties that are loaded when initialized from JSON deserializer
+        [JsonPropertyName("id")]
         public string Id { get; set; }
+
+        [JsonPropertyName("attributes")]
+        public ElementAttributeMap Attributes { get; set; }
 
         // Property that is loaded everytime it is called
         public string TagName => GetProperty<string>("tagName");
