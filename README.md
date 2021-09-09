@@ -1,8 +1,9 @@
 # JsBind.Net
-[![Nuget](https://img.shields.io/nuget/v/JsBind.Net?style=flat-square&color=blue)](https://www.nuget.org/packages/JsBind.Net/)
-[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/mingyaulee/JsBind.Net/Build?style=flat-square&color=blue)](https://github.com/mingyaulee/JsBind.Net/actions/workflows/JsBind.Net-Build.yml)
-[![Sonar Tests](https://img.shields.io/sonar/tests/JsBind.Net?compact_message&server=https%3A%2F%2Fsonarcloud.io&style=flat-square)](https://sonarcloud.io/dashboard?id=JsBind.Net)
-[![Sonar Quality Gate](https://img.shields.io/sonar/quality_gate/JsBind.Net?server=https%3A%2F%2Fsonarcloud.io&style=flat-square)](https://sonarcloud.io/dashboard?id=JsBind.Net)
+[![Nuget](https://img.shields.io/nuget/v/JsBind.Net?style=for-the-badge&color=blue)](https://www.nuget.org/packages/JsBind.Net/)
+[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/mingyaulee/JsBind.Net/Build?style=for-the-badge&color=blue)](https://github.com/mingyaulee/JsBind.Net/actions/workflows/JsBind.Net-Build.yml)
+[![Sonar Tests](https://img.shields.io/sonar/tests/JsBind.Net?compact_message&server=https%3A%2F%2Fsonarcloud.io&style=for-the-badge)](https://sonarcloud.io/dashboard?id=JsBind.Net)
+[![Sonar Tests](https://img.shields.io/sonar/coverage/JsBind.Net?server=https%3A%2F%2Fsonarcloud.io&style=for-the-badge)](https://sonarcloud.io/dashboard?id=JsBind.Net)
+[![Sonar Quality Gate](https://img.shields.io/sonar/quality_gate/JsBind.Net?server=https%3A%2F%2Fsonarcloud.io&style=for-the-badge)](https://sonarcloud.io/dashboard?id=JsBind.Net)
 
 A package for creating binding from .Net to JavaScript.
 
@@ -71,13 +72,16 @@ The [test binding project](test/TestBindings) showcases how to create bindings f
 
 > For simplicity the test binding project is not separated into multiple projects as advised in the project separation strategy above.
 
+### Binding classes
+
 You can start creating binding from the root object that needs to be bound, for example the storage API:
 ```csharp
 public class LocalStorage : ObjectBindingBase
 {
     public LocalStorage(IJsRuntimeAdapter jsRuntime)
     {
-        Initialize(jsRuntime, "localStorage");
+        SetAccessPath("localStorage");
+        Initialize(jsRuntime);
     }
 
     public string GetItem(string key) => Invoke<string>("getItem", key);
@@ -93,7 +97,8 @@ public class LocalStorage : ObjectBindingBase
 {
     public LocalStorage(IJsRuntimeAdapter jsRuntime)
     {
-        Initialize(jsRuntime, "localStorage");
+        SetAccessPath("localStorage");
+        Initialize(jsRuntime);
     }
 
     public ValueTask<string> GetItem(string key) => InvokeAsync<string>("getItem", key);
@@ -101,6 +106,116 @@ public class LocalStorage : ObjectBindingBase
     public ValueTask<string> RemoveItem(string key) => InvokeAsync<string>("removeItem", key);
     public ValueTask Clear() => InvokeVoidAsync("clear");
 }
+```
+
+The simplest way is to inherit from `ObjectBindingBase` class which offers the following APIs:
+
+| API                                  | Description                                                                                           |
+| ------------------------------------ | ----------------------------------------------------------------------------------------------------- |
+| `SetAccessPath`                      | Sets the access path of the object relative to the `globalThis` variable.                             |
+| `GetProperty`/`GetPropertyAsync`     | Gets a property value from the JavaScript object with the specified property name.                    |
+| `SetProperty`/`SetPropertyAsync`     | Sets a property value to the JavaScript object with the specified property name.                      |
+| `Invoke`/`InvokeAsync`               | Invoke a function matching the specified function name to the JavaScript object with return value.    |
+| `InvokeVoid`/`InvokeVoidAsync`       | Invoke a function matching the specified function name to the JavaScript object without return value. |
+| `ConvertToType`/`ConvertToTypeAsync` | Converts the current object to the specified type.                                                    |
+
+#### Binding class constructor
+If the binding class can be used directly to perform interop, meaning they can be accessed from the top level `globalThis` (e.g. globalThis.document/globalThis.window/globalThis.jQuery), the binding class needs a constructor that receives the `IJsRuntimeAdapter` to be able to interop to JavaScript. The constructor has to use the `SetAccessPath` API to set the path relative to the `globalThis` variable. Example of constructor:
+```csharp
+public LocalStorage(IJsRuntimeAdapter jsRuntime)
+{
+    SetAccessPath("localStorage");
+    Initialize(jsRuntime);
+}
+
+public Window(IJsRuntimeAdapter jsRuntime)
+{
+    SetAccessPath("window");
+    Initialize(jsRuntime);
+}
+```
+
+If the binding class represents the structure of objects that can be returned from a JavaScript interop, it needs to have an parameterless constructor, or a constructor that can be deserialized (e.g. decorated with `JsonConstructor` attribute).
+```
+// Location class representing the object returned from window.location
+public class Location
+{
+    // Initialized from JSON deserialization
+    public Location()
+    {
+    }
+
+    [JsonPropertyName("href")]
+    public string Href { get; set; }
+}
+```
+
+### Binding attributes
+You should use the binding attributes to define the behaviour of the interop and serialization/deserialization.
+
+Attributes from the `System.Text.Json` can be used for the serialization and deserialization behaviour.
+
+Attributes that can be used for binding are
+| Attribute                       | Usage    | Description                                                                                                |
+| ------------------------------- | -------- | ---------------------------------------------------------------------------------------------------------- |
+| BindDeclaredPropertiesAttribute | Class    | Include the public properties with setter that are declared in the class for binding.                      |
+| BindAllPropertiesAttribute      | Class    | Include all properties from the JavaScript object for binding.                                             |
+| BindIncludePropertiesAttribute  | Class    | Include the specified properties from the JavaScript object for binding.                                   |
+| BindExcludePropertiesAttribute  | Class    | Include all properties except for the specified properties from the JavaScript object for binding.         |
+| BindIgnoreAttribute             | Property | Ignore this property from binding (Only when the class is decorated with BindDeclaredPropertiesAttribute). |
+
+Properties decorated with `JsonIgnoreAttribute` and `BindIgnoreAttribute` will be excluded from binding.
+
+### Dynamic binding class
+There are cases where you may want to create a binding dynamically, either from an existing ObjectBindingBase instance, or just simply from an access path.
+For example, to achieve this in JavaScript:
+```javascript
+const newDiv = document.createElement("div");
+document.body.append(newDiv);
+```
+The equivalent code would be:
+```csharp
+var document = Any.From("document", jsRuntime);
+var newDiv = document.InvokeFunction<Any>("createElement", "div");
+document["body"].InvokeFunctionVoid("append", newDiv);
+```
+
+### Object reference disposal
+Objects returned from function invocation are stored as object references, and delegates passed in as parameter to function invocation are stored as delegate references.
+The object references are stored in the JavaScript, whereas delegate references are stored in both JavaScript and DotNet.
+
+If your library or the consuming project invokes a lot of functions, it will be good to dispose the object and delegate references.
+If the object reference is an instance of the `BindingBase` and is the root of the object reference, either the `Dispose` or `DisposeAsync` method can be used to dispose it in JavaScript.
+Otherwise, the `JsObjectManager` can be used with the following APIs:
+
+| Method                                                         | Description                                                                                    |
+| -------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| `DisposeObjectReference`/`DisposeObjectReferenceAsync`         | Disposes the object reference, if the object (can be enumerable) is the root object reference. |
+| `DisposeRootObjectReference`/`DisposeRootObjectReferenceAsync` | Disposes the root object reference.                                                            |
+| `DisposeDelegateReference`/`DisposeDelegateReferenceAsync`     | Disposes the delegate reference in both JavaScript and DotNet.                                 |
+| `DisposeSession`/`DisposeSessionAsync`                         | Disposes all the references for the session.                                                   |
+
+Any disposed object reference and delegate reference can no longer perform any operation such as `GetProperty` or `InvokeFunction`.
+
+If the consuming project is a Blazor server, the references in the server needs to be cleared everytime a session ends.
+In order to do this, you can create a component.
+```csharp
+public class SessionController : ComponentBase, IDisposable
+{
+    [Inject] public IJsRuntimeAdapter JsRuntime { get; set; }
+
+    public void Dispose()
+    {
+        JsObjectManager.DisposeSession(JsRuntime);
+    }
+}
+```
+And in `App.razor`, add this component next to the `<Router>` component.
+```razor
+<Router AppAssembly="@typeof(Program).Assembly" PreferExactMatches="@true">
+    // ...
+</Router>
+<SessionController />
 ```
 
 ## Customize build
