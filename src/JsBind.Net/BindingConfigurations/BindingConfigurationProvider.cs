@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using JsBind.Net.Internal.Extensions;
 
@@ -191,11 +192,12 @@ namespace JsBind.Net.BindingConfigurations
                 var propertyNameAttribute = propertyInfo.GetCustomAttribute<JsonPropertyNameAttribute>();
                 if (!string.IsNullOrEmpty(propertyNameAttribute?.Name))
                 {
-                    propertyName = propertyNameAttribute!.Name;
+                    propertyName = propertyNameAttribute.Name;
                 }
             }
 
-            return propertyName;
+            // default to camel case naming policy
+            return JsonNamingPolicy.CamelCase.ConvertName(propertyName);
         }
     }
 }

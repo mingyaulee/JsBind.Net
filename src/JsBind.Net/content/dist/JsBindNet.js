@@ -281,7 +281,7 @@
       return getArrayValueFromBinding(value, binding.arrayItemBinding, accessPath);
     }
 
-    const includeProperties = binding.include?.map(includeProperty => includeProperty.toUpperCase());
+    const includeAllProperties = binding.include && binding.include.some(includeProperty => includeProperty === "*");
     const excludeProperties = binding.exclude?.map(excludeProperty => excludeProperty.toUpperCase());
     const getPropertyBinding = (propertyName) => {
       return binding.propertyBindings?.[propertyName.toUpperCase()];
@@ -295,13 +295,20 @@
       boundValue[JsRuntimePropertyName] = 0;
     }
 
+    if (binding.include && !includeAllProperties) {
+      // Fast path: The include properties are known
+      binding.include.forEach(property => {
+        boundValue[property] = getValueFromBinding(value[property], getPropertyBinding(property), AccessPaths.combine(accessPath, property));
+      });
+      return boundValue;
+    }
+
+    // Slow path: Include all properties or only the exclude properties are known
     getObjectKeys(value).forEach(property => {
-      const upperCasePropertyName = property.toUpperCase();
-      if (includeProperties) {
-        if (includeProperties.some(includeProperty => includeProperty === upperCasePropertyName || includeProperty === "*")) {
-          boundValue[property] = getValueFromBinding(value[property], getPropertyBinding(property), AccessPaths.combine(accessPath, property));
-        }
+      if (includeAllProperties) {
+        boundValue[property] = getValueFromBinding(value[property], getPropertyBinding(property), AccessPaths.combine(accessPath, property));
       } else if (excludeProperties) {
+        const upperCasePropertyName = property.toUpperCase();
         if (excludeProperties.every(excludeProperty => excludeProperty !== upperCasePropertyName)) {
           boundValue[property] = getValueFromBinding(value[property], getPropertyBinding(property), AccessPaths.combine(accessPath, property));
         }
