@@ -117,9 +117,10 @@ namespace JsBind.Net
             => InvokeVoidAsync(functionName, args);
 
         /// <summary>
-        /// Converts an object binding to a dynamic binding type.
+        /// Converts an object binding to a dynamic binding object of type <see cref="Any" />.
         /// </summary>
         /// <param name="obj">The object binding.</param>
+        /// <returns>The dynamic binding object.</returns>
         public static Any From(ObjectBindingBase obj)
         {
             var accessPath = obj.InternalGetAccessPath() ??
@@ -134,6 +135,40 @@ namespace JsBind.Net
                 dynamicTypeObject.Initialize(jsRuntime);
             }
 
+            return dynamicTypeObject;
+        }
+
+        /// <summary>
+        /// Creates a dynamic binding object of type <see cref="Any" /> with the specified access path.
+        /// </summary>
+        /// <param name="accessPath">The access path.</param>
+        /// <returns>The dynamic binding object.</returns>
+        public static Any From(string? accessPath)
+        {
+            return From(accessPath, null);
+        }
+
+        /// <summary>
+        /// Creates a dynamic binding object of type <see cref="Any" /> with the specified access path and JS runtime.
+        /// </summary>
+        /// <param name="accessPath">The access path.</param>
+        /// <param name="jsRuntime">The JS runtime.</param>
+        /// <returns>The dynamic binding object.</returns>
+        public static Any From(string? accessPath, IJsRuntimeAdapter? jsRuntime)
+        {
+            if (accessPath is null)
+            {
+                throw new ArgumentNullException(nameof(accessPath));
+            }
+
+            var dynamicTypeObject = new Any();
+            dynamicTypeObject.SetAccessPath(accessPath);
+            
+            if (jsRuntime is not null)
+            {
+                dynamicTypeObject.Initialize(jsRuntime);
+            }
+            
             return dynamicTypeObject;
         }
     }
