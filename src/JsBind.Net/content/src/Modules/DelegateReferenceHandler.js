@@ -8,6 +8,7 @@ class DelegateReferenceHandlerClass {
   constructor() {
     /** @type {Object<string, DotNetDelegateProxy>} */
     this._delegateReferences = {};
+    this._delegateReferencesCount = 0;
   }
 
   /**
@@ -20,6 +21,7 @@ class DelegateReferenceHandlerClass {
       return this._delegateReferences[delegateReference.delegateId];
     }
 
+    this._delegateReferencesCount++;
     const delegateProxy = new DotNetDelegateProxy(delegateReference);
     this._delegateReferences[delegateReference.delegateId] = delegateProxy;
     return delegateProxy;
@@ -31,6 +33,7 @@ class DelegateReferenceHandlerClass {
    */
   removeDelegateReference(delegateId) {
     if (this._delegateReferences[delegateId]) {
+      this._delegateReferencesCount--;
       this._delegateReferences[delegateId] = null;
       try {
         delete this._delegateReferences[delegateId];
@@ -43,7 +46,20 @@ class DelegateReferenceHandlerClass {
    */
   clearDelegateReferences() {
     this._delegateReferences = {};
+    this._delegateReferencesCount = 0;
   }
+
+  /**
+   * Get the delegate references.
+   * @returns {object} The delegate references.
+   */
+  getDelegateReferences() { return this._delegateReferences; }
+
+  /**
+   * Get the count of the delegate references.
+   * @returns {number} The count of the delegate references.
+   */
+  getDelegateReferencesCount() { return this._delegateReferencesCount; }
 }
 
 const DelegateReferenceHandler = new DelegateReferenceHandlerClass();

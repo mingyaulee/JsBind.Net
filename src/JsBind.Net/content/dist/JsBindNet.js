@@ -465,6 +465,7 @@
     constructor() {
       /** @type {Object<string, DotNetDelegateProxy>} */
       this._delegateReferences = {};
+      this._delegateReferencesCount = 0;
     }
 
     /**
@@ -477,6 +478,7 @@
         return this._delegateReferences[delegateReference.delegateId];
       }
 
+      this._delegateReferencesCount++;
       const delegateProxy = new DotNetDelegateProxy(delegateReference);
       this._delegateReferences[delegateReference.delegateId] = delegateProxy;
       return delegateProxy;
@@ -488,6 +490,7 @@
      */
     removeDelegateReference(delegateId) {
       if (this._delegateReferences[delegateId]) {
+        this._delegateReferencesCount--;
         this._delegateReferences[delegateId] = null;
         try {
           delete this._delegateReferences[delegateId];
@@ -500,7 +503,20 @@
      */
     clearDelegateReferences() {
       this._delegateReferences = {};
+      this._delegateReferencesCount = 0;
     }
+
+    /**
+     * Get the delegate references.
+     * @returns {object} The delegate references.
+     */
+    getDelegateReferences() { return this._delegateReferences; }
+
+    /**
+     * Get the count of the delegate references.
+     * @returns {number} The count of the delegate references.
+     */
+    getDelegateReferencesCount() { return this._delegateReferencesCount; }
   }
 
   const DelegateReferenceHandler = new DelegateReferenceHandlerClass();
@@ -761,6 +777,18 @@
      * @returns {number} The count of the object references.
      */
     getObjectReferencesCount() { return JsObjectHandler.getObjectReferencesCount(); }
+
+    /**
+     * Get the delegate references.
+     * @returns {object} The delegate references.
+     */
+    getDelegateReferences() { return DelegateReferenceHandler.getDelegateReferences(); }
+
+    /**
+     * Get the count of the delegate references.
+     * @returns {number} The count of the delegate references.
+     */
+    getDelegateReferencesCount() { return DelegateReferenceHandler.getDelegateReferencesCount(); }
 
     /**
      * Get the return value wrapped in InvokeResult.

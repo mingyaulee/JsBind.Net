@@ -163,6 +163,18 @@ export default class JsBindNet {
   getObjectReferencesCount() { return JsObjectHandler.getObjectReferencesCount(); }
 
   /**
+   * Get the delegate references.
+   * @returns {object} The delegate references.
+   */
+  getDelegateReferences() { return DelegateReferenceHandler.getDelegateReferences(); }
+
+  /**
+   * Get the count of the delegate references.
+   * @returns {number} The count of the delegate references.
+   */
+  getDelegateReferencesCount() { return DelegateReferenceHandler.getDelegateReferencesCount(); }
+
+  /**
    * Get the return value wrapped in InvokeResult.
    * @param {any} returnValue
    * @param {InvokeOption} invokeOption
