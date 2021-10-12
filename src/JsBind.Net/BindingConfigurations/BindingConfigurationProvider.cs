@@ -36,7 +36,11 @@ namespace JsBind.Net.BindingConfigurations
             var bindingConfiguration = bindingConfigurations[type];
             if (bindingConfiguration?.IncludeProperties is not null && bindingConfiguration.PropertyBindings is null)
             {
-                bindingConfiguration.PropertyBindings = GetPropertyBindingsFromType(type, bindingConfiguration.IncludeProperties);
+                bindingConfiguration.PropertyBindings = new Dictionary<string, BindingConfiguration?>();
+                foreach (var propertyBinding in GetPropertyBindingsFromType(type, bindingConfiguration.IncludeProperties))
+                {
+                    bindingConfiguration.PropertyBindings.Add(propertyBinding);
+                }
             }
 
             return bindingConfiguration;
@@ -171,6 +175,12 @@ namespace JsBind.Net.BindingConfigurations
         {
             var propertyBindings = new Dictionary<string, BindingConfiguration?>();
             var properties = GetTypeProperties(type);
+            
+            if (includeProperties.SingleOrDefault() == BindingConfiguration.IncludeAllPropertiesPattern)
+            {
+                includeProperties = properties.Keys;
+            }
+
             foreach (var includeProperty in includeProperties)
             {
                 if (!properties.TryGetValue(includeProperty, out var propertyInfo))

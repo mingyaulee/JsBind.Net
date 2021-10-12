@@ -9,6 +9,24 @@ namespace JsBind.Net.InvokeOptions
     public class ObjectBindingConfiguration
     {
         /// <summary>
+        /// Indicate that this is an object binding configuration instance.
+        /// </summary>
+        [JsonPropertyName("__isObjectBindingConfiguration")]
+        public bool IsObjectBindingConfiguration => true;
+
+        /// <summary>
+        /// The identifier of the binding configuration.
+        /// </summary>
+        [JsonPropertyName("id")]
+        public string? Id { get; set; }
+
+        /// <summary>
+        /// The reference identifier of the binding configuration.
+        /// </summary>
+        [JsonPropertyName("referenceId")]
+        public string? ReferenceId { get; set; }
+
+        /// <summary>
         /// The properties to include for binding.
         /// </summary>
         [JsonPropertyName("include")]

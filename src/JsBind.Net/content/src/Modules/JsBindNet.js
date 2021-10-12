@@ -4,6 +4,7 @@ import JsObjectHandler from "./JsObjectHandler.js";
 import ObjectBindingHandler from "./ObjectBindingHandler.js";
 import InvokeResult from "./InvokeResult.js";
 import DelegateReferenceReviver from "./JsonRevivers/DelegateReferenceReviver.js";
+import ObjectBindingConfigurationReviver from "./JsonRevivers/ObjectBindingConfigurationReviver.js";
 import ObjectReferenceReviver from "./JsonRevivers/ObjectReferenceReviver.js";
 
 /**
@@ -22,8 +23,9 @@ function attachDotNetRevivers() {
     setTimeout(attachDotNetRevivers, 10);
     return;
   }
-  globalThis.DotNet.attachReviver(DelegateReferenceReviver.revive);
-  globalThis.DotNet.attachReviver(ObjectReferenceReviver.revive);
+  globalThis.DotNet.attachReviver(DelegateReferenceReviver.revive.bind(DelegateReferenceReviver));
+  globalThis.DotNet.attachReviver(ObjectBindingConfigurationReviver.revive.bind(ObjectBindingConfigurationReviver));
+  globalThis.DotNet.attachReviver(ObjectReferenceReviver.revive.bind(ObjectReferenceReviver));
 }
 
 export default class JsBindNet {

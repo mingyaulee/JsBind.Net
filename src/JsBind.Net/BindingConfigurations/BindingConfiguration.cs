@@ -7,9 +7,10 @@ namespace JsBind.Net.BindingConfigurations
     /// </summary>
     public class BindingConfiguration
     {
+        internal const string IncludeAllPropertiesPattern = "*";
         internal static BindingConfiguration IncludeAllProperties { get; } = new()
         {
-            IncludeProperties = new[] { "*" }
+            IncludeProperties = new[] { IncludeAllPropertiesPattern }
         };
 
         /// <summary>

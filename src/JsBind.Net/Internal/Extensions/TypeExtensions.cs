@@ -83,24 +83,43 @@ namespace JsBind.Net.Internal.Extensions
         public static ObjectBindingConfiguration? GetBindingConfiguration(this Type type, IBindingConfigurationProvider bindingConfigurationProvider)
         {
             var bindingConfiguration = bindingConfigurationProvider.Get(type);
-            return MapFromBindingConfiguration(bindingConfiguration);
+            return new BindingConfigurationMapper().MapFromBindingConfiguration(bindingConfiguration);
         }
 
-        private static ObjectBindingConfiguration? MapFromBindingConfiguration(BindingConfiguration? bindingConfiguration)
+        private class BindingConfigurationMapper
         {
-            if (bindingConfiguration is null)
-            {
-                return null;
-            }
+            private readonly Dictionary<BindingConfiguration, ObjectBindingConfiguration> ProcessedBindings = new();
 
-            return new ObjectBindingConfiguration()
+            public ObjectBindingConfiguration? MapFromBindingConfiguration(BindingConfiguration? bindingConfiguration)
             {
-                Include = bindingConfiguration.IncludeProperties,
-                Exclude = bindingConfiguration.ExcludeProperties,
-                IsBindingBase = bindingConfiguration.IsBindingBase,
-                PropertyBindings = bindingConfiguration.PropertyBindings?.ToDictionary(keyValuePair => keyValuePair.Key, keyValuePair => MapFromBindingConfiguration(keyValuePair.Value)),
-                ArrayItemBinding = MapFromBindingConfiguration(bindingConfiguration.ArrayItemBinding)
-            };
+                if (bindingConfiguration is null)
+                {
+                    return null;
+                }
+
+                if (ProcessedBindings.TryGetValue(bindingConfiguration, out var processedBinding))
+                {
+                    if (string.IsNullOrEmpty(processedBinding.Id))
+                    {
+                        processedBinding.Id = Guid.NewGuid().ToString();
+                    }
+
+                    return new ObjectBindingConfiguration()
+                    {
+                        ReferenceId = processedBinding.Id
+                    };
+                }
+
+                var objectBindingConfiguration = new ObjectBindingConfiguration();
+                ProcessedBindings.Add(bindingConfiguration, objectBindingConfiguration);
+
+                objectBindingConfiguration.Include = bindingConfiguration.IncludeProperties;
+                objectBindingConfiguration.Exclude = bindingConfiguration.ExcludeProperties;
+                objectBindingConfiguration.IsBindingBase = bindingConfiguration.IsBindingBase;
+                objectBindingConfiguration.PropertyBindings = bindingConfiguration.PropertyBindings?.ToDictionary(keyValuePair => keyValuePair.Key, keyValuePair => MapFromBindingConfiguration(keyValuePair.Value));
+                objectBindingConfiguration.ArrayItemBinding = MapFromBindingConfiguration(bindingConfiguration.ArrayItemBinding);
+                return objectBindingConfiguration;
+            }
         }
     }
 }
