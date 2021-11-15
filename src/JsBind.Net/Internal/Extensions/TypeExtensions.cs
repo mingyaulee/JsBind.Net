@@ -86,7 +86,7 @@ namespace JsBind.Net.Internal.Extensions
             return new BindingConfigurationMapper().MapFromBindingConfiguration(bindingConfiguration);
         }
 
-        private class BindingConfigurationMapper
+        private sealed class BindingConfigurationMapper
         {
             private readonly Dictionary<BindingConfiguration, ObjectBindingConfiguration> ProcessedBindings = new();
 
