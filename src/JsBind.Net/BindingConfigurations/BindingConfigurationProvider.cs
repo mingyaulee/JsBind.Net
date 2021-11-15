@@ -176,7 +176,7 @@ namespace JsBind.Net.BindingConfigurations
             var propertyBindings = new Dictionary<string, BindingConfiguration?>();
             var properties = GetTypeProperties(type);
             
-            if (includeProperties.SingleOrDefault() == BindingConfiguration.IncludeAllPropertiesPattern)
+            if (includeProperties.Count() == 1 && includeProperties.Single() == BindingConfiguration.IncludeAllPropertiesPattern)
             {
                 includeProperties = properties.Keys;
             }
