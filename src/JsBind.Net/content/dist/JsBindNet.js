@@ -430,7 +430,7 @@
      */
     _processInvokeArgs(invokeArgs) {
       const bindings = this.delegateReference.argumentBindings;
-      if (!invokeArgs || !invokeArgs.length || !bindings.length) {
+      if (!invokeArgs || !invokeArgs.length || !bindings || !bindings.length) {
         return invokeArgs;
       }
 
