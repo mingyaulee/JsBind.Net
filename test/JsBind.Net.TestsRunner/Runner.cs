@@ -28,7 +28,7 @@ namespace JsBind.Net.TestsRunner
             var configuration = "release";
 #endif
 
-            var testProjectOutput = $"{solutionDirectory}\\test\\JsBind.Net.Tests\\bin\\{configuration}\\net5.0\\wwwroot\\_framework";
+            var testProjectOutput = $"{solutionDirectory}\\test\\JsBind.Net.Tests\\bin\\{configuration}\\net6.0\\wwwroot\\_framework";
             // delete all gzip files to disable use of gzip and allow code coverage collection
             foreach (var gzipFile in Directory.GetFiles(testProjectOutput).Where(file => file.EndsWith(".gz")))
             {
