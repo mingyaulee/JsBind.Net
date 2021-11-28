@@ -44,6 +44,22 @@ class JsObjectHandlerClass {
   }
 
   /**
+   * Gets an object reference from the reference identifier.
+   * @param {string} referenceId The object reference identifier.
+   */
+  getObjectReference(referenceId) {
+    return this._objectReferences[referenceId];
+  }
+
+  /**
+   * Checks if an object reference is stored.
+   * @param {string} referenceId The object reference identifier.
+   */
+  containsObjectReference(referenceId) {
+    return this._objectReferences[referenceId] !== null && typeof this._objectReferences[referenceId] !== "undefined";
+  }
+
+  /**
    * Remove object reference.
    * @param {string} referenceId The object reference identifier.
    */

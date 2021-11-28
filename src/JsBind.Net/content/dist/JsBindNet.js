@@ -53,6 +53,24 @@
 
   const AccessPaths = new AccessPathsClass();
 
+  class GuidClass {
+    /**
+     * Generate a new GUID.
+     * @returns {string}
+     */
+    newGuid() {
+      if (globalThis.crypto.randomUUID) {
+        return globalThis.crypto.randomUUID();
+      }
+
+      return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
+        (c ^ globalThis.crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+      );
+    }
+  }
+
+  const Guid = new GuidClass();
+
   class JsBindError extends Error {
     /**
      * Creates a new instance of JsBindError.
@@ -125,6 +143,22 @@
         this._objectReferencesCount++;
       }
       this._objectReferences[referenceId] = objectReference;
+    }
+
+    /**
+     * Gets an object reference from the reference identifier.
+     * @param {string} referenceId The object reference identifier.
+     */
+    getObjectReference(referenceId) {
+      return this._objectReferences[referenceId];
+    }
+
+    /**
+     * Checks if an object reference is stored.
+     * @param {string} referenceId The object reference identifier.
+     */
+    containsObjectReference(referenceId) {
+      return this._objectReferences[referenceId] !== null && typeof this._objectReferences[referenceId] !== "undefined";
     }
 
     /**
@@ -438,7 +472,11 @@
         let invokeArgAccessPath = null;
 
         if (this.delegateReference.storeArgumentsAsReferences[index]) {
-          const referenceId = this.delegateReference.argumentsReferenceIds[index];
+          let referenceId = this.delegateReference.argumentsReferenceIds[index];
+          if (JsObjectHandler.containsObjectReference(referenceId) && JsObjectHandler.getObjectReference(referenceId) !== invokeArg) {
+            referenceId = Guid.newGuid();
+          }
+
           invokeArgAccessPath = AccessPaths.fromReferenceId(referenceId);
           JsObjectHandler.addObjectReference(referenceId, invokeArg);
         }
@@ -613,7 +651,7 @@
 
   /**
    * @callback FoundBindingCallback
-   * @param {ObjectBindingConfiguration}
+   * @param {ObjectBindingConfiguration} binding
    */
 
   class ObjectBindingConfigurationReviverClass {
@@ -632,33 +670,49 @@
     revive(key, value) {
       if (IsObjectBindingConfiguration(value)) {
         if (value.id) {
-          this.references[value.id] = value;
-          if (this.referenceCallbacks.hasOwnProperty(value.id)) {
-            this.referenceCallbacks[value.id].forEach(callback => callback(value));
-            this.referenceCallbacks[value.id] = [];
-            try {
-              delete this.referenceCallbacks[value.id];
-            } catch { }
-          }
+          this.foundObject(value);
         } else if (value.referenceId) {
-          if (this.references.hasOwnProperty(value.referenceId)) {
-            return this.references[value.referenceId];
-          } else {
-            if (!this.referenceCallbacks.hasOwnProperty(value.referenceId)) {
-              this.referenceCallbacks[value.referenceId] = [];
-            }
-            this.referenceCallbacks[value.referenceId].push(binding => {
-              value.include = binding.include;
-              value.exclude = binding.exclude;
-              value.propertyBindings = binding.propertyBindings;
-              value.isBindingBase = binding.isBindingBase;
-              value.arrayItemBinding = binding.arrayItemBinding;
-            });
-          }
+          this.trackReference(value);
         }
       }
 
       return value;
+    }
+
+    /**
+     * Called when an object with id is found.
+     * @param {ObjectBindingConfiguration} obj 
+     */
+    foundObject(obj) {
+      this.references[obj.id] = obj;
+      if (this.referenceCallbacks.hasOwnProperty(obj.id)) {
+        this.referenceCallbacks[obj.id].forEach(callback => callback(obj));
+        this.referenceCallbacks[obj.id] = [];
+        try {
+          delete this.referenceCallbacks[obj.id];
+        } catch { }
+      }
+    }
+
+    /**
+     * Track a reference object with reference id to be initialized when the referenced object is found.
+     * @param {any} referenceObject 
+     */
+    trackReference(referenceObject) {
+      if (this.references.hasOwnProperty(referenceObject.referenceId)) {
+        return this.references[referenceObject.referenceId];
+      } else {
+        if (!this.referenceCallbacks.hasOwnProperty(referenceObject.referenceId)) {
+          this.referenceCallbacks[referenceObject.referenceId] = [];
+        }
+        this.referenceCallbacks[referenceObject.referenceId].push(binding => {
+          referenceObject.include = binding.include;
+          referenceObject.exclude = binding.exclude;
+          referenceObject.propertyBindings = binding.propertyBindings;
+          referenceObject.isBindingBase = binding.isBindingBase;
+          referenceObject.arrayItemBinding = binding.arrayItemBinding;
+        });
+      }
     }
   }
 

@@ -24,6 +24,9 @@ namespace JsBind.Net.Internal.References
         [JsonPropertyName("storeArgumentsAsReferences")]
         public IEnumerable<bool>? StoreArgumentsAsReferences => ArgumentBindings is not null ? ArgumentBindings.Select(binding => binding is not null) : null;
 
+        /// <summary>
+        /// Do not use this property from dotnet. The reference IDs will be generated again from JavaScript when necessary. Refer to Modules\DotNetDelegateProxy.js
+        /// </summary>
         [JsonPropertyName("argumentsReferenceIds")]
         public IEnumerable<string?>? ArgumentsReferenceIds
         {

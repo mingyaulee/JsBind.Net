@@ -1,4 +1,5 @@
 ﻿import AccessPaths from "./AccessPaths.js";
+import Guid from "./Guid.js";
 import JsBindError from "./JsBindError.js";
 import JsObjectHandler from "./JsObjectHandler.js";
 import ObjectBindingHandler from "./ObjectBindingHandler.js";
@@ -111,7 +112,11 @@ export default class DotNetDelegateProxy {
       let invokeArgAccessPath = null;
 
       if (this.delegateReference.storeArgumentsAsReferences[index]) {
-        const referenceId = this.delegateReference.argumentsReferenceIds[index];
+        let referenceId = this.delegateReference.argumentsReferenceIds[index];
+        if (JsObjectHandler.containsObjectReference(referenceId) && JsObjectHandler.getObjectReference(referenceId) !== invokeArg) {
+          referenceId = Guid.newGuid();
+        }
+
         invokeArgAccessPath = AccessPaths.fromReferenceId(referenceId);
         JsObjectHandler.addObjectReference(referenceId, invokeArg);
       }
