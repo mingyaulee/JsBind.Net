@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using JsBind.Net;
 
@@ -32,5 +33,7 @@ namespace TestBindings.WebAssembly.BindingTestLibrary
         public NestedDelegateClass GetNestedActionDelegate() => Invoke<NestedDelegateClass>("getNestedActionDelegate");
         public Func<int, int> GetPrimitiveFunctionDelegate() => Invoke<Func<int, int>>("getMirrorFunctionDelegate");
         public Func<Window, Window> GetReferenceFunctionDelegate() => Invoke<Func<Window, Window>>("getMirrorFunctionDelegate");
+        
+        public TResult TestInvokeDelegateWithParams<TResult>(Delegate del, params object[] args) => Invoke<TResult>("testInvokeDelegate", new object[] { del }.Concat(args).ToArray());
     }
 }
