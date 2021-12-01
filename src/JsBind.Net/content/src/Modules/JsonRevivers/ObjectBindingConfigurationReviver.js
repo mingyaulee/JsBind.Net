@@ -54,19 +54,20 @@ class ObjectBindingConfigurationReviverClass {
    * @param {any} referenceObject 
    */
   trackReference(referenceObject) {
+    const foundBinding = (/** @type {ObjectBindingConfiguration} */ binding) => {
+      referenceObject.include = binding.include;
+      referenceObject.exclude = binding.exclude;
+      referenceObject.propertyBindings = binding.propertyBindings;
+      referenceObject.isBindingBase = binding.isBindingBase;
+      referenceObject.arrayItemBinding = binding.arrayItemBinding;
+    };
     if (this.references.hasOwnProperty(referenceObject.referenceId)) {
-      return this.references[referenceObject.referenceId];
+      foundBinding(this.references[referenceObject.referenceId]);
     } else {
       if (!this.referenceCallbacks.hasOwnProperty(referenceObject.referenceId)) {
         this.referenceCallbacks[referenceObject.referenceId] = [];
       }
-      this.referenceCallbacks[referenceObject.referenceId].push(binding => {
-        referenceObject.include = binding.include;
-        referenceObject.exclude = binding.exclude;
-        referenceObject.propertyBindings = binding.propertyBindings;
-        referenceObject.isBindingBase = binding.isBindingBase;
-        referenceObject.arrayItemBinding = binding.arrayItemBinding;
-      });
+      this.referenceCallbacks[referenceObject.referenceId].push(foundBinding);
     }
   }
 }
