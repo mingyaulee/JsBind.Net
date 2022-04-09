@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <_JsBind_Package_Contents_Scripts_Directory>$(MSBuildThisFileDirectory)..\..\src\JsBind.Net\content\dist</_JsBind_Package_Contents_Scripts_Directory>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TestBindings\TestBindings.csproj" />
+
+    <StaticWebAsset Include="..\TestBindings\BindingTestLibrary.js">
+      <SourceType>Package</SourceType>
+      <SourceId>TestBindings</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\TestBindings</ContentRoot>
+      <BasePath>_content/TestBindings</BasePath>
+      <RelativePath>BindingTestLibrary.js</RelativePath>
+    </StaticWebAsset>
+  </ItemGroup>
+
+  <!-- Import the build files as if it is imported by the JsBind.Net NuGet package -->
+  <Import Project="..\..\src\JsBind.Net\build\JsBind.Net.props" />
+  <Import Project="..\..\src\JsBind.Net\build\JsBind.Net.targets" />
+
+</Project>

@@ -8,5 +8,6 @@ namespace TestBindings.Server.BindingTestLibrary
         [JsonPropertyName("isTestClass")]
         public bool IsTestClass { get; set; }
         public double RandomValue { get; set; }
+        public NestedDelegateClass NestedObj { get; set; }
     }
 }

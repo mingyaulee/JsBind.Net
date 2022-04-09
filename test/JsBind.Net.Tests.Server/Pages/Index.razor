@@ -1,0 +1,45 @@
+﻿@page "/"
+@inject TestBindings.Server.BindingTestLibrary.BindingTestLibrary bindingTestLibrary
+@inject TestBindings.Server.Document document
+@inject IJsRuntimeAdapter jsRuntime
+@implements IAsyncDisposable
+@using TestBindings.Server.BindingTestLibrary;
+
+<h1>Hello, world!</h1>
+
+Welcome to your new app.
+
+<SurveyPrompt Title="How is Blazor working for you?" />
+
+@code{
+    int currentInvocationCount;
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await Task.Delay(100);
+        await bindingTestLibrary.TestInvokeDelegate((Action<TestBoundClass>)((TestBoundClass obj) =>
+            {
+                Console.WriteLine("onmessage");
+                Console.WriteLine(obj);
+                Console.WriteLine(obj?.NestedObj);
+            }));
+
+
+        await bindingTestLibrary.TestInvokeDelegateAsync((Func<Task>)TestDelegateAsync).ConfigureAwait(false);
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        await JsObjectManager.DisposeDelegateReferenceAsync((Func<Task>)TestDelegateAsync, jsRuntime).ConfigureAwait(false);
+    }
+
+    private async Task TestDelegateAsync()
+    {
+        await Task.Delay(10).ConfigureAwait(false);
+        currentInvocationCount++;
+    }
+
+    private void TestDelegate(object a, string ab)
+    {
+        currentInvocationCount++;
+    }
+}
