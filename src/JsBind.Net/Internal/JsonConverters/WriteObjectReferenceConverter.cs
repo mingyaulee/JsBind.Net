@@ -39,7 +39,11 @@ namespace JsBind.Net.Internal.JsonConverters
             else
             {
                 var cloneOptions = new JsonSerializerOptions(options);
-                cloneOptions.Converters.OfType<WriteObjectReferenceConverterFactory>().Single().SkipConvertOnce = true;
+                cloneOptions.Converters.Remove(cloneOptions.Converters.OfType<WriteObjectReferenceConverterFactory>().Single());
+                cloneOptions.Converters.Add(new WriteObjectReferenceConverterFactory()
+                {
+                    SkipConvertOnce = true
+                });
                 JsonSerializer.Serialize(writer, (object?)value, cloneOptions);
             }
         }
