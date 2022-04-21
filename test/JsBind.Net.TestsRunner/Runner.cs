@@ -1,6 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium.Chrome;
-using OpenQA.Selenium.Remote;
 using System;
 using System.IO;
 using System.Text.Json;
@@ -9,6 +8,7 @@ using JsBind.Net.TestsRunner.Helpers;
 using JsBind.Net.TestsRunner.Models;
 using System.Diagnostics;
 using System.Linq;
+using OpenQA.Selenium;
 
 namespace JsBind.Net.TestsRunner
 {
@@ -89,19 +89,19 @@ namespace JsBind.Net.TestsRunner
             }
         }
 
-        private static RemoteWebDriver GetWebDriver(string driverPath)
+        private static WebDriver GetWebDriver(string driverPath)
         {
             var chromeOptions = new ChromeOptions();
             return new ChromeDriver(driverPath, chromeOptions);
         }
 
-        private static void LaunchTestPage(RemoteWebDriver webDriver)
+        private static void LaunchTestPage(WebDriver webDriver)
         {
             var testPageUrl = $"http://localhost:5151/index.html?random=false&coverlet";
             webDriver.Navigate().GoToUrl(testPageUrl);
         }
 
-        private static async Task WaitForTestToFinish(RemoteWebDriver webDriver)
+        private static async Task WaitForTestToFinish(WebDriver webDriver)
         {
             // wait for 30 seconds
             var waitTime = 30 * 1000;
@@ -126,7 +126,7 @@ namespace JsBind.Net.TestsRunner
             }
         }
 
-        private static TestRunInfo GetTestResults(RemoteWebDriver webDriver)
+        private static TestRunInfo GetTestResults(WebDriver webDriver)
         {
             var resultsObject = (string)webDriver.ExecuteScript("return JSON.stringify(TestRunner.GetTestResults());");
             var testRunResult = JsonSerializer.Deserialize<TestRunInfo>(resultsObject, new JsonSerializerOptions()
@@ -150,7 +150,7 @@ namespace JsBind.Net.TestsRunner
             return testRunResult;
         }
 
-        private static async Task<TestCoverage> GetTestCoverageHits(RemoteWebDriver webDriver)
+        private static async Task<TestCoverage> GetTestCoverageHits(WebDriver webDriver)
         {
             // wait for 5 seconds
             var waitTime = 5 * 1000;
