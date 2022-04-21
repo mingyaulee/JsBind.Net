@@ -4,10 +4,10 @@ import { IsObjectReference } from "../References/ObjectReference.js";
 class ObjectReferenceReviverClass {
   /**
    * Converts an ObjectReference JSON object to an object.
-   * @param {any} key
+   * @param {any} _key
    * @param {any} value
    */
-  revive(key, value) {
+  revive(_key, value) {
     if (IsObjectReference(value)) {
       return JsObjectHandler.getObjectFromAccessPath(value.accessPath);
     }

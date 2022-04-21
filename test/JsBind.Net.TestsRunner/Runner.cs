@@ -19,7 +19,7 @@ namespace JsBind.Net.TestsRunner
         public async Task RunTests()
         {
             var currentDirectory = Directory.GetCurrentDirectory();
-            var solutionDirectory = currentDirectory.Substring(0, currentDirectory.IndexOf("\\test"));
+            var solutionDirectory = currentDirectory[..currentDirectory.IndexOf("\\test")];
             var driverPath = "C:\\SeleniumWebDrivers\\ChromeDriver";
             var resultsPath = $"{solutionDirectory}\\test\\TestResults";
 #if DEBUG

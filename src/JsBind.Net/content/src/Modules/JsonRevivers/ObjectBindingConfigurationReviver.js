@@ -19,10 +19,10 @@ class ObjectBindingConfigurationReviverClass {
 
   /**
    * Revives reference binding configuration.
-   * @param {any} key
+   * @param {any} _key
    * @param {any} value
    */
-  revive(key, value) {
+  revive(_key, value) {
     if (IsObjectBindingConfiguration(value)) {
       if (value.id) {
         this.foundObject(value);
