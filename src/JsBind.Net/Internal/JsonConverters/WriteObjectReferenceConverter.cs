@@ -42,7 +42,8 @@ namespace JsBind.Net.Internal.JsonConverters
                 cloneOptions.Converters.Remove(cloneOptions.Converters.OfType<WriteObjectReferenceConverterFactory>().Single());
                 cloneOptions.Converters.Add(new WriteObjectReferenceConverterFactory()
                 {
-                    SkipConvertOnce = true
+                    SkipConvertOnce = true,
+                    SkipConvertType = typeof(T)
                 });
                 JsonSerializer.Serialize(writer, (object?)value, cloneOptions);
             }
