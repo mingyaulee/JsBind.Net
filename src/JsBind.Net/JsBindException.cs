@@ -45,6 +45,9 @@ namespace JsBind.Net
             return jsBindStackTrace;
         }
 
+#if NET8_0_OR_GREATER
+    [Obsolete(DiagnosticId = "SYSLIB0051")] // add this attribute to the serialization ctor
+#endif
         private JsBindException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
@@ -53,6 +56,9 @@ namespace JsBind.Net
         }
 
         /// <inheritdoc />
+#if NET8_0_OR_GREATER
+    [Obsolete(DiagnosticId = "SYSLIB0051")] // add this attribute to the serialization ctor
+#endif
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             base.GetObjectData(info, context);

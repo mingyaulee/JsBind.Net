@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31424.327
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34009.444
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsBind.Net", "src\JsBind.Net\JsBind.Net.csproj", "{A687DFF7-AA4B-4512-ADDD-99CC29251DCC}"
 EndProject
@@ -18,12 +18,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsBind.Net.Extensions.DependencyInjection", "src\JsBind.Net.Extensions.DependencyInjection\JsBind.Net.Extensions.DependencyInjection.csproj", "{5AEE886C-9662-4A8F-817E-D226D8559474}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{E146EA13-698E-411F-845F-64885BA509DE}"
-	ProjectSection(SolutionItems) = preProject
-		.github\workflows\JsBind.Net-Build.yml = .github\workflows\JsBind.Net-Build.yml
-		.github\workflows\JsBind.Net-Release.yml = .github\workflows\JsBind.Net-Release.yml
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{E87622DD-4B6E-4DC7-9858-B56167959C51}"
 EndProject

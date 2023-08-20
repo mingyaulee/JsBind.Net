@@ -28,7 +28,7 @@ namespace JsBind.Net.TestsRunner
             var configuration = "release";
 #endif
 
-            var testProjectOutput = $"{solutionDirectory}\\test\\JsBind.Net.Tests\\bin\\{configuration}\\net7.0\\wwwroot\\_framework";
+            var testProjectOutput = $"{solutionDirectory}\\test\\JsBind.Net.Tests\\bin\\{configuration}\\net8.0\\wwwroot\\_framework";
             // delete all gzip files to disable use of gzip and allow code coverage collection
             foreach (var gzipFile in Directory.GetFiles(testProjectOutput).Where(file => file.EndsWith(".gz")))
             {
@@ -49,7 +49,7 @@ namespace JsBind.Net.TestsRunner
 
             if (!Directory.Exists(driverPath))
             {
-                throw new NotSupportedException($"Download the chromedriver from and extract the executable file to {driverPath}. Check available versions at http://chromedriver.storage.googleapis.com/");
+                throw new NotSupportedException($"Download the chromedriver from and extract the executable file to {driverPath}. Check available versions at http://chromedriver.storage.googleapis.com/ or download the latest version from https://googlechromelabs.github.io/chrome-for-testing/");
             }
 
             try
@@ -79,7 +79,7 @@ namespace JsBind.Net.TestsRunner
             }
             catch (Exception exception)
             {
-                Assert.Fail("Failed to create WebDriver. Exception message: " + exception.Message);
+                Assert.Fail("Failed to create WebDriver. Exception message: " + exception.Message + Environment.NewLine + "Check available versions at http://chromedriver.storage.googleapis.com/ or download the latest version from https://googlechromelabs.github.io/chrome-for-testing/");
             }
             finally
             {

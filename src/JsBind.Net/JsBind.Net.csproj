@@ -3,7 +3,7 @@
   <!-- Build properties. -->
   <PropertyGroup>
     <LangVersion>9</LangVersion>
-    <TargetFrameworks>net7.0;net6.0;net5.0</TargetFrameworks>
+    <TargetFrameworks>net8.0;net7.0;net6.0</TargetFrameworks>
     <Nullable>enable</Nullable>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <GenerateDependencyFile>false</GenerateDependencyFile>
@@ -35,9 +35,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Condition="'$(TargetFramework)' == 'net7.0'" Include="Microsoft.JSInterop" Version="7.0.0-*" />
+    <PackageReference Condition="'$(TargetFramework)' == 'net8.0'" Include="Microsoft.JSInterop" Version="8.0.0-*" />
+    <PackageReference Condition="'$(TargetFramework)' == 'net7.0'" Include="Microsoft.JSInterop" Version="7.0.0" />
     <PackageReference Condition="'$(TargetFramework)' == 'net6.0'" Include="Microsoft.JSInterop" Version="6.0.0" />
-    <PackageReference Condition="'$(TargetFramework)' == 'net5.0'" Include="Microsoft.JSInterop" Version="5.0.0" />
   </ItemGroup>
 
 </Project>
