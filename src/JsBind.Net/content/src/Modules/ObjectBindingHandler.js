@@ -118,7 +118,7 @@ function getValueFromBinding(value, binding, accessPath) {
     return getArrayValueFromBinding(value, binding.arrayItemBinding, accessPath);
   }
 
-  const includeAllProperties = binding.include && binding.include.some(includeProperty => includeProperty === "*");
+  const includeAllProperties = binding.include?.some(includeProperty => includeProperty === "*");
   const excludeProperties = binding.exclude?.map(excludeProperty => excludeProperty.toUpperCase());
   const getPropertyBinding = (propertyName) => {
     return binding.propertyBindings?.[propertyName.toUpperCase()];

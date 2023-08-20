@@ -13,7 +13,7 @@ namespace JsBind.Net.BindingConfigurations
     /// </summary>
     internal class BindingConfigurationProvider : IBindingConfigurationProvider
     {
-        private readonly IDictionary<Type, BindingConfiguration?> bindingConfigurations = new Dictionary<Type, BindingConfiguration?>();
+        private readonly Dictionary<Type, BindingConfiguration?> bindingConfigurations = new();
 
         /// <inheritdoc />
         public BindingConfiguration? Get(Type type)
@@ -63,7 +63,7 @@ namespace JsBind.Net.BindingConfigurations
             return GetTypeProperties(type).Keys;
         }
 
-        private static IDictionary<string, PropertyInfo> GetTypeProperties(Type type)
+        private static Dictionary<string, PropertyInfo> GetTypeProperties(Type type)
         {
             return type
                 .GetProperties(BindingFlags.Public | BindingFlags.Instance)
@@ -171,11 +171,11 @@ namespace JsBind.Net.BindingConfigurations
             Add(type, bindingConfiguration);
         }
 
-        private IDictionary<string, BindingConfiguration?> GetPropertyBindingsFromType(Type type, IEnumerable<string> includeProperties)
+        private Dictionary<string, BindingConfiguration?> GetPropertyBindingsFromType(Type type, IEnumerable<string> includeProperties)
         {
             var propertyBindings = new Dictionary<string, BindingConfiguration?>();
             var properties = GetTypeProperties(type);
-            
+
             if (includeProperties.Count() == 1 && includeProperties.Single() == BindingConfiguration.IncludeAllPropertiesPattern)
             {
                 includeProperties = properties.Keys;

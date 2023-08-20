@@ -74,7 +74,7 @@ export default class DotNetDelegateProxy {
    */
   _invokeDelegateInternal(delegateId, invokeArgs) {
     const invokeResult = globalThis.DotNet.invokeMethod("JsBind.Net", "InvokeDelegateFromJs", delegateId, invokeArgs);
-    if (invokeResult && invokeResult.isError && invokeResult.errorMessage) {
+    if (invokeResult?.isError && invokeResult.errorMessage) {
       throw new JsBindError(invokeResult.errorMessage, invokeResult.stackTrace);
     }
 
@@ -91,7 +91,7 @@ export default class DotNetDelegateProxy {
     let invokeAsyncResult = await globalThis.DotNet.invokeMethodAsync("JsBind.Net", "InvokeDelegateFromJsAsync", delegateId, invokeArgs);
     let invokeResult = unwrapAsyncResult(invokeAsyncResult);
 
-    if (invokeResult && invokeResult.isError && invokeResult.errorMessage) {
+    if (invokeResult?.isError && invokeResult.errorMessage) {
       throw new JsBindError(invokeResult.errorMessage, invokeResult.stackTrace);
     }
 
@@ -104,7 +104,7 @@ export default class DotNetDelegateProxy {
    */
   _processInvokeArgs(invokeArgs) {
     const bindings = this.delegateReference.argumentBindings;
-    if (!invokeArgs || !invokeArgs.length || !bindings || !bindings.length) {
+    if (!invokeArgs?.length || !bindings?.length) {
       return invokeArgs;
     }
 

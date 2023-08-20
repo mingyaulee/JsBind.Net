@@ -156,10 +156,7 @@ namespace JsBind.Net
         /// <returns>The dynamic binding object.</returns>
         public static Any From(string? accessPath, IJsRuntimeAdapter? jsRuntime)
         {
-            if (accessPath is null)
-            {
-                throw new ArgumentNullException(nameof(accessPath));
-            }
+            ArgumentNullException.ThrowIfNull(accessPath);
 
             var dynamicTypeObject = new Any();
             dynamicTypeObject.SetAccessPath(accessPath);

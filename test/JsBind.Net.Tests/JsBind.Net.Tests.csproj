@@ -6,6 +6,8 @@
     <BlazorEnableCompression>false</BlazorEnableCompression>
     <!-- Disable caching so that we can skip integrity check. This is for coverlet to inject the hits counter into the assembly which will change the integrity hash. -->
     <BlazorCacheBootResources>false</BlazorCacheBootResources>
+    <!-- Disable conversion of DLLs to webcil-in-wasm format. This is for coverlet to inject the hits counter into the assembly which only works for DLLs. -->
+    <WasmEnableWebcil>false</WasmEnableWebcil>
   </PropertyGroup>
 
   <ItemGroup>
