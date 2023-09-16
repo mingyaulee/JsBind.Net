@@ -1,6 +1,6 @@
 # JsBind.Net
 [![Nuget](https://img.shields.io/nuget/v/JsBind.Net?style=for-the-badge&color=blue)](https://www.nuget.org/packages/JsBind.Net/)
-[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/mingyaulee/JsBind.Net/Build?style=for-the-badge&color=blue)](https://github.com/mingyaulee/JsBind.Net/actions/workflows/JsBind.Net-Build.yml)
+[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/mingyaulee/JsBind.Net/JsBind.Net-Build.yml?branch=main&style=for-the-badge&color=blue)](https://github.com/mingyaulee/JsBind.Net/actions/workflows/JsBind.Net-Build.yml)
 [![Sonar Tests](https://img.shields.io/sonar/tests/JsBind.Net?compact_message&server=https%3A%2F%2Fsonarcloud.io&style=for-the-badge)](https://sonarcloud.io/dashboard?id=JsBind.Net)
 [![Sonar Tests](https://img.shields.io/sonar/coverage/JsBind.Net?server=https%3A%2F%2Fsonarcloud.io&style=for-the-badge)](https://sonarcloud.io/dashboard?id=JsBind.Net)
 [![Sonar Quality Gate](https://img.shields.io/sonar/quality_gate/JsBind.Net?server=https%3A%2F%2Fsonarcloud.io&style=for-the-badge)](https://sonarcloud.io/dashboard?id=JsBind.Net)
@@ -156,6 +156,7 @@ You should use the binding attributes to define the behaviour of the interop and
 Attributes from the `System.Text.Json` can be used for the serialization and deserialization behaviour.
 
 Attributes that can be used for binding are
+
 | Attribute                       | Usage    | Description                                                                                                |
 | ------------------------------- | -------- | ---------------------------------------------------------------------------------------------------------- |
 | BindDeclaredPropertiesAttribute | Class    | Include the public properties with setter that are declared in the class for binding.                      |
