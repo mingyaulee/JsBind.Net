@@ -560,6 +560,15 @@
   const DelegateReferenceHandler = new DelegateReferenceHandlerClass();
 
   class InvokeResult {
+    /** @type {any} */
+    value;
+    /** @type {boolean} */
+    isError;
+    /** @type {string} */
+    errorMessage;
+    /** @type {string} */
+    stackTrace;
+
     /**
      * Creates a new instance of InvokeResult.
      * @param {any} value

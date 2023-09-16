@@ -38,7 +38,9 @@ namespace JsBind.Net.Internal.JsonConverters
             }
             else
             {
+#pragma warning disable CA1869 // Cache and reuse 'JsonSerializerOptions' instances
                 var cloneOptions = new JsonSerializerOptions(options);
+#pragma warning restore CA1869 // Cache and reuse 'JsonSerializerOptions' instances
                 cloneOptions.Converters.Remove(cloneOptions.Converters.OfType<WriteObjectReferenceConverterFactory>().Single());
                 cloneOptions.Converters.Add(new WriteObjectReferenceConverterFactory()
                 {
