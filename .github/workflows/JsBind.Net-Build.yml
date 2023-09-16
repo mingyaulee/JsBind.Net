@@ -41,7 +41,6 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 8.0.x
-        include-prerelease: true
     - name: Setup Chrome and Chrome Driver
       uses: nanasess/setup-chromedriver@master
     - name: Checkout
@@ -94,7 +93,7 @@ jobs:
     - name: Check if tag exists
       uses: mukunku/tag-exists-action@v1.3.0
       id: tagExistsCheck
-      with: 
+      with:
         tag: 'v${{ needs.version.outputs.NuGetVersion }}'
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
