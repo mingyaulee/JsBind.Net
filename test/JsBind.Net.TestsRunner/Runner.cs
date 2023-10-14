@@ -122,6 +122,15 @@ namespace JsBind.Net.TestsRunner
             }
             if (!finished)
             {
+                var logs = webDriver.Manage().Logs
+                    .GetLog(LogType.Browser)
+                    .Where(log => !log.Message.Contains("ThrowExceptionInTest"))
+                    .Select(log => log.Message)
+                    .ToList();
+                if (logs.Count > 0)
+                {
+                    throw new TestRunnerException($"Failed to wait for tests to finish. Browser logs: {string.Join(Environment.NewLine, logs)}");
+                }
                 throw new TestRunnerException("Failed to wait for tests to finish.");
             }
         }
