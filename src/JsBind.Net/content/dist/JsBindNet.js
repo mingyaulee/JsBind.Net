@@ -588,6 +588,7 @@
    * @typedef {import("./ReferenceType.js").ReferenceTypeEnumValue} ReferenceTypeEnumValue
    */
 
+
   /**
    * Checks if a value is a ReferenceBase.
    * @param {any} value
