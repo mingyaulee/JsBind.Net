@@ -2,7 +2,7 @@
   "name": "js-bind-net",
   "private": true,
   "devDependencies": {
-    "rollup": "^4.9.2"
+    "rollup": "^4.9.5"
   },
   "scripts": {
     "bundle": "rollup -c"
