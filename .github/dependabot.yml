@@ -8,7 +8,9 @@ updates:
     open-pull-requests-limit: 5
   # Check for updates to NuGet packages every week
   - package-ecosystem: "nuget"
-    directory: "/test/JsBind.Net.Tests/"
+    directories:
+    - "/test/JsBind.Net.Tests/"
+    - "/test/JsBind.Net.TestsRunner/"
     allow:
     - dependency-type: "direct"
     schedule:
@@ -17,18 +19,10 @@ updates:
     groups:
       aspnetcore:
         patterns: [ Microsoft.AspNetCore.* ]
-  - package-ecosystem: "nuget"
-    directory: "/test/JsBind.Net.TestsRunner/"
-    allow:
-    - dependency-type: "direct"
-    schedule:
-      interval: "weekly"
-    open-pull-requests-limit: 5
-    groups:
       mstest:
         patterns: [ MSTest.* ]
-  - package-ecosystem: 'npm'
-    directory: '/src/JsBind.Net/content/'
+  - package-ecosystem: "npm"
+    directory: "/src/JsBind.Net/content/"
     schedule:
-      interval: 'weekly'
+      interval: "weekly"
     open-pull-requests-limit: 5
