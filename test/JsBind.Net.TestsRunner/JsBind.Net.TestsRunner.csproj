@@ -8,8 +8,8 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
-    <PackageReference Include="MSTest.TestAdapter" Version="3.4.3" />
-    <PackageReference Include="MSTest.TestFramework" Version="3.4.3" />
+    <PackageReference Include="MSTest.TestAdapter" Version="3.6.0" />
+    <PackageReference Include="MSTest.TestFramework" Version="3.6.0" />
     <PackageReference Include="Selenium.WebDriver" Version="4.24.0" />
     <PackageReference Include="System.Xml.XmlSerializer" Version="4.3.0" />
   </ItemGroup>
