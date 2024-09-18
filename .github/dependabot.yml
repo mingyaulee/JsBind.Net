@@ -13,6 +13,9 @@ updates:
     - "/test/JsBind.Net.TestsRunner/"
     allow:
     - dependency-type: "direct"
+    ignore:
+    - dependency-name: "Microsoft.JSInterop"
+    - dependency-name: "Microsoft.Extensions.DependencyInjection.Abstractions"
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 5
