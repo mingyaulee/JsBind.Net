@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Runtime.Serialization;
 
 namespace JsBind.Net
 {
     /// <summary>
     /// Exception thrown by JsBind.
     /// </summary>
-    [Serializable]
     public sealed class JsBindException : Exception
     {
         private string? jsBindStackTrace;
@@ -43,27 +41,6 @@ namespace JsBind.Net
             }
 
             return jsBindStackTrace;
-        }
-
-#if NET8_0_OR_GREATER
-        [Obsolete("Serialization support is not required for custom exceptions", DiagnosticId = "SYSLIB0051")] // add this attribute to the serialization ctor
-#endif
-        private JsBindException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
-            jsBindStackTrace = info.GetString("JsBindStackTrace");
-            previousStackTrace = info.GetString("PreviousStackTrace");
-        }
-
-        /// <inheritdoc />
-#if NET8_0_OR_GREATER
-        [Obsolete("Serialization support is not required for custom exceptions", DiagnosticId = "SYSLIB0051")] // add this attribute to the serialization ctor
-#endif
-        public override void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            base.GetObjectData(info, context);
-            info.AddValue("JsBindStackTrace", jsBindStackTrace, typeof(string));
-            info.AddValue("PreviousStackTrace", previousStackTrace, typeof(string));
         }
     }
 }

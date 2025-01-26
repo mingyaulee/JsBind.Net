@@ -10,7 +10,7 @@ namespace JsBind.Net.Internal.DelegateReferences
     internal partial class JsFunctionProxy : FunctionBindingBase
     {
 #pragma warning disable S3011 // Reflection should not be used to increase accessibility of classes, methods, or fields
-        static IReadOnlyDictionary<string, MethodInfo> InvokeMethods = typeof(JsFunctionProxy)
+        static Dictionary<string, MethodInfo> InvokeMethods = typeof(JsFunctionProxy)
             .GetMethods(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly)
             .ToDictionary(methodInfo => methodInfo.Name + (methodInfo.IsGenericMethod ? methodInfo.GetGenericArguments().Length : string.Empty), methodInfo => methodInfo);
 #pragma warning restore S3011 // Reflection should not be used to increase accessibility of classes, methods, or fields
