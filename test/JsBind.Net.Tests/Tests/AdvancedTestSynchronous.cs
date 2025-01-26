@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using FluentAssertions;
-using JsBind.Net.Tests.Infrastructure;
+﻿using JsBind.Net.Tests.Infrastructure;
 using TestBindings.WebAssembly;
 using TestBindings.WebAssembly.BindingTestLibrary;
 
@@ -32,7 +29,7 @@ namespace JsBind.Net.Tests.Tests
             var result = bindingTestLibrary.IsPlainObjectPassed(obj);
 
             // Assert
-            result.Should().BeTrue();
+            result.ShouldBeTrue();
         }
 
         [Fact(Description = "Object reference from function should be revived in JS")]
@@ -45,7 +42,7 @@ namespace JsBind.Net.Tests.Tests
             var isRevived = bindingTestLibrary.IsObjectReferenceRevived(obj);
 
             // Assert
-            isRevived.Should().BeTrue();
+            isRevived.ShouldBeTrue();
         }
 
         [Fact(Description = "Nested object reference from function should be revived in JS")]
@@ -61,7 +58,7 @@ namespace JsBind.Net.Tests.Tests
             });
 
             // Assert
-            isRevived.Should().BeTrue();
+            isRevived.ShouldBeTrue();
         }
 
         [Fact(Description = "Object reference from property should be revived in JS")]
@@ -74,7 +71,7 @@ namespace JsBind.Net.Tests.Tests
             var isRevived = bindingTestLibrary.IsObjectReferenceRevived(obj);
 
             // Assert
-            isRevived.Should().BeTrue();
+            isRevived.ShouldBeTrue();
         }
 
         [Fact(Description = "Nested object reference from property should be revived in JS")]
@@ -90,7 +87,7 @@ namespace JsBind.Net.Tests.Tests
             });
 
             // Assert
-            isRevived.Should().BeTrue();
+            isRevived.ShouldBeTrue();
         }
 
         [Fact(Description = "Delegate reference should be revived in JS")]
@@ -103,7 +100,7 @@ namespace JsBind.Net.Tests.Tests
             var isRevived = bindingTestLibrary.IsDelegateReferenceRevived(testDelegate);
 
             // Assert
-            isRevived.Should().BeTrue();
+            isRevived.ShouldBeTrue();
         }
 
         [Fact(Description = "Nested delegate reference should be revived in JS")]
@@ -122,7 +119,7 @@ namespace JsBind.Net.Tests.Tests
             });
 
             // Assert
-            isRevived.Should().BeTrue();
+            isRevived.ShouldBeTrue();
         }
 
         [Fact(Description = "Delegate references should be equal in JS")]
@@ -135,7 +132,7 @@ namespace JsBind.Net.Tests.Tests
             var isEqual = bindingTestLibrary.AreDelegateReferencesEqual(testDelegate, testDelegate);
 
             // Assert
-            isEqual.Should().BeTrue();
+            isEqual.ShouldBeTrue();
         }
 
         [Fact(Description = "Delegate reference can be invoked from JS")]
@@ -149,7 +146,7 @@ namespace JsBind.Net.Tests.Tests
             bindingTestLibrary.TestInvokeDelegate(testDelegate);
 
             // Assert
-            currentInvocationCount.Should().Be(1);
+            currentInvocationCount.ShouldBe(1);
         }
 
         [Fact(Description = "Async delegate reference can be invoked from JS")]
@@ -167,7 +164,7 @@ namespace JsBind.Net.Tests.Tests
             await bindingTestLibrary.TestInvokeDelegateAsync(testDelegateAsync);
 
             // Assert
-            currentInvocationCount.Should().Be(1);
+            currentInvocationCount.ShouldBe(1);
         }
 
         [Fact(Description = "JS invoked delegate reference with primitive return value")]
@@ -181,7 +178,7 @@ namespace JsBind.Net.Tests.Tests
             var result = bindingTestLibrary.TestInvokeDelegate<Guid>(testDelegate);
 
             // Assert
-            result.Should().Be(randomGuid);
+            result.ShouldBe(randomGuid);
         }
 
         [Fact(Description = "JS invoked delegate reference with reference return value")]
@@ -194,8 +191,8 @@ namespace JsBind.Net.Tests.Tests
             var result = bindingTestLibrary.TestInvokeDelegate<Window>(testDelegate);
 
             // Assert
-            result.Should().NotBeNull();
-            result.InstanceEquals(window).Should().BeTrue();
+            result.ShouldNotBeNull();
+            result.InstanceEquals(window).ShouldBeTrue();
         }
 
         [Fact(Description = "JS invoked delegate reference with delegate return value")]
@@ -209,8 +206,8 @@ namespace JsBind.Net.Tests.Tests
             var result = bindingTestLibrary.TestInvokeDelegate<Action>(testDelegate);
 
             // Assert
-            result.Should().NotBeNull();
-            result.Should().BeSameAs(returnAction);
+            result.ShouldNotBeNull();
+            result.ShouldBeSameAs(returnAction);
         }
 
         [Fact(Description = "JS invoked delegate reference with nested delegate return value")]
@@ -226,8 +223,8 @@ namespace JsBind.Net.Tests.Tests
             var result = bindingTestLibrary.TestInvokeDelegate<NestedDelegateClass>(testDelegate);
 
             // Assert
-            result.Should().NotBeNull();
-            result.NestedAction.Should().NotBeNull();
+            result.ShouldNotBeNull();
+            result.NestedAction.ShouldNotBeNull();
         }
 
         [Fact(Description = "Delegate return value from JS invoked delegate reference can be invoked")]
@@ -242,7 +239,7 @@ namespace JsBind.Net.Tests.Tests
             delegateReturnValue();
 
             // Assert
-            currentInvocationCount.Should().Be(1);
+            currentInvocationCount.ShouldBe(1);
         }
 
         [Fact(Description = "Delegate return value from JS invoked delegate reference can be invoked with primitive parameter")]
@@ -257,7 +254,7 @@ namespace JsBind.Net.Tests.Tests
             delegateReturnValue(5);
 
             // Assert
-            currentInvocationCount.Should().Be(5);
+            currentInvocationCount.ShouldBe(5);
         }
 
         [Fact(Description = "Delegate return value from JS invoked delegate reference can be invoked with reference parameter")]
@@ -272,7 +269,7 @@ namespace JsBind.Net.Tests.Tests
             delegateReturnValue(window);
 
             // Assert
-            referenceParameterIsNotNull.Should().BeTrue();
+            referenceParameterIsNotNull.ShouldBeTrue();
         }
 
         [Fact(Description = "Invoke function with delegate return value")]
@@ -282,7 +279,7 @@ namespace JsBind.Net.Tests.Tests
             var delegateReturnValue = bindingTestLibrary.GetFunctionDelegate();
 
             // Assert
-            delegateReturnValue.Should().NotBeNull();
+            delegateReturnValue.ShouldNotBeNull();
         }
 
         [Fact(Description = "Invoke function with nested delegate return value")]
@@ -292,8 +289,8 @@ namespace JsBind.Net.Tests.Tests
             var nestedDelegateReturnValue = bindingTestLibrary.GetNestedActionDelegate();
 
             // Assert
-            nestedDelegateReturnValue.Should().NotBeNull();
-            nestedDelegateReturnValue.NestedAction.Should().NotBeNull();
+            nestedDelegateReturnValue.ShouldNotBeNull();
+            nestedDelegateReturnValue.NestedAction.ShouldNotBeNull();
         }
 
         [Fact(Description = "Returned delegate can be invoked")]
@@ -306,7 +303,7 @@ namespace JsBind.Net.Tests.Tests
             var result = functionDelegate();
 
             // Assert
-            result.Should().BeTrue();
+            result.ShouldBeTrue();
         }
 
         [Fact(Description = "Returned delegate can be invoked with primitive parameter and return value")]
@@ -319,7 +316,7 @@ namespace JsBind.Net.Tests.Tests
             var result = functionDelegate(5);
 
             // Assert
-            result.Should().Be(5);
+            result.ShouldBe(5);
         }
 
         [Fact(Description = "Returned delegate can be invoked with reference parameter and return value")]
@@ -332,7 +329,7 @@ namespace JsBind.Net.Tests.Tests
             var result = functionDelegate(window);
 
             // Assert
-            result.InstanceEquals(window).Should().BeTrue();
+            result.InstanceEquals(window).ShouldBeTrue();
         }
     }
 }

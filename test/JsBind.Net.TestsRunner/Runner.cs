@@ -9,6 +9,7 @@ using JsBind.Net.TestsRunner.Models;
 using System.Diagnostics;
 using System.Linq;
 using OpenQA.Selenium;
+using System.Text;
 
 namespace JsBind.Net.TestsRunner
 {
@@ -71,6 +72,24 @@ namespace JsBind.Net.TestsRunner
                 {
                     TestCoverageWriter.Write(testCoverage.HitsFilePath, testCoverage.HitsArray);
                     Console.WriteLine($"Test coverage hits file: {testCoverage.HitsFilePath}");
+                }
+
+                if (testResults.Status == "failed")
+                {
+                    var errors = new StringBuilder();
+                    errors.AppendLine("One or more test(s) failed.");
+                    var index = 0;
+                    foreach (var testResult in testResults.Tests.Where(test => test.Status == "failed"))
+                    {
+                        index++;
+                        errors.AppendLine(
+                            $"""
+                            // Start Test Result {index} - {testResult.MethodName}
+                            {testResult.FailMessage}
+                            // End Test Result {index} - {testResult.MethodName}
+                            """);
+                    }
+                    throw new TestRunnerException(errors.ToString());
                 }
             }
             catch (TestRunnerException testRunnerException)

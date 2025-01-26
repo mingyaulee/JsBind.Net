@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using FluentAssertions;
-using JsBind.Net.Tests.Infrastructure;
+﻿using JsBind.Net.Tests.Infrastructure;
 using TestBindings.WebAssembly;
 
 namespace JsBind.Net.Tests.Tests
@@ -29,7 +25,7 @@ namespace JsBind.Net.Tests.Tests
             var origin = originProperty.GetValue<string>();
 
             // Assert
-            origin.Should().NotBeNullOrEmpty();
+            origin.ShouldNotBeNullOrEmpty();
         }
 
         [Fact(Description = "Reference property get value")]
@@ -42,8 +38,8 @@ namespace JsBind.Net.Tests.Tests
             var innerWindow = innerWindowProperty.GetValue<Window>();
 
             // Assert
-            innerWindow.Should().NotBeNull();
-            innerWindow.Origin.Should().NotBeNullOrEmpty();
+            innerWindow.ShouldNotBeNull();
+            innerWindow.Origin.ShouldNotBeNullOrEmpty();
         }
 
         [Fact(Description = "Get primitive property value")]
@@ -56,7 +52,7 @@ namespace JsBind.Net.Tests.Tests
             var origin = dynamicTypeWindow.GetPropertyValue<string>("origin");
 
             // Assert
-            origin.Should().NotBeNullOrEmpty();
+            origin.ShouldNotBeNullOrEmpty();
         }
 
         [Fact(Description = "Get reference property value")]
@@ -69,8 +65,8 @@ namespace JsBind.Net.Tests.Tests
             var innerWindow = dynamicTypeWindow.GetPropertyValue<Window>("window");
 
             // Assert
-            innerWindow.Should().NotBeNull();
-            innerWindow.Origin.Should().NotBeNullOrEmpty();
+            innerWindow.ShouldNotBeNull();
+            innerWindow.Origin.ShouldNotBeNullOrEmpty();
         }
 
         [Fact(Description = "Set property value")]
@@ -85,7 +81,7 @@ namespace JsBind.Net.Tests.Tests
             var actualValue = dynamicTypeWindow.GetPropertyValue<string>("testProperty");
 
             // Assert
-            actualValue.Should().Be(testValue);
+            actualValue.ShouldBe(testValue);
         }
 
         [Fact(Description = "Invoke function with primitive return value")]
@@ -98,7 +94,7 @@ namespace JsBind.Net.Tests.Tests
             var result = dynamicTypeWindow.InvokeFunction<int>("parseInt", "30");
 
             // Assert
-            result.Should().Be(30);
+            result.ShouldBe(30);
         }
 
         [Fact(Description = "Invoke function with reference return value")]
@@ -111,8 +107,8 @@ namespace JsBind.Net.Tests.Tests
             var result = dynamicTypeDocument.InvokeFunction<Element>("getElementById", "app");
 
             // Assert
-            result.Should().NotBeNull();
-            result.Id.Should().Be("app");
+            result.ShouldNotBeNull();
+            result.Id.ShouldBe("app");
         }
 
         [Fact(Description = "Invoke function with array like return value")]
@@ -125,9 +121,10 @@ namespace JsBind.Net.Tests.Tests
             var results = dynamicTypeDocument.InvokeFunction<IEnumerable<Element>>("querySelectorAll", "#app");
 
             // Assert
-            results.Should().NotBeNull().And.HaveCount(1);
-            results.Single().Should().NotBeNull();
-            results.Single().Id.Should().Be("app");
+            results.ShouldNotBeNull();
+            results.Count().ShouldBe(1);
+            results.Single().ShouldNotBeNull();
+            results.Single().Id.ShouldBe("app");
         }
     }
 }

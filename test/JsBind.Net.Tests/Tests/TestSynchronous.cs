@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using FluentAssertions;
-using JsBind.Net.Tests.Infrastructure;
+﻿using JsBind.Net.Tests.Infrastructure;
 using TestBindings.WebAssembly;
 
 namespace JsBind.Net.Tests.Tests
@@ -22,7 +19,7 @@ namespace JsBind.Net.Tests.Tests
         public void PropertyShouldBeInitialized()
         {
             // Assert
-            window.Origin.Should().NotBeNullOrEmpty();
+            window.Origin.ShouldNotBeNullOrEmpty();
         }
 
         [Fact(Description = "Property should be initialized from JSON deserializer")]
@@ -32,7 +29,7 @@ namespace JsBind.Net.Tests.Tests
             var innerWindow = window.window;
 
             // Assert
-            innerWindow.Origin.Should().NotBeNullOrEmpty();
+            innerWindow.Origin.ShouldNotBeNullOrEmpty();
         }
 
         [Fact(Description = "Invoke function with primitive return value")]
@@ -42,7 +39,7 @@ namespace JsBind.Net.Tests.Tests
             var result = window.ParseInt("30");
 
             // Assert
-            result.Should().Be(30);
+            result.ShouldBe(30);
         }
 
         [Fact(Description = "Invoke function with reference return value")]
@@ -52,8 +49,8 @@ namespace JsBind.Net.Tests.Tests
             var result = document.GetElementById("app");
 
             // Assert
-            result.Should().NotBeNull();
-            result.Id.Should().Be("app");
+            result.ShouldNotBeNull();
+            result.Id.ShouldBe("app");
         }
 
         [Fact(Description = "Get property on reference return value")]
@@ -66,7 +63,7 @@ namespace JsBind.Net.Tests.Tests
             var result = element.TagName;
 
             // Assert
-            result.Should().NotBeNullOrEmpty();
+            result.ShouldNotBeNullOrEmpty();
         }
 
         [Fact(Description = "Invoke function with primitive return value on reference return value")]
@@ -79,7 +76,7 @@ namespace JsBind.Net.Tests.Tests
             var result = element.GetAttribute("id");
 
             // Assert
-            result.Should().Be("app");
+            result.ShouldBe("app");
         }
 
         [Fact(Description = "Invoke function with array like return value")]
@@ -89,9 +86,10 @@ namespace JsBind.Net.Tests.Tests
             var results = document.QuerySelectorAll("#app");
 
             // Assert
-            results.Should().NotBeNull().And.HaveCount(1);
-            results.Single().Should().NotBeNull();
-            results.Single().Id.Should().Be("app");
+            results.ShouldNotBeNull();
+            results.Count().ShouldBe(1);
+            results.Single().ShouldNotBeNull();
+            results.Single().Id.ShouldBe("app");
         }
 
         [Fact(Description = "Get property on array like return value")]
@@ -104,7 +102,7 @@ namespace JsBind.Net.Tests.Tests
             var result = element.TagName;
 
             // Assert
-            result.Should().NotBeNullOrEmpty();
+            result.ShouldNotBeNullOrEmpty();
         }
 
         [Fact(Description = "Invoke function with primitive return value on array like return value")]
@@ -117,7 +115,7 @@ namespace JsBind.Net.Tests.Tests
             var result = element.GetAttribute("id");
 
             // Assert
-            result.Should().Be("app");
+            result.ShouldBe("app");
         }
 
         [Fact(Description = "Set property value with primitive value")]
@@ -132,7 +130,7 @@ namespace JsBind.Net.Tests.Tests
 
             // Assert
             var actualValue = window.GetVariableValue<int>(variableName);
-            actualValue.Should().Be(variableValue);
+            actualValue.ShouldBe(variableValue);
         }
 
         [Fact(Description = "Set property value with reference value")]
@@ -147,8 +145,8 @@ namespace JsBind.Net.Tests.Tests
 
             // Assert
             var actualValue = window.GetVariableValue<Document>(variableName);
-            actualValue.Should().NotBeNull();
-            actualValue.InstanceEquals(document).Should().BeTrue();
+            actualValue.ShouldNotBeNull();
+            actualValue.InstanceEquals(document).ShouldBeTrue();
         }
 
         [Fact(Description = "Convert reference value type")]
@@ -162,8 +160,8 @@ namespace JsBind.Net.Tests.Tests
             var windowWithCustomProperty = window.ToType<WindowWithCustomProperty>();
 
             // Assert
-            windowWithCustomProperty.Should().NotBeNull();
-            windowWithCustomProperty.CustomProperty.Should().Be(customPropertyValue);
+            windowWithCustomProperty.ShouldNotBeNull();
+            windowWithCustomProperty.CustomProperty.ShouldBe(customPropertyValue);
         }
 
         [Fact(Description = "Convert reference value type with nested reference value")]
@@ -173,9 +171,9 @@ namespace JsBind.Net.Tests.Tests
             var windowWithLocation = window.ToType<WindowWithLocation>();
 
             // Assert
-            windowWithLocation.Should().NotBeNull();
-            windowWithLocation.Location.Should().NotBeNull();
-            windowWithLocation.Location.Href.Should().NotBeNull();
+            windowWithLocation.ShouldNotBeNull();
+            windowWithLocation.Location.ShouldNotBeNull();
+            windowWithLocation.Location.Href.ShouldNotBeNull();
         }
     }
 }

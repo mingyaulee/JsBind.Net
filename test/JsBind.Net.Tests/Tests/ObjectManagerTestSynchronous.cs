@@ -1,6 +1,4 @@
-﻿using System;
-using FluentAssertions;
-using JsBind.Net.Tests.Infrastructure;
+﻿using JsBind.Net.Tests.Infrastructure;
 using TestBindings.WebAssembly;
 using TestBindings.WebAssembly.BindingTestLibrary;
 
@@ -36,7 +34,7 @@ namespace JsBind.Net.Tests.Tests
             var currentObjectReferencesCount = getObjectReferencesCount();
 
             // Assert
-            currentObjectReferencesCount.Should().Be(objectReferencesCount - 1);
+            currentObjectReferencesCount.ShouldBe(objectReferencesCount - 1);
         }
 
         [Fact(Description = "Dispose array like object reference")]
@@ -51,7 +49,7 @@ namespace JsBind.Net.Tests.Tests
             var currentObjectReferencesCount = getObjectReferencesCount();
 
             // Assert
-            currentObjectReferencesCount.Should().Be(objectReferencesCount - 1);
+            currentObjectReferencesCount.ShouldBe(objectReferencesCount - 1);
         }
 
         [Fact(Description = "Dispose root object reference")]
@@ -66,7 +64,7 @@ namespace JsBind.Net.Tests.Tests
             var currentObjectReferencesCount = getObjectReferencesCount();
 
             // Assert
-            currentObjectReferencesCount.Should().Be(objectReferencesCount - 1);
+            currentObjectReferencesCount.ShouldBe(objectReferencesCount - 1);
         }
 
         [Fact(Description = "Dispose delegate reference")]
@@ -85,7 +83,7 @@ namespace JsBind.Net.Tests.Tests
             var currentDelegateReferencesCount = getDelegateReferencesCount();
 
             // Assert
-            currentDelegateReferencesCount.Should().Be(delegateReferencesCount - 1);
+            currentDelegateReferencesCount.ShouldBe(delegateReferencesCount - 1);
         }
 
         [Fact(Description = "Dispose session")]
@@ -105,8 +103,8 @@ namespace JsBind.Net.Tests.Tests
             var currentDelegateReferencesCount = getDelegateReferencesCount();
 
             // Assert
-            currentObjectReferencesCount.Should().Be(0);
-            currentDelegateReferencesCount.Should().Be(0);
+            currentObjectReferencesCount.ShouldBe(0);
+            currentDelegateReferencesCount.ShouldBe(0);
         }
     }
 }

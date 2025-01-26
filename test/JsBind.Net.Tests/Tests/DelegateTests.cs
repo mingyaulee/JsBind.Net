@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using FluentAssertions;
-using JsBind.Net.Tests.Infrastructure;
+﻿using JsBind.Net.Tests.Infrastructure;
 using TestBindings.WebAssembly.BindingTestLibrary;
 
 namespace JsBind.Net.Tests.Tests
@@ -31,7 +28,7 @@ namespace JsBind.Net.Tests.Tests
             await bindingTestLibrary.TestInvokeDelegateAsync(testDelegateAsync);
 
             // Assert
-            currentInvocationCount.Should().Be(1);
+            currentInvocationCount.ShouldBe(1);
         }
 
         [Fact(Description = "Async Task delegate reference can be invoked from JS")]
@@ -49,7 +46,7 @@ namespace JsBind.Net.Tests.Tests
             await bindingTestLibrary.TestInvokeDelegateAsync(testDelegateAsync);
 
             // Assert
-            currentInvocationCount.Should().Be(1);
+            currentInvocationCount.ShouldBe(1);
         }
 
         [Fact(Description = "Async ValueTask with result delegate reference can be invoked from JS")]
@@ -67,8 +64,8 @@ namespace JsBind.Net.Tests.Tests
             var result = await bindingTestLibrary.TestInvokeDelegateAsync<int>(testDelegateAsync);
 
             // Assert
-            currentInvocationCount.Should().Be(1);
-            result.Should().Be(1);
+            currentInvocationCount.ShouldBe(1);
+            result.ShouldBe(1);
         }
 
         [Fact(Description = "Async Task with result delegate reference can be invoked from JS")]
@@ -86,8 +83,8 @@ namespace JsBind.Net.Tests.Tests
             var result = await bindingTestLibrary.TestInvokeDelegateAsync<int>(testDelegateAsync);
 
             // Assert
-            currentInvocationCount.Should().Be(1);
-            result.Should().Be(1);
+            currentInvocationCount.ShouldBe(1);
+            result.ShouldBe(1);
         }
 
         [Fact(Description = "Delegate reference with exception can be invoked from JS")]
@@ -103,9 +100,11 @@ namespace JsBind.Net.Tests.Tests
             Action action = () => bindingTestLibrary.TestInvokeDelegate(testDelegate);
 
             // Assert
-            action.Should().Throw<JsBindException>()
-                .WithMessage("A test exception")
-                .And.StackTrace.Should().Contain(nameof(ThrowExceptionInTest));
+            action.ShouldThrow<JsBindException>()
+                .ShouldSatisfyAllConditions(
+                    exception => exception.Message.ShouldBe("A test exception"),
+                    exception => exception.StackTrace.ShouldContain(nameof(ThrowExceptionInTest))
+                );
         }
 
         [Fact(Description = "Async delegate reference with exception can be invoked from JS")]
@@ -122,9 +121,11 @@ namespace JsBind.Net.Tests.Tests
             Func<Task> action = async () => await bindingTestLibrary.TestInvokeDelegateAsync(testDelegateAsync);
 
             // Assert
-            (await action.Should().ThrowAsync<JsBindException>())
-                .WithMessage("A test exception")
-                .And.StackTrace.Should().Contain(nameof(ThrowExceptionInTest));
+            (await action.ShouldThrowAsync<JsBindException>())
+                .ShouldSatisfyAllConditions(
+                    exception => exception.Message.ShouldBe("A test exception"),
+                    exception => exception.StackTrace.ShouldContain(nameof(ThrowExceptionInTest))
+                );
         }
 
         [Fact(Description = "Delegate reference can be invoked with missing parameters from JS")]
@@ -140,7 +141,7 @@ namespace JsBind.Net.Tests.Tests
             var result = bindingTestLibrary.TestInvokeDelegate<string>(testDelegate);
 
             // Assert
-            result.Should().Be("0,null,null");
+            result.ShouldBe("0,null,null");
         }
 
         [Fact(Description = "Delegate reference can be invoked with partially missing parameters from JS")]
@@ -156,7 +157,7 @@ namespace JsBind.Net.Tests.Tests
             var result = bindingTestLibrary.TestInvokeDelegateWithParams<string>(testDelegate, 100, "test");
 
             // Assert
-            result.Should().Be("100,notnull,null");
+            result.ShouldBe("100,notnull,null");
         }
 
         private static void ThrowExceptionInTest(string message)
