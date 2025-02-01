@@ -4,9 +4,11 @@
     <TargetFramework>net9.0</TargetFramework>
     <_JsBind_Package_Contents_Scripts_Directory>$(MSBuildThisFileDirectory)..\..\src\JsBind.Net\content\dist</_JsBind_Package_Contents_Scripts_Directory>
     <BlazorEnableCompression>false</BlazorEnableCompression>
-    <!-- Disable conversion of DLLs to webcil-in-wasm format. This is for coverlet to inject the hits counter into the assembly which only works for DLLs. -->
-    <WasmEnableWebcil>false</WasmEnableWebcil>
     <ImplicitUsings>true</ImplicitUsings>
+    <!-- Disable conversion of DLLs to webcil-in-wasm format, fingerprinting, compression. This is for coverlet to inject the hits counter into the assembly which only works for DLLs with PDBs. -->
+    <WasmEnableWebcil>false</WasmEnableWebcil>
+    <CompressionEnabled>false</CompressionEnabled>
+    <WasmFingerprintAssets>false</WasmFingerprintAssets>
   </PropertyGroup>
 
   <ItemGroup>
