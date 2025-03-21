@@ -1,7 +1,6 @@
 # JsBind.Net
 [![Nuget](https://img.shields.io/nuget/v/JsBind.Net?style=for-the-badge&color=blue)](https://www.nuget.org/packages/JsBind.Net/)
 [![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/mingyaulee/JsBind.Net/JsBind.Net-Build.yml?branch=main&style=for-the-badge&color=blue)](https://github.com/mingyaulee/JsBind.Net/actions/workflows/JsBind.Net-Build.yml)
-[![Sonar Tests](https://img.shields.io/sonar/tests/JsBind.Net?compact_message&server=https%3A%2F%2Fsonarcloud.io&style=for-the-badge)](https://sonarcloud.io/dashboard?id=JsBind.Net)
 [![Sonar Tests](https://img.shields.io/sonar/coverage/JsBind.Net?server=https%3A%2F%2Fsonarcloud.io&style=for-the-badge)](https://sonarcloud.io/dashboard?id=JsBind.Net)
 [![Sonar Quality Gate](https://img.shields.io/sonar/quality_gate/JsBind.Net?server=https%3A%2F%2Fsonarcloud.io&style=for-the-badge)](https://sonarcloud.io/dashboard?id=JsBind.Net)
 
@@ -28,7 +27,7 @@ Of course this can also be separated into just 2 packages:
 0. Server bindings (with or without dependency injection extension)
 
 To get started with creating a WebAssembly or Server binding project:
-1. Create a new class library project, targeting `.Net 5.0` or above.
+1. Create a new class library project.
 0. Install `JsBind.Net` from Nuget.
 0. Add `PrivateAssets="contentfiles"` to the package reference in the `csproj` project file. For example:
    
@@ -37,7 +36,7 @@ To get started with creating a WebAssembly or Server binding project:
 0. Start creating bindings. You can refer to the section [How to create bindings](#how-to-create-bindings) below.
 
 To create a dependency injection extension project:
-1. Create a new class library project, targeting `.Net 5.0` or above.
+1. Create a new class library project.
 0. Install `JsBind.Net.Extensions.DependencyInjection` from Nuget.
 0. Create the extension method for registering the binding services.
 
@@ -210,7 +209,7 @@ public class SessionController : ComponentBase, IDisposable
 ```
 And in `App.razor`, add this component next to the `<Router>` component.
 ```razor
-<Router AppAssembly="@typeof(Program).Assembly" PreferExactMatches="@true">
+<Router AppAssembly="@typeof(Program).Assembly">
     // ...
 </Router>
 <SessionController />
