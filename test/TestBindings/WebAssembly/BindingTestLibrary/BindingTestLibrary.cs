@@ -26,6 +26,7 @@ namespace TestBindings.WebAssembly.BindingTestLibrary
 
         public void TestInvokeDelegate(Delegate del) => InvokeVoid("testInvokeDelegate", del);
         public TResult TestInvokeDelegate<TResult>(Delegate del) => Invoke<TResult>("testInvokeDelegate", del);
+        public TResult TestInvokeDelegateWithParams<TResult>(Delegate del, params object[] args) => Invoke<TResult>("testInvokeDelegate", new object[] { del }.Concat(args).ToArray());
         public ValueTask TestInvokeDelegateAsync(Delegate del) => InvokeVoidAsync("testInvokeDelegateAsync", del);
         public ValueTask<TResult> TestInvokeDelegateAsync<TResult>(Delegate del) => InvokeAsync<TResult>("testInvokeDelegateAsync", del);
 
@@ -33,7 +34,6 @@ namespace TestBindings.WebAssembly.BindingTestLibrary
         public NestedDelegateClass GetNestedActionDelegate() => Invoke<NestedDelegateClass>("getNestedActionDelegate");
         public Func<int, int> GetPrimitiveFunctionDelegate() => Invoke<Func<int, int>>("getMirrorFunctionDelegate");
         public Func<Window, Window> GetReferenceFunctionDelegate() => Invoke<Func<Window, Window>>("getMirrorFunctionDelegate");
-        
-        public TResult TestInvokeDelegateWithParams<TResult>(Delegate del, params object[] args) => Invoke<TResult>("testInvokeDelegate", new object[] { del }.Concat(args).ToArray());
+        public Func<T, T> GetMirrorFunctionDelegate<T>() => Invoke<Func<T, T>>("getMirrorFunctionDelegate");
     }
 }

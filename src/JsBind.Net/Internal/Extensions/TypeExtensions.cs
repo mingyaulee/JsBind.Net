@@ -16,7 +16,7 @@ namespace JsBind.Net.Internal.Extensions
         /// <returns><c>true</c> if the type is iterable.</returns>
         public static bool IsIterableType(this Type type)
         {
-            return type.IsArray || (type.IsGenericType && typeof(IEnumerable<>).IsAssignableFrom(type.GetGenericTypeDefinition()));
+            return type.IsArray || IsEnumerable(type) || Array.Exists(type.GetInterfaces(), IsEnumerable);
         }
 
         /// <summary>
@@ -30,7 +30,9 @@ namespace JsBind.Net.Internal.Extensions
             {
                 return type.GetElementType();
             }
-            return type.GetGenericArguments().FirstOrDefault();
+
+            var enumerableType = IsEnumerable(type) ? type : type.GetInterfaces().First(IsEnumerable);
+            return enumerableType.GetGenericArguments().FirstOrDefault();
         }
 
         /// <summary>
@@ -84,6 +86,11 @@ namespace JsBind.Net.Internal.Extensions
         {
             var bindingConfiguration = bindingConfigurationProvider.Get(type);
             return new BindingConfigurationMapper().MapFromBindingConfiguration(bindingConfiguration);
+        }
+
+        private static bool IsEnumerable(Type type)
+        {
+            return type.IsGenericType && typeof(IEnumerable<>).IsAssignableFrom(type.GetGenericTypeDefinition());
         }
 
         private sealed class BindingConfigurationMapper

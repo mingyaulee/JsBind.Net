@@ -331,5 +331,28 @@ namespace JsBind.Net.Tests.Tests
             // Assert
             result.InstanceEquals(window).ShouldBeTrue();
         }
+
+        [Fact(Description = "Complex object can be passed round trip")]
+        public void ComplexObjectCanBePassedRoundTrip()
+        {
+            // Arrange
+            var functionDelegate = bindingTestLibrary.GetMirrorFunctionDelegate<ComplexTestBoundClass>();
+            var obj = new ComplexTestBoundClass()
+            {
+                NestedItem = new() { Property = "NestedItemProperty" },
+                NestedItemsArray = [new() { Property = "NestedItemArrayProperty" }],
+                NestedItemsEnumerable = [new() { Property = "NestedItemEnumerableProperty" }],
+                NestedItemsList = [new() { Property = "NestedItemListProperty" }]
+            };
+
+            // Act
+            var result = functionDelegate(obj);
+
+            // Assert
+            result.NestedItem.ShouldBeEquivalentTo(obj.NestedItem);
+            result.NestedItemsArray.ShouldBe(obj.NestedItemsArray);
+            result.NestedItemsEnumerable.ShouldBe(obj.NestedItemsEnumerable);
+            result.NestedItemsList.ShouldBe(obj.NestedItemsList);
+        }
     }
 }

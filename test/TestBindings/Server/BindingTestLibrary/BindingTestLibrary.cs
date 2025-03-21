@@ -32,5 +32,6 @@ namespace TestBindings.Server.BindingTestLibrary
         public ValueTask<NestedDelegateClass> GetNestedActionDelegate() => InvokeAsync<NestedDelegateClass>("getNestedActionDelegate");
         public ValueTask<Func<int, Task<int>>> GetPrimitiveFunctionDelegate() => InvokeAsync<Func<int, Task<int>>>("getMirrorFunctionDelegate");
         public ValueTask<Func<Window, Task<Window>>> GetReferenceFunctionDelegate() => InvokeAsync<Func<Window, Task<Window>>>("getMirrorFunctionDelegate");
+        public ValueTask<Func<T, Task<T>>> GetMirrorFunctionDelegate<T>() => InvokeAsync<Func<T, Task<T>>>("getMirrorFunctionDelegate");
     }
 }
