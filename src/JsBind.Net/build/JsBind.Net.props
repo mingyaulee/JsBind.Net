@@ -3,6 +3,9 @@
 
   <PropertyGroup>
     <IncludeJsBindAssets Condition="'$(IncludeJsBindAssets)' == ''">true</IncludeJsBindAssets>
+    <JsBindModuleAsset Condition="'$(JsBindScriptAsset)' == 'true'">false</JsBindModuleAsset>
+    <JsBindModuleAsset Condition="'$(JsBindModuleAsset)' == ''">true</JsBindModuleAsset>
+    <JsBindScriptAsset Condition="'$(JsBindScriptAsset)' == ''">false</JsBindScriptAsset>
     <LinkJsBindAssets Condition="'$(LinkJsBindAssets)' == ''">false</LinkJsBindAssets>
     <LinkJsBindAssetsPath Condition="'$(LinkJsBindAssetsPath)' == ''">wwwroot\_content\JsBind.Net</LinkJsBindAssetsPath>
   </PropertyGroup>

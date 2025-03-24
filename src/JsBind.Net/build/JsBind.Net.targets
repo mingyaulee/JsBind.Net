@@ -10,16 +10,29 @@
   </PropertyGroup>
 
   <ItemGroup Condition="'$(IncludeJsBindAssets)' == 'true'">
+    <JsBindAssetFiles Include="$(_JsBind_Package_Contents_Scripts_Directory)\**\*.*" />
+    <JsBindAssetFiles Condition="'$(JsBindModuleAsset)' == 'false'"
+                      Remove="$(_JsBind_Package_Contents_Scripts_Directory)\**\*.lib.module.js" />
+    <JsBindAssetFiles Condition="'$(JsBindScriptAsset)' == 'false'"
+                      Remove="$(_JsBind_Package_Contents_Scripts_Directory)\JsBindNet.js" />
+
     <StaticWebAsset Condition="'$(LinkJsBindAssets)' == 'false'"
-                    Include="$(_JsBind_Package_Contents_Scripts_Directory)\**\*.*">
+                    Include="@(JsBindAssetFiles)">
       <SourceType>Package</SourceType>
       <SourceId>JsBind.Net</SourceId>
       <ContentRoot>$(_JsBind_Package_Contents_Scripts_Directory)</ContentRoot>
       <BasePath>_content/JsBind.Net</BasePath>
       <RelativePath>%(RecursiveDir)%(Filename)%(Extension)</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+    </StaticWebAsset>
+    <StaticWebAsset Update="$(_JsBind_Package_Contents_Scripts_Directory)\**\*.lib.module.js">
+      <AssetTraitName>JSModule</AssetTraitName>
+      <AssetTraitValue>JSLibraryModule</AssetTraitValue>
     </StaticWebAsset>
     <None Condition="'$(LinkJsBindAssets)' != 'false'"
-          Include="$(_JsBind_Package_Contents_Scripts_Directory)\**\*.*"
+          Include="@(JsBindAssetFiles)"
           Link="$(_JsBind_Project_Link_Scripts_Directory)\%(RecursiveDir)%(Filename)%(Extension)">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
