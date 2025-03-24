@@ -53,7 +53,7 @@ When you want to interop to the JavaScript libraries in your project from .Net, 
    ```
 0. Add the script tag as shown in the section below to import the `JsBind.Net` JavaScript file.
 
-## For projects using the binding
+## For projects using the binding without Blazor
 The projects using the binding from a binding library or from the project itself will need to include the JavaScript file from `JsBind.Net` with
 ```html
 <script src="_content/JsBind.Net/JsBindNet.js"></script>

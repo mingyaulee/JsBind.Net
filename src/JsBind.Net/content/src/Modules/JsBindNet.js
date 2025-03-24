@@ -20,7 +20,7 @@ import ObjectReferenceReviver from "./JsonRevivers/ObjectReferenceReviver.js";
 
 function attachDotNetRevivers() {
   if (typeof globalThis.DotNet === "undefined") {
-    setTimeout(attachDotNetRevivers, 10);
+    console.error("DotNet should be imported before JsBind is imported.");
     return;
   }
   globalThis.DotNet.attachReviver(DelegateReferenceReviver.revive.bind(DelegateReferenceReviver));
