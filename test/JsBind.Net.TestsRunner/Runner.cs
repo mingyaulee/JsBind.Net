@@ -1,15 +1,15 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OpenQA.Selenium.Chrome;
-using System;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using JsBind.Net.TestsRunner.Helpers;
 using JsBind.Net.TestsRunner.Models;
-using System.Diagnostics;
-using System.Linq;
-using OpenQA.Selenium;
-using System.Text;
+using Microsoft.Playwright;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace JsBind.Net.TestsRunner
 {
@@ -55,19 +55,26 @@ namespace JsBind.Net.TestsRunner
 
             try
             {
-                using var webDriver = GetWebDriver(driverPath);
-                LaunchTestPage(webDriver);
-                await WaitForTestToFinish(webDriver);
+                using var playwright = await Playwright.CreateAsync();
+                var browser = await playwright.Chromium.LaunchAsync(new() { Headless = false });
+                var page = await browser.NewPageAsync();
+                var consoleMessages = new List<string>();
+                page.Console += (_, message) =>
+                {
+                    consoleMessages.Add(message.Text);
+                };
+                await LaunchTestPage(page);
+                await WaitForTestToFinish(page, consoleMessages);
 
                 // Test results
-                var testResults = GetTestResults(webDriver);
+                var testResults = await GetTestResults(page);
                 var resultsXML = TestResultsGenerator.Generate(testResults);
                 var trxFilePath = $"{resultsPath}\\TestResults_{DateTime.UtcNow:yyyy-MM-dd_HH_mm_ss}.trx";
                 await WriteResultsToFile(trxFilePath, resultsXML);
                 Console.WriteLine($"Results file: {trxFilePath}");
 
                 // Test coverage
-                var testCoverage = await GetTestCoverageHits(webDriver);
+                var testCoverage = await GetTestCoverageHits(page);
                 if (testCoverage is not null)
                 {
                     TestCoverageWriter.Write(testCoverage.HitsFilePath, testCoverage.HitsArray);
@@ -96,10 +103,6 @@ namespace JsBind.Net.TestsRunner
             {
                 Assert.Fail(testRunnerException.Message);
             }
-            catch (Exception exception)
-            {
-                Assert.Fail("Failed to create WebDriver. Exception message: " + exception.Message + Environment.NewLine + "Download the latest version from https://googlechromelabs.github.io/chrome-for-testing/");
-            }
             finally
             {
                 dotnetRunProcess.CloseMainWindow();
@@ -108,19 +111,13 @@ namespace JsBind.Net.TestsRunner
             }
         }
 
-        private static WebDriver GetWebDriver(string driverPath)
-        {
-            var chromeOptions = new ChromeOptions();
-            return new ChromeDriver(driverPath, chromeOptions);
-        }
-
-        private static void LaunchTestPage(WebDriver webDriver)
+        private static Task LaunchTestPage(IPage page)
         {
             var testPageUrl = $"http://localhost:5151/index.html?random=false&coverlet";
-            webDriver.Navigate().GoToUrl(testPageUrl);
+            return page.GotoAsync(testPageUrl);
         }
 
-        private static async Task WaitForTestToFinish(WebDriver webDriver)
+        private static async Task WaitForTestToFinish(IPage page, IEnumerable<string> consoleMessages)
         {
             // wait for 30 seconds
             var waitTime = 30 * 1000;
@@ -132,19 +129,18 @@ namespace JsBind.Net.TestsRunner
             while (count > 0)
             {
                 count--;
-                finished = (bool)webDriver.ExecuteScript("return window.jsApiReporter && window.jsApiReporter.finished;");
+                finished = await page.EvaluateAsync<bool>("window.jsApiReporter && window.jsApiReporter.finished");
                 if (finished)
                 {
                     break;
                 }
                 await Task.Delay(interval);
             }
+
             if (!finished)
             {
-                var logs = webDriver.Manage().Logs
-                    .GetLog(LogType.Browser)
-                    .Where(log => !log.Message.Contains("ThrowExceptionInTest"))
-                    .Select(log => log.Message)
+                var logs = consoleMessages
+                    .Where(message => !message.Contains("ThrowExceptionInTest"))
                     .ToList();
                 if (logs.Count > 0)
                 {
@@ -154,14 +150,13 @@ namespace JsBind.Net.TestsRunner
             }
         }
 
-        private static TestRunInfo GetTestResults(WebDriver webDriver)
+        private static async Task<TestRunInfo> GetTestResults(IPage page)
         {
-            var resultsObject = (string)webDriver.ExecuteScript("return JSON.stringify(TestRunner.GetTestResults());");
+            var resultsObject = await page.EvaluateAsync<string>("JSON.stringify(TestRunner.GetTestResults())");
             var testRunResult = JsonSerializer.Deserialize<TestRunInfo>(resultsObject, new JsonSerializerOptions()
             {
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase
             });
-
             if (testRunResult?.Tests is null)
             {
                 throw new TestRunnerException("Failed to get test run results.");
@@ -178,7 +173,7 @@ namespace JsBind.Net.TestsRunner
             return testRunResult;
         }
 
-        private static async Task<TestCoverage> GetTestCoverageHits(WebDriver webDriver)
+        private static async Task<TestCoverage> GetTestCoverageHits(IPage page)
         {
             // wait for 5 seconds
             var waitTime = 5 * 1000;
@@ -190,7 +185,7 @@ namespace JsBind.Net.TestsRunner
             while (count > 0)
             {
                 count--;
-                var resultsObject = (string)webDriver.ExecuteScript("return JSON.stringify(TestRunner.GetTestCoverage());");
+                var resultsObject = await page.EvaluateAsync<string>("JSON.stringify(TestRunner.GetTestCoverage())");
                 testCoverage = JsonSerializer.Deserialize<TestCoverage>(resultsObject, new JsonSerializerOptions()
                 {
                     PropertyNamingPolicy = JsonNamingPolicy.CamelCase
