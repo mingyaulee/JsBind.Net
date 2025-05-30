@@ -21,7 +21,6 @@ namespace JsBind.Net.TestsRunner
         {
             var currentDirectory = AppDomain.CurrentDomain.BaseDirectory;
             var solutionDirectory = currentDirectory[..currentDirectory.IndexOf("\\test")];
-            var driverPath = "C:\\SeleniumWebDrivers\\ChromeDriver";
             var resultsPath = $"{solutionDirectory}\\test\\TestResults";
 #if DEBUG
             var configuration = "debug";
@@ -46,11 +45,6 @@ namespace JsBind.Net.TestsRunner
             if (!Directory.Exists(resultsPath))
             {
                 Directory.CreateDirectory(resultsPath);
-            }
-
-            if (!Directory.Exists(driverPath))
-            {
-                throw new NotSupportedException($"Download the chromedriver from and extract the executable file to {driverPath}. Download the latest version from https://googlechromelabs.github.io/chrome-for-testing/");
             }
 
             try
