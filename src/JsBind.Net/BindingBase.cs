@@ -52,7 +52,6 @@ namespace JsBind.Net
         /// </summary>
         protected virtual string? AccessPath => accessPath;
 
-
         internal string? InternalGetAccessPath() => accessPath;
         internal IJsRuntimeAdapter? InternalGetJsRuntime() => jsRuntime;
 
@@ -60,21 +59,27 @@ namespace JsBind.Net
         /// Sets the access path of the binding instance.
         /// </summary>
         /// <param name="accessPath">The access path.</param>
-        protected virtual void SetAccessPath(string accessPath)
+        protected void SetAccessPath(string accessPath)
         {
             this.accessPath = accessPath;
         }
 
         /// <summary>
+        /// Additional action during initialization
+        /// </summary>
+        protected Action<IJsRuntimeAdapter>? InitializeAction { get; set; }
+
+        /// <summary>
         /// Initialized the binding instance with JS runtime adapter.
         /// </summary>
         /// <param name="jsRuntime">The JS runtime adapter.</param>
-        protected virtual void Initialize(IJsRuntimeAdapter? jsRuntime)
+        protected void Initialize(IJsRuntimeAdapter? jsRuntime)
         {
             if (jsRuntime is not null)
             {
                 isInitialized = true;
                 this.jsRuntime = jsRuntime;
+                InitializeAction?.Invoke(jsRuntime);
             }
         }
 
