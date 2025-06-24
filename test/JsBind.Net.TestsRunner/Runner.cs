@@ -105,10 +105,10 @@ namespace JsBind.Net.TestsRunner
             }
         }
 
-        private static Task LaunchTestPage(IPage page)
+        private static async Task LaunchTestPage(IPage page)
         {
             var testPageUrl = $"http://localhost:5151/index.html?random=false&coverlet";
-            return page.GotoAsync(testPageUrl);
+            await page.GotoAsync(testPageUrl);
         }
 
         private static async Task WaitForTestToFinish(IPage page, IEnumerable<string> consoleMessages)
@@ -147,10 +147,7 @@ namespace JsBind.Net.TestsRunner
         private static async Task<TestRunInfo> GetTestResults(IPage page)
         {
             var resultsObject = await page.EvaluateAsync<string>("JSON.stringify(TestRunner.GetTestResults())");
-            var testRunResult = JsonSerializer.Deserialize<TestRunInfo>(resultsObject, new JsonSerializerOptions()
-            {
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-            });
+            var testRunResult = JsonSerializer.Deserialize<TestRunInfo>(resultsObject, SerializerOptions);
             if (testRunResult?.Tests is null)
             {
                 throw new TestRunnerException("Failed to get test run results.");
@@ -180,10 +177,7 @@ namespace JsBind.Net.TestsRunner
             {
                 count--;
                 var resultsObject = await page.EvaluateAsync<string>("JSON.stringify(TestRunner.GetTestCoverage())");
-                testCoverage = JsonSerializer.Deserialize<TestCoverage>(resultsObject, new JsonSerializerOptions()
-                {
-                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-                });
+                testCoverage = JsonSerializer.Deserialize<TestCoverage>(resultsObject, SerializerOptions);
                 if (testCoverage != null)
                 {
                     break;
@@ -217,5 +211,10 @@ namespace JsBind.Net.TestsRunner
                 throw new TestRunnerException($"Failed to write results to file. Exception message: {exception.Message}");
             }
         }
+
+        private static readonly JsonSerializerOptions SerializerOptions = new()
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        };
     }
 }
