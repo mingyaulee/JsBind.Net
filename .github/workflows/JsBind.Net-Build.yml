@@ -41,12 +41,6 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 9.0.x
-    - name: Setup Node
-      uses: actions/setup-node@v4
-      with:
-        node-version: lts/*
-    - name: Install Playwright Browsers
-      run: npx playwright install --with-deps
     - name: Checkout
       uses: actions/checkout@v4
       with:
@@ -79,12 +73,12 @@ jobs:
       run: dotnet restore
     - name: Build and analyze
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       shell: powershell
       run: |
         .\.sonar\scanner\dotnet-sonarscanner begin /k:"JsBind.Net" /o:"mingyaulee" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /v:"v${{ needs.version.outputs.NuGetVersion }}" /d:sonar.cs.vstest.reportsPaths="test/TestResults/*.trx" /d:sonar.cs.opencover.reportsPaths="test/TestResults/**/*.opencover.xml"
         dotnet build --no-restore --configuration Release
+        .\test\JsBind.Net.TestsRunner\BuildOutput\Release\playwright.ps1 install --with-deps
         .\.coverlet\console\coverlet ./test/JsBind.Net.Tests/bin/Release/net9.0/wwwroot/_framework --include "[JsBind.Net*]*" --target "dotnet" --targetargs "test . --no-restore --no-build --configuration Release" --format opencover --output ./test/TestResults/coverage --verbosity detailed
         .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
 
