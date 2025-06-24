@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using JsBind.Net.InvokeOptions;
@@ -15,26 +14,12 @@ namespace JsBind.Net
         private IJsRuntimeAdapter? jsRuntime;
         private string? accessPath;
 
-        /// <summary>
-        /// Do not use this property. It is public for deserialization only.
-        /// </summary>
-        [BindIgnore]
-        [JsonPropertyName("__jsBindAccessPath")]
-        [Obsolete("Do not use this property. It is public for deserialization only.")]
-        [EditorBrowsable(EditorBrowsableState.Never)]
 #pragma warning disable S2376 // Write-only properties should not be used
-        public string? __JsBindAccessPath { set => accessPath = value; }
-#pragma warning restore S2376 // Write-only properties should not be used
+        [JsonInclude, JsonPropertyName("__jsBindAccessPath")]
+        private string? _JsBindAccessPath { set => accessPath = value; }
 
-        /// <summary>
-        /// Do not use this property. It is public for deserialization only.
-        /// </summary>
-        [BindIgnore]
-        [JsonPropertyName("__jsBindJsRuntime")]
-        [Obsolete("Do not use this property. It is public for deserialization only.")]
-        [EditorBrowsable(EditorBrowsableState.Never)]
-#pragma warning disable S2376 // Write-only properties should not be used
-        public IJsRuntimeAdapter? __JsBindJsRuntime { set => Initialize(value); }
+        [JsonInclude, JsonPropertyName("__jsBindJsRuntime")]
+        private IJsRuntimeAdapter? _JsBindJsRuntime { set => Initialize(value); }
 #pragma warning restore S2376 // Write-only properties should not be used
 
         /// <summary>
