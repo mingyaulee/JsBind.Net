@@ -1,0 +1,32 @@
+<Project>
+
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+    <ProjectIsInSrc Condition="$(MSBuildProjectDirectory.Contains('$(MSBuildThisFileDirectory)src'))">true</ProjectIsInSrc>
+    <ProjectIsInTest Condition="$(MSBuildProjectDirectory.Contains('$(MSBuildThisFileDirectory)test'))">true</ProjectIsInTest>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(ProjectIsInSrc)' == 'true'">
+    <TargetFrameworks>net9.0;net8.0</TargetFrameworks>
+    <IsPackable>true</IsPackable>
+    <Nullable>enable</Nullable>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <GenerateDependencyFile>false</GenerateDependencyFile>
+    <IsShippingPackage>true</IsShippingPackage>
+    <HasReferenceAssembly>false</HasReferenceAssembly>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(ProjectIsInTest)' == 'true'">
+    <TargetFramework>net9.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(IsPackable)' == 'true'">
+    <PackageOutputPath>$(MSBuildThisFileDirectory)PackageOutput</PackageOutputPath>
+    <Authors>mingyaulee</Authors>
+    <RepositoryUrl>https://github.com/mingyaulee/JsBind.Net</RepositoryUrl>
+    <PackageTags>JavaScript .Net Binding JS Bind</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+
+</Project>
