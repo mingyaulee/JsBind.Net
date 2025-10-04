@@ -76,7 +76,7 @@ jobs:
       run: |
         .\.sonar\scanner\dotnet-sonarscanner begin /k:"JsBind.Net" /o:"mingyaulee" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /v:"v${{ needs.version.outputs.MajorMinorPatch }}" /d:sonar.cs.vstest.reportsPaths="test/TestResults/*.trx" /d:sonar.cs.opencover.reportsPaths="test/TestResults/**/*.opencover.xml"
         dotnet build --no-restore --configuration Release
-        .\test\JsBind.Net.TestsRunner\BuildOutput\Release\playwright.ps1 install --with-deps
+        .\test\JsBind.Net.TestsRunner\bin\Release\net9.0\playwright.ps1 install --with-deps
         .\.coverlet\console\coverlet ./test/JsBind.Net.Tests/bin/Release/net9.0/wwwroot/_framework --include "[JsBind.Net*]*" --target "dotnet" --targetargs "test . --no-restore --no-build --configuration Release" --format opencover --output ./test/TestResults/coverage --verbosity detailed
         .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
 

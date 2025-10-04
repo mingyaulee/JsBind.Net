@@ -3,9 +3,20 @@
     <File Path=".editorconfig" />
     <File Path=".gitignore" />
     <File Path="CONTRIBUTING.md" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
     <File Path="GitVersion.yml" />
     <File Path="LICENSE" />
     <File Path="README.md" />
+  </Folder>
+  <Folder Name="/Solution Items/.github/">
+    <File Path=".github/dependabot.yml" />
+    <File Path=".github/FUNDING.yml" />
+  </Folder>
+  <Folder Name="/Solution Items/.github/workflows/">
+    <File Path=".github/workflows/JsBind.Net-Build.yml" />
+    <File Path=".github/workflows/JsBind.Net-PR-Build.yml" />
+    <File Path=".github/workflows/JsBind.Net-Release.yml" />
   </Folder>
   <Folder Name="/src/">
     <Project Path="src/JsBind.Net.Extensions.DependencyInjection/JsBind.Net.Extensions.DependencyInjection.csproj" />

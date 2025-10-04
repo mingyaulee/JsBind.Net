@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
     <_JsBind_Package_Contents_Scripts_Directory>$(MSBuildThisFileDirectory)..\..\src\JsBind.Net\content\dist</_JsBind_Package_Contents_Scripts_Directory>
     <BlazorEnableCompression>false</BlazorEnableCompression>
     <ImplicitUsings>true</ImplicitUsings>
@@ -16,10 +15,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.6" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="9.0.6" PrivateAssets="all" />
-    <PackageReference Include="Shouldly" Version="4.3.0" />
-    <PackageReference Include="System.Net.Http.Json" Version="9.0.6" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" PrivateAssets="all" />
+    <PackageReference Include="Shouldly" />
+    <PackageReference Include="System.Net.Http.Json" />
   </ItemGroup>
 
   <ItemGroup>
@@ -38,5 +37,5 @@
   <!-- Import the build files as if it is imported by the JsBind.Net NuGet package -->
   <Import Project="..\..\src\JsBind.Net\build\JsBind.Net.props" />
   <Import Project="..\..\src\JsBind.Net\build\JsBind.Net.targets" />
-  
+
 </Project>
