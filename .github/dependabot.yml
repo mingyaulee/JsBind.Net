@@ -1,29 +1,28 @@
 version: 2
 updates:
-  # Check for updates to GitHub Actions every week
+  # Check for updates to GitHub Actions every month
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "monthly"
     open-pull-requests-limit: 5
-  # Check for updates to NuGet packages every week
+  # Check for updates to NuGet packages every month
   - package-ecosystem: "nuget"
     directories:
     - "/test/JsBind.Net.Tests/"
     - "/test/JsBind.Net.TestsRunner/"
+    - "/test/TestBindings/"
     allow:
     - dependency-type: "direct"
-    ignore:
-    - dependency-name: "Microsoft.JSInterop"
-    - dependency-name: "Microsoft.Extensions.DependencyInjection.Abstractions"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
     open-pull-requests-limit: 5
     groups:
       aspnetcore:
         patterns: [ Microsoft.AspNetCore.* ]
       mstest:
         patterns: [ MSTest.* ]
+  # Check for updates to npm packages every month
   - package-ecosystem: "npm"
     directory: "/src/JsBind.Net/content/"
     schedule:
