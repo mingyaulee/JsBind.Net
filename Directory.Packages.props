@@ -16,8 +16,8 @@
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.6" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
     <PackageVersion Include="Microsoft.Playwright" Version="1.52.0" />
-    <PackageVersion Include="MSTest.TestAdapter" Version="3.9.3" />
-    <PackageVersion Include="MSTest.TestFramework" Version="3.9.3" />
+    <PackageVersion Include="MSTest.TestAdapter" Version="3.11.0" />
+    <PackageVersion Include="MSTest.TestFramework" Version="3.11.0" />
     <PackageVersion Include="Shouldly" Version="4.3.0" />
     <PackageVersion Include="System.Net.Http.Json" Version="9.0.6" />
     <PackageVersion Include="System.Xml.XmlSerializer" Version="4.3.0" />
