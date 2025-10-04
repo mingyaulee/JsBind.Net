@@ -106,7 +106,7 @@ function shouldReturnValueWithoutBinding(value, binding, accessPath) {
  * @returns {any}
  */
 function getValueFromBinding(value, binding, accessPath) {
-  if (value instanceof Function) {
+  if (typeof(value) === "function") {
     return getFunctionValue(value, accessPath);
   }
 

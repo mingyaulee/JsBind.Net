@@ -220,7 +220,7 @@ export default class JsBindNet {
     }
 
     const targetFunction = invokeFunctionOption.functionName ? targetObject[invokeFunctionOption.functionName] : targetObject;
-    if (!targetFunction || !(targetFunction instanceof Function)) {
+    if (!targetFunction || typeof(targetFunction) !== "function") {
       if (invokeFunctionOption.functionName) {
         throw new Error(`Member ${invokeFunctionOption.functionName} on target object is not a function.`);
       } else {

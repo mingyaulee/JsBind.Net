@@ -11,7 +11,7 @@ const rollupNormalizeLineEndings = function () {
         }
         const filePath = path.resolve(options.file);
         let fileContent = fs.readFileSync(filePath, "utf8");
-        fileContent = fileContent.replace(/(\r\n|\n)/g, "\r\n");
+        fileContent = fileContent.replaceAll(/\r?\n/g, "\r\n");
         fs.writeFileSync(filePath, fileContent, { encoding: "utf8" });
       }
     }

@@ -17,8 +17,8 @@
   bindingTestLibrary.isObjectReferenceRevived = (instance) => instance === testObjectReferenceReviverInstance;
   bindingTestLibrary.isNestedObjectReferenceRevived = (nestedObject) => nestedObject.instance === testObjectReferenceReviverInstance;
 
-  bindingTestLibrary.isDelegateReferenceRevived = (delegateReference) => delegateReference instanceof Function;
-  bindingTestLibrary.isNestedDelegateReferenceRevived = (nestedObject) => nestedObject.delegate instanceof Function;
+  bindingTestLibrary.isDelegateReferenceRevived = (delegateReference) => typeof(delegateReference) === "function";
+  bindingTestLibrary.isNestedDelegateReferenceRevived = (nestedObject) => typeof(nestedObject.delegate) === "function";
   bindingTestLibrary.areDelegateReferencesEqual = (delegateReference1, delegateReference2) => delegateReference1 === delegateReference2;
 
   bindingTestLibrary.testInvokeDelegate = (delegateReference, ...args) => delegateReference(...args);
