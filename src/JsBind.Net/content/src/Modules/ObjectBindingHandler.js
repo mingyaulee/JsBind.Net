@@ -106,7 +106,7 @@ function shouldReturnValueWithoutBinding(value, binding, accessPath) {
  * @returns {any}
  */
 function getValueFromBinding(value, binding, accessPath) {
-  if (value instanceof Function) {
+  if (typeof(value) === "function") {
     return getFunctionValue(value, accessPath);
   }
 
@@ -118,7 +118,7 @@ function getValueFromBinding(value, binding, accessPath) {
     return getArrayValueFromBinding(value, binding.arrayItemBinding, accessPath);
   }
 
-  const includeAllProperties = binding.include?.some(includeProperty => includeProperty === "*");
+  const includeAllProperties = binding.include?.includes("*");
   const excludeProperties = binding.exclude?.map(excludeProperty => excludeProperty.toUpperCase());
   const getPropertyBinding = (propertyName) => {
     return binding.propertyBindings?.[propertyName.toUpperCase()];
@@ -134,14 +134,14 @@ function getValueFromBinding(value, binding, accessPath) {
 
   if (binding.include && !includeAllProperties) {
     // Fast path: The include properties are known
-    binding.include.forEach(property => {
+    for (const property of binding.include) {
       boundValue[property] = getValueFromBinding(value[property], getPropertyBinding(property), AccessPaths.combine(accessPath, property));
-    });
+    }
     return boundValue;
   }
 
   // Slow path: Include all properties or only the exclude properties are known
-  getObjectKeys(value).forEach(property => {
+  for (const property of getObjectKeys(value)) {
     if (includeAllProperties) {
       boundValue[property] = getValueFromBinding(value[property], getPropertyBinding(property), AccessPaths.combine(accessPath, property));
     } else if (excludeProperties) {
@@ -150,7 +150,7 @@ function getValueFromBinding(value, binding, accessPath) {
         boundValue[property] = getValueFromBinding(value[property], getPropertyBinding(property), AccessPaths.combine(accessPath, property));
       }
     }
-  });
+  }
   return boundValue;
 }
 

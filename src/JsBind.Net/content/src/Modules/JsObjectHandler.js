@@ -56,7 +56,7 @@ class JsObjectHandlerClass {
    * @param {string} referenceId The object reference identifier.
    */
   containsObjectReference(referenceId) {
-    return this._objectReferences[referenceId] !== null && typeof this._objectReferences[referenceId] !== "undefined";
+    return this._objectReferences[referenceId] !== null && this._objectReferences[referenceId] !== undefined;
   }
 
   /**

@@ -60,8 +60,8 @@ class GuidClass {
       return globalThis.crypto.randomUUID();
     }
 
-    return (1e7.toString() + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
-      (parseInt(c) ^ globalThis.crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> parseInt(c) / 4).toString(16)
+    return (1e7.toString() + -1e3 + -4e3 + -8e3 + -1e11).replaceAll(/[018]/g, c =>
+      (Number.parseInt(c) ^ globalThis.crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> Number.parseInt(c) / 4).toString(16)
     );
   }
 }
@@ -155,7 +155,7 @@ class JsObjectHandlerClass {
    * @param {string} referenceId The object reference identifier.
    */
   containsObjectReference(referenceId) {
-    return this._objectReferences[referenceId] !== null && typeof this._objectReferences[referenceId] !== "undefined";
+    return this._objectReferences[referenceId] !== null && this._objectReferences[referenceId] !== undefined;
   }
 
   /**
@@ -300,7 +300,7 @@ function shouldReturnValueWithoutBinding(value, binding, accessPath) {
  * @returns {any}
  */
 function getValueFromBinding(value, binding, accessPath) {
-  if (value instanceof Function) {
+  if (typeof(value) === "function") {
     return getFunctionValue(value, accessPath);
   }
 
@@ -312,7 +312,7 @@ function getValueFromBinding(value, binding, accessPath) {
     return getArrayValueFromBinding(value, binding.arrayItemBinding, accessPath);
   }
 
-  const includeAllProperties = binding.include?.some(includeProperty => includeProperty === "*");
+  const includeAllProperties = binding.include?.includes("*");
   const excludeProperties = binding.exclude?.map(excludeProperty => excludeProperty.toUpperCase());
   const getPropertyBinding = (propertyName) => {
     return binding.propertyBindings?.[propertyName.toUpperCase()];
@@ -328,14 +328,14 @@ function getValueFromBinding(value, binding, accessPath) {
 
   if (binding.include && !includeAllProperties) {
     // Fast path: The include properties are known
-    binding.include.forEach(property => {
+    for (const property of binding.include) {
       boundValue[property] = getValueFromBinding(value[property], getPropertyBinding(property), AccessPaths.combine(accessPath, property));
-    });
+    }
     return boundValue;
   }
 
   // Slow path: Include all properties or only the exclude properties are known
-  getObjectKeys(value).forEach(property => {
+  for (const property of getObjectKeys(value)) {
     if (includeAllProperties) {
       boundValue[property] = getValueFromBinding(value[property], getPropertyBinding(property), AccessPaths.combine(accessPath, property));
     } else if (excludeProperties) {
@@ -344,7 +344,7 @@ function getValueFromBinding(value, binding, accessPath) {
         boundValue[property] = getValueFromBinding(value[property], getPropertyBinding(property), AccessPaths.combine(accessPath, property));
       }
     }
-  });
+  }
   return boundValue;
 }
 
@@ -693,7 +693,9 @@ class ObjectBindingConfigurationReviverClass {
   foundObject(obj) {
     this.references[obj.id] = obj;
     if (this.referenceCallbacks.hasOwnProperty(obj.id)) {
-      this.referenceCallbacks[obj.id].forEach(callback => callback(obj));
+      for (const callback of this.referenceCallbacks[obj.id]) {
+        callback(obj);
+      }
       this.referenceCallbacks[obj.id] = [];
       try {
         delete this.referenceCallbacks[obj.id];
@@ -764,7 +766,7 @@ const ObjectReferenceReviver = new ObjectReferenceReviverClass();
  */
 
 function attachDotNetRevivers() {
-  if (typeof globalThis.DotNet === "undefined") {
+  if (globalThis.DotNet === undefined) {
     console.error("DotNet should be imported before JsBind is imported.");
     return;
   }
@@ -965,7 +967,7 @@ class JsBindNet {
     }
 
     const targetFunction = invokeFunctionOption.functionName ? targetObject[invokeFunctionOption.functionName] : targetObject;
-    if (!targetFunction || !(targetFunction instanceof Function)) {
+    if (!targetFunction || typeof(targetFunction) !== "function") {
       if (invokeFunctionOption.functionName) {
         throw new Error(`Member ${invokeFunctionOption.functionName} on target object is not a function.`);
       } else {

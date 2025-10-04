@@ -41,7 +41,9 @@ class ObjectBindingConfigurationReviverClass {
   foundObject(obj) {
     this.references[obj.id] = obj;
     if (this.referenceCallbacks.hasOwnProperty(obj.id)) {
-      this.referenceCallbacks[obj.id].forEach(callback => callback(obj));
+      for (const callback of this.referenceCallbacks[obj.id]) {
+        callback(obj);
+      }
       this.referenceCallbacks[obj.id] = [];
       try {
         delete this.referenceCallbacks[obj.id];

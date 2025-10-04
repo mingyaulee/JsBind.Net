@@ -19,7 +19,7 @@ import ObjectReferenceReviver from "./JsonRevivers/ObjectReferenceReviver.js";
  */
 
 function attachDotNetRevivers() {
-  if (typeof globalThis.DotNet === "undefined") {
+  if (globalThis.DotNet === undefined) {
     console.error("DotNet should be imported before JsBind is imported.");
     return;
   }
@@ -220,7 +220,7 @@ export default class JsBindNet {
     }
 
     const targetFunction = invokeFunctionOption.functionName ? targetObject[invokeFunctionOption.functionName] : targetObject;
-    if (!targetFunction || !(targetFunction instanceof Function)) {
+    if (!targetFunction || typeof(targetFunction) !== "function") {
       if (invokeFunctionOption.functionName) {
         throw new Error(`Member ${invokeFunctionOption.functionName} on target object is not a function.`);
       } else {
