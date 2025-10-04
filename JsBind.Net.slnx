@@ -1,0 +1,19 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path=".gitignore" />
+    <File Path="CONTRIBUTING.md" />
+    <File Path="GitVersion.yml" />
+    <File Path="LICENSE" />
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/JsBind.Net.Extensions.DependencyInjection/JsBind.Net.Extensions.DependencyInjection.csproj" />
+    <Project Path="src/JsBind.Net/JsBind.Net.csproj" />
+  </Folder>
+  <Folder Name="/test/">
+    <Project Path="test/JsBind.Net.Tests/JsBind.Net.Tests.csproj" />
+    <Project Path="test/JsBind.Net.TestsRunner/JsBind.Net.TestsRunner.csproj" />
+    <Project Path="test/TestBindings/TestBindings.csproj" />
+  </Folder>
+</Solution>
