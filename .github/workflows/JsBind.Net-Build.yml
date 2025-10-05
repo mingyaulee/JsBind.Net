@@ -76,7 +76,7 @@ jobs:
     - name: Build
       run: dotnet build --no-restore --configuration Release
     - name: Install Playwright
-      run: .\test\JsBind.Net.TestsRunner\bin\Release\net9.0\playwright.ps1 install --with-deps
+      run: .\test\JsBind.Net.TestsRunner\bin\Release\net9.0\playwright.ps1 install chromium --with-deps
     - name: Test
       run: ${{ runner.temp }}\coverlet\coverlet ./test/JsBind.Net.Tests/bin/Release/net9.0/wwwroot/_framework --include "[JsBind.Net*]*" --target "dotnet" --targetargs "test . --no-restore --no-build --configuration Release" --format opencover --output ./test/TestResults/coverage --verbosity detailed
     - name: End analyze
