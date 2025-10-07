@@ -22,7 +22,7 @@ internal class DelegateReference(string? delegateId, IEnumerable<ObjectBindingCo
     public IEnumerable<ObjectBindingConfiguration?>? ArgumentBindings { get; } = argumentBindings;
 
     [JsonPropertyName("storeArgumentsAsReferences")]
-    public IEnumerable<bool>? StoreArgumentsAsReferences => ArgumentBindings is not null ? ArgumentBindings.Select(binding => binding is not null) : null;
+    public IEnumerable<bool>? StoreArgumentsAsReferences => ArgumentBindings?.Select(binding => binding is not null);
 
     /// <summary>
     /// Do not use this property from dotnet. The reference IDs will be generated again from JavaScript when necessary. Refer to Modules\DotNetDelegateProxy.js

@@ -12,14 +12,14 @@ public interface IJsBindOptionsConfigurator
     /// </summary>
     /// <param name="value">Whether to use the in process JS runtime.</param>
     /// <returns>The configurator.</returns>
-    public IJsBindOptionsConfigurator UseInProcessJsRuntime(bool value = true);
+    IJsBindOptionsConfigurator UseInProcessJsRuntime(bool value = true);
 
     /// <summary>
     /// Configure the bindings.
     /// </summary>
     /// <param name="configureAction">The action to configure the bindings.</param>
     /// <returns>The configurator.</returns>
-    public IJsBindOptionsConfigurator ConfigureBinding(Action<IBindingConfigurator> configureAction);
+    IJsBindOptionsConfigurator ConfigureBinding(Action<IBindingConfigurator> configureAction);
 
     /// <summary>
     /// Gets the options configured.
