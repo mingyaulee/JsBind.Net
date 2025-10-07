@@ -1,9 +1,8 @@
-﻿namespace JsBind.Net.TestsRunner.Models
+﻿namespace JsBind.Net.TestsRunner.Models;
+
+public enum TestStatus
 {
-    public enum TestStatus
-    {
-        Passed,
-        Failed,
-        NotExecuted
-    }
+    Passed,
+    Failed,
+    NotExecuted
 }

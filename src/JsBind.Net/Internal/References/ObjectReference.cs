@@ -1,15 +1,14 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace JsBind.Net.Internal.References
-{
-    /// <summary>
-    /// Object refence class to be serialized and passed to JavaScript.
-    /// </summary>
-    internal class ObjectReference(string? accessPath) : ReferenceBase
-    {
-        public override ReferenceType ReferenceType => ReferenceType.Object;
+namespace JsBind.Net.Internal.References;
 
-        [JsonPropertyName("accessPath")]
-        public string? AccessPath { get; } = accessPath;
-    }
+/// <summary>
+/// Object refence class to be serialized and passed to JavaScript.
+/// </summary>
+internal class ObjectReference(string? accessPath) : ReferenceBase
+{
+    public override ReferenceType ReferenceType => ReferenceType.Object;
+
+    [JsonPropertyName("accessPath")]
+    public string? AccessPath { get; } = accessPath;
 }

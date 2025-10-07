@@ -1,12 +1,11 @@
 ﻿using System.Text.Json.Serialization;
 using JsBind.Net;
 
-namespace TestBindings.WebAssembly
+namespace TestBindings.WebAssembly;
+
+[BindDeclaredProperties]
+public class Location : ObjectBindingBase
 {
-    [BindDeclaredProperties]
-    public class Location : ObjectBindingBase
-    {
-        [JsonPropertyName("href")]
-        public string Href { get; set; }
-    }
+    [JsonPropertyName("href")]
+    public string Href { get; set; }
 }

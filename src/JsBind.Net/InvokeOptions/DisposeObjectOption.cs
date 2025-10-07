@@ -1,18 +1,17 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace JsBind.Net.InvokeOptions
+namespace JsBind.Net.InvokeOptions;
+
+/// <summary>
+/// Invoke option to dispose object. In sync with Modules\InvokeOptions\DisposeObjectOption.js
+/// </summary>
+internal class DisposeObjectOption(string? referenceId) : InvokeOption
 {
     /// <summary>
-    /// Invoke option to dispose object. In sync with Modules\InvokeOptions\DisposeObjectOption.js
+    /// Fully qualified function name for disposing object.
     /// </summary>
-    internal class DisposeObjectOption(string? referenceId) : InvokeOption
-    {
-        /// <summary>
-        /// Fully qualified function name for disposing object.
-        /// </summary>
-        public const string Identifier = "JsBindNet.DisposeObject";
+    public const string Identifier = "JsBindNet.DisposeObject";
 
-        [JsonPropertyName("referenceId")]
-        public string? ReferenceId { get; set; } = referenceId;
-    }
+    [JsonPropertyName("referenceId")]
+    public string? ReferenceId { get; set; } = referenceId;
 }

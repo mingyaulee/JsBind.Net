@@ -1,9 +1,8 @@
-﻿namespace JsBind.Net.Tests.Models
+﻿namespace JsBind.Net.Tests.Models;
+
+public class TestResult
 {
-    public class TestResult
-    {
-        public bool Success { get; set; }
-        public string FailMessage { get; set; }
-        public string StackTrace { get; set; }
-    }
+    public bool Success { get; set; }
+    public string FailMessage { get; set; }
+    public string StackTrace { get; set; }
 }

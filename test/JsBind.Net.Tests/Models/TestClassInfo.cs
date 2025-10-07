@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
 
-namespace JsBind.Net.Tests.Models
+namespace JsBind.Net.Tests.Models;
+
+public class TestClassInfo
 {
-    public class TestClassInfo
-    {
-        public string Description { get; set; }
-        public string FullName { get; set; }
-        public IEnumerable<TestMethodInfo> TestMethods { get; set; }
-    }
+    public string Description { get; set; }
+    public string FullName { get; set; }
+    public IEnumerable<TestMethodInfo> TestMethods { get; set; }
 }

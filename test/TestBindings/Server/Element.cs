@@ -2,22 +2,21 @@
 using System.Threading.Tasks;
 using JsBind.Net;
 
-namespace TestBindings.Server
+namespace TestBindings.Server;
+
+[BindDeclaredProperties]
+public class Element : ObjectBindingBase
 {
-    [BindDeclaredProperties]
-    public class Element : ObjectBindingBase
-    {
-        // Properties that are loaded when initialized from JSON deserializer
-        [JsonPropertyName("id")]
-        public string Id { get; set; }
+    // Properties that are loaded when initialized from JSON deserializer
+    [JsonPropertyName("id")]
+    public string Id { get; set; }
 
-        [JsonPropertyName("attributes")]
-        public ElementAttributeMap Attributes { get; set; }
+    [JsonPropertyName("attributes")]
+    public ElementAttributeMap Attributes { get; set; }
 
-        // Property that is loaded everytime it is called (needs to be changed to async method)
-        public ValueTask<string> GetTagName() => GetPropertyAsync<string>("tagName");
+    // Property that is loaded everytime it is called (needs to be changed to async method)
+    public ValueTask<string> GetTagName() => GetPropertyAsync<string>("tagName");
 
-        // Invoke function on this object (needs to be changed to async method)
-        public ValueTask<string> GetAttribute(string attributeName) => InvokeAsync<string>("getAttribute", attributeName);
-    }
+    // Invoke function on this object (needs to be changed to async method)
+    public ValueTask<string> GetAttribute(string attributeName) => InvokeAsync<string>("getAttribute", attributeName);
 }

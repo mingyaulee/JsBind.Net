@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Text.Json.Serialization;
 
-namespace TestBindings.WebAssembly.BindingTestLibrary
+namespace TestBindings.WebAssembly.BindingTestLibrary;
+
+public class NestedDelegateClass
 {
-    public class NestedDelegateClass
-    {
-        [JsonPropertyName("action")]
-        public Action NestedAction { get; set; }
-    }
+    [JsonPropertyName("action")]
+    public Action NestedAction { get; set; }
 }

@@ -1,11 +1,10 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace JsBind.Net.Internal.References
+namespace JsBind.Net.Internal.References;
+
+[JsonConverter(typeof(JsonStringEnumConverter))]
+internal enum ReferenceType
 {
-    [JsonConverter(typeof(JsonStringEnumConverter))]
-    internal enum ReferenceType
-    {
-        Object,
-        Delegate
-    }
+    Object,
+    Delegate
 }

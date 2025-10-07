@@ -1,10 +1,9 @@
 ﻿using System;
 
-namespace JsBind.Net.Tests.Infrastructure
+namespace JsBind.Net.Tests.Infrastructure;
+
+[AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
+public class TestClassAttribute : Attribute
 {
-    [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
-    public class TestClassAttribute : Attribute
-    {
-        public string Description { get; set; }
-    }
+    public string Description { get; set; }
 }

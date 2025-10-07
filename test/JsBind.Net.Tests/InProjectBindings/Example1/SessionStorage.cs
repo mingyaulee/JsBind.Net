@@ -1,11 +1,10 @@
-﻿namespace JsBind.Net.Tests.InProjectBindings.Example1
+﻿namespace JsBind.Net.Tests.InProjectBindings.Example1;
+
+public class SessionStorage : Storage
 {
-    public class SessionStorage : Storage
+    public SessionStorage(IJsRuntimeAdapter jsRuntime)
     {
-        public SessionStorage(IJsRuntimeAdapter jsRuntime)
-        {
-            SetAccessPath("sessionStorage");
-            Initialize(jsRuntime);
-        }
+        SetAccessPath("sessionStorage");
+        Initialize(jsRuntime);
     }
 }

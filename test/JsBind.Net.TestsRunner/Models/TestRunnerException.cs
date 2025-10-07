@@ -1,8 +1,7 @@
 ﻿using System;
 
-namespace JsBind.Net.TestsRunner.Models
+namespace JsBind.Net.TestsRunner.Models;
+
+public class TestRunnerException(string message) : Exception(message)
 {
-    public class TestRunnerException(string message) : Exception(message)
-    {
-    }
 }

@@ -1,12 +1,11 @@
 ﻿using System.Text.Json.Serialization;
 using JsBind.Net;
 
-namespace TestBindings.WebAssembly
+namespace TestBindings.WebAssembly;
+
+[BindDeclaredProperties]
+public class WindowWithCustomProperty : Window
 {
-    [BindDeclaredProperties]
-    public class WindowWithCustomProperty : Window
-    {
-        [JsonPropertyName("customProperty")]
-        public string CustomProperty { get; set; }
-    }
+    [JsonPropertyName("customProperty")]
+    public string CustomProperty { get; set; }
 }

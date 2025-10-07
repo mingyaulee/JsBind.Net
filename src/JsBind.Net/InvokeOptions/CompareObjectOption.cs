@@ -1,21 +1,20 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace JsBind.Net.InvokeOptions
+namespace JsBind.Net.InvokeOptions;
+
+/// <summary>
+/// Invoke option to compare objects. In sync with Modules\InvokeOptions\CompareObjectOptions.js
+/// </summary>
+internal class CompareObjectOption(string? object1AccessPath, string? object2AccessPath) : InvokeOptionWithReturnValue
 {
     /// <summary>
-    /// Invoke option to compare objects. In sync with Modules\InvokeOptions\CompareObjectOptions.js
+    /// Fully qualified function name for comparing object.
     /// </summary>
-    internal class CompareObjectOption(string? object1AccessPath, string? object2AccessPath) : InvokeOptionWithReturnValue
-    {
-        /// <summary>
-        /// Fully qualified function name for comparing object.
-        /// </summary>
-        public const string Identifier = "JsBindNet.CompareObject";
+    public const string Identifier = "JsBindNet.CompareObject";
 
-        [JsonPropertyName("object1AccessPath")]
-        public string? Object1AccessPath { get; } = object1AccessPath;
+    [JsonPropertyName("object1AccessPath")]
+    public string? Object1AccessPath { get; } = object1AccessPath;
 
-        [JsonPropertyName("object2AccessPath")]
-        public string? Object2AccessPath { get; } = object2AccessPath;
-    }
+    [JsonPropertyName("object2AccessPath")]
+    public string? Object2AccessPath { get; } = object2AccessPath;
 }
