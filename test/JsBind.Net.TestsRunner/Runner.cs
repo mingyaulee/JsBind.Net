@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.Versioning;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -22,13 +24,10 @@ namespace JsBind.Net.TestsRunner
             var currentDirectory = AppDomain.CurrentDomain.BaseDirectory;
             var solutionDirectory = currentDirectory[..currentDirectory.IndexOf("\\test")];
             var resultsPath = $"{solutionDirectory}\\test\\TestResults";
-#if DEBUG
-            var configuration = "debug";
-#else
-            var configuration = "release";
-#endif
-
-            var testProjectOutput = $@"{solutionDirectory}\test\JsBind.Net.Tests\bin\{configuration}\net9.0\wwwroot\_framework";
+            var assembly = Assembly.GetExecutingAssembly();
+            var targetFramework = assembly.GetCustomAttribute<TargetFrameworkAttribute>().FrameworkDisplayName.ToLower().Replace(" ", string.Empty).TrimStart('.');
+            var configuration = assembly.GetCustomAttribute<AssemblyConfigurationAttribute>().Configuration;
+            var testProjectOutput = $@"{solutionDirectory}\test\JsBind.Net.Tests\bin\{configuration}\{targetFramework}\wwwroot\_framework";
             // delete all gzip files to disable use of gzip and allow code coverage collection
             foreach (var gzipFile in Directory.GetFiles(testProjectOutput).Where(file => file.EndsWith(".gz")))
             {
