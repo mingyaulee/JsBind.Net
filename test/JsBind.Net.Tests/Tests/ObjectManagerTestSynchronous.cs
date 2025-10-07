@@ -5,22 +5,13 @@ using TestBindings.WebAssembly.BindingTestLibrary;
 namespace JsBind.Net.Tests.Tests
 {
     [TestClass(Description = "Object Manager Synchronous (WebAssembly)")]
-    public class ObjectManagerTestSynchronous
+    public class ObjectManagerTestSynchronous(Document document, BindingTestLibrary bindingTestLibrary, IJsRuntimeAdapter jsRuntime)
     {
-        private readonly Document document;
-        private readonly BindingTestLibrary bindingTestLibrary;
-        private readonly IJsRuntimeAdapter jsRuntime;
-        private readonly Func<int> getObjectReferencesCount;
-        private readonly Func<int> getDelegateReferencesCount;
-
-        public ObjectManagerTestSynchronous(Document document, BindingTestLibrary bindingTestLibrary, IJsRuntimeAdapter jsRuntime)
-        {
-            this.document = document;
-            this.bindingTestLibrary = bindingTestLibrary;
-            this.jsRuntime = jsRuntime;
-            getObjectReferencesCount = () => Any.From("JsBindNet", jsRuntime).InvokeFunction<int>("getObjectReferencesCount");
-            getDelegateReferencesCount = () => Any.From("JsBindNet", jsRuntime).InvokeFunction<int>("getDelegateReferencesCount");
-        }
+        private readonly Document document = document;
+        private readonly BindingTestLibrary bindingTestLibrary = bindingTestLibrary;
+        private readonly IJsRuntimeAdapter jsRuntime = jsRuntime;
+        private readonly Func<int> getObjectReferencesCount = () => Any.From("JsBindNet", jsRuntime).InvokeFunction<int>("getObjectReferencesCount");
+        private readonly Func<int> getDelegateReferencesCount = () => Any.From("JsBindNet", jsRuntime).InvokeFunction<int>("getDelegateReferencesCount");
 
         [Fact(Description = "Dispose object reference")]
         public void DisposeObjectReference()

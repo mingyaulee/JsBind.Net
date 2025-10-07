@@ -4,16 +4,10 @@ using TestBindings.WebAssembly;
 namespace JsBind.Net.Tests.Tests
 {
     [TestClass(Description = "Dynamic Object Synchronous (WebAssembly)")]
-    public class DynamicObjectTestSynchronous
+    public class DynamicObjectTestSynchronous(Window window, Document document)
     {
-        private readonly Window window;
-        private readonly Document document;
-
-        public DynamicObjectTestSynchronous(Window window, Document document)
-        {
-            this.window = window;
-            this.document = document;
-        }
+        private readonly Window window = window;
+        private readonly Document document = document;
 
         [Fact(Description = "Primitive property get value")]
         public void PrimitivePropertyGetValue()

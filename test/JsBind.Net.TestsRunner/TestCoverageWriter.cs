@@ -13,7 +13,7 @@ namespace JsBind.Net.TestsRunner
                 using var fs = new FileStream(hitsFilePath, FileMode.CreateNew);
                 using var bw = new BinaryWriter(fs);
                 bw.Write(hitsArray.Length);
-                foreach (int hitCount in hitsArray)
+                foreach (var hitCount in hitsArray)
                 {
                     bw.Write(hitCount);
                 }

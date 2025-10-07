@@ -14,17 +14,13 @@ namespace JsBind.Net.Tests.Infrastructure
         {
             var testNamespace = TestNamespace;
             var testTypes = GetTestAssembly().GetTypes().Where(type => type.Namespace != null && type.Namespace.Contains(testNamespace));
-            return testTypes
+            return [.. testTypes
                 .Select(GetTestClassInfoFromType)
                 .Where(classInfo => classInfo != null)
-                .OrderBy(classInfo => classInfo.FullName)
-                .ToList();
+                .OrderBy(classInfo => classInfo.FullName)];
         }
 
-        private static Assembly GetTestAssembly()
-        {
-            return typeof(TestFactory).Assembly;
-        }
+        private static Assembly GetTestAssembly() => typeof(TestFactory).Assembly;
 
         private TestClassInfo GetTestClassInfoFromType(Type type)
         {
@@ -38,7 +34,7 @@ namespace JsBind.Net.Tests.Infrastructure
             {
                 Description = testClassAttribute.Description ?? type.Name,
                 FullName = type.FullName,
-                TestMethods = type.GetMethods().Select(GetTestMethodFromMethodInfo).Where(methodInfo => methodInfo != null).OrderBy(methodInfo => methodInfo.Order).ToArray()
+                TestMethods = [.. type.GetMethods().Select(GetTestMethodFromMethodInfo).Where(methodInfo => methodInfo != null).OrderBy(methodInfo => methodInfo.Order)]
             };
         }
 

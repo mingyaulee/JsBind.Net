@@ -1,14 +1,8 @@
 ﻿namespace JsBind.Net.Tests.InProjectBindings.Example2
 {
-    public class ExampleUsage
+    public class ExampleUsage(Global global)
     {
-        private readonly Global global;
-
-        public ExampleUsage(Global global)
-        {
-            // Assuming Global has been registered in the dependency container
-            this.global = global;
-        }
+        private readonly Global global = global;
 
         public void UseStorage()
         {

@@ -15,9 +15,7 @@ namespace JsBind.Net.Internal.Extensions
         /// <param name="type">The type.</param>
         /// <returns><c>true</c> if the type is iterable.</returns>
         public static bool IsIterableType(this Type type)
-        {
-            return type.IsArray || IsEnumerable(type) || Array.Exists(type.GetInterfaces(), IsEnumerable);
-        }
+            => type.IsArray || IsEnumerable(type) || Array.Exists(type.GetInterfaces(), IsEnumerable);
 
         /// <summary>
         /// Gets the iterable item type from either array type or type inheriting from generic <see cref="IEnumerable{T}"/>.
@@ -41,9 +39,7 @@ namespace JsBind.Net.Internal.Extensions
         /// <param name="type">The type.</param>
         /// <returns><c>true</c> if the type is primitive.</returns>
         public static bool IsPrimitiveType(this Type type)
-        {
-            return type.IsPrimitive || type == typeof(string) || type == typeof(Guid);
-        }
+            => type.IsPrimitive || type == typeof(string) || type == typeof(Guid);
 
         /// <summary>
         /// Checks if the type is either a <see cref="Task" /> or <see cref="ValueTask" />, or their generic version.
@@ -89,13 +85,11 @@ namespace JsBind.Net.Internal.Extensions
         }
 
         private static bool IsEnumerable(Type type)
-        {
-            return type.IsGenericType && typeof(IEnumerable<>).IsAssignableFrom(type.GetGenericTypeDefinition());
-        }
+            => type.IsGenericType && typeof(IEnumerable<>).IsAssignableFrom(type.GetGenericTypeDefinition());
 
         private sealed class BindingConfigurationMapper
         {
-            private readonly Dictionary<BindingConfiguration, ObjectBindingConfiguration> ProcessedBindings = new();
+            private readonly Dictionary<BindingConfiguration, ObjectBindingConfiguration> ProcessedBindings = [];
 
             public ObjectBindingConfiguration? MapFromBindingConfiguration(BindingConfiguration? bindingConfiguration)
             {

@@ -32,11 +32,11 @@ namespace JsBind.Net.Internal.DelegateReferences
                 Task<object> objectTask;
                 if (typeof(Task).IsAssignableFrom(resultType))
                 {
-                    objectTask=(Task<object>)GetObjectFromTaskMethodInfo.MakeGenericMethod(resultType.GetGenericArguments()[0]).Invoke(null, new[] { result })!;
+                    objectTask=(Task<object>)GetObjectFromTaskMethodInfo.MakeGenericMethod(resultType.GetGenericArguments()[0]).Invoke(null, [result])!;
                 }
                 else
                 {
-                    objectTask = (Task<object>)GetObjectFromValueTaskMethodInfo.MakeGenericMethod(resultType.GetGenericArguments()[0]).Invoke(null, new[] { result })!;
+                    objectTask = (Task<object>)GetObjectFromValueTaskMethodInfo.MakeGenericMethod(resultType.GetGenericArguments()[0]).Invoke(null, [result])!;
                 }
 
                 return await objectTask.ConfigureAwait(false);
@@ -57,13 +57,9 @@ namespace JsBind.Net.Internal.DelegateReferences
         }
 
         private static async Task<object?> GetObjectFromValueTask<TResult>(ValueTask<TResult> resultTask)
-        {
-            return await resultTask.AsTask().ConfigureAwait(false);
-        }
+            => await resultTask.AsTask().ConfigureAwait(false);
 
         private static async Task<object?> GetObjectFromTask<TResult>(Task<TResult> resultTask)
-        {
-            return await resultTask.ConfigureAwait(false);
-        }
+            => await resultTask.ConfigureAwait(false);
     }
 }

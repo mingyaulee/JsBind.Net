@@ -5,16 +5,10 @@ using TestBindings.Server.BindingTestLibrary;
 namespace JsBind.Net.Tests.Tests
 {
     [TestClass(Description = "Advanced Asynchronous (Server)")]
-    public class AdvancedTestAsynchronous
+    public class AdvancedTestAsynchronous(BindingTestLibrary bindingTestLibrary, Window window)
     {
-        private readonly BindingTestLibrary bindingTestLibrary;
-        private readonly Window window;
-
-        public AdvancedTestAsynchronous(BindingTestLibrary bindingTestLibrary, Window window)
-        {
-            this.bindingTestLibrary = bindingTestLibrary;
-            this.window = window;
-        }
+        private readonly BindingTestLibrary bindingTestLibrary = bindingTestLibrary;
+        private readonly Window window = window;
 
         [Fact(Description = "Plain object binding can be passed as argument")]
         public async Task PlainObjectBindingCanBePassedAsArgument()
@@ -216,7 +210,7 @@ namespace JsBind.Net.Tests.Tests
             // Arrange
             Func<NestedDelegateClass> testDelegate = () => new()
             {
-                NestedAction = async () => { await Task.Delay(1).ConfigureAwait(false); }
+                NestedAction = async () => await Task.Delay(1).ConfigureAwait(false)
             };
 
             // Act

@@ -144,9 +144,7 @@ namespace JsBind.Net
         /// <param name="accessPath">The access path.</param>
         /// <returns>The dynamic binding object.</returns>
         public static Any From(string? accessPath)
-        {
-            return From(accessPath, null);
-        }
+            => From(accessPath, null);
 
         /// <summary>
         /// Creates a dynamic binding object of type <see cref="Any" /> with the specified access path and JS runtime.

@@ -10,9 +10,7 @@ namespace JsBind.Net.Internal.JsonConverters
     internal class InvokeResultConverter<TValue> : JsonConverter<InvokeResult<TValue>?>
     {
         public override bool CanConvert(Type typeToConvert)
-        {
-            return typeof(InvokeResultWithValue).IsAssignableFrom(typeToConvert);
-        }
+            => typeof(InvokeResultWithValue).IsAssignableFrom(typeToConvert);
 
         public override InvokeResult<TValue>? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
@@ -28,8 +26,6 @@ namespace JsBind.Net.Internal.JsonConverters
         }
 
         public override void Write(Utf8JsonWriter writer, InvokeResult<TValue>? value, JsonSerializerOptions options)
-        {
-            throw new NotImplementedException();
-        }
+            => throw new NotImplementedException();
     }
 }

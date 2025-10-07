@@ -4,14 +4,9 @@ using TestBindings.WebAssembly.BindingTestLibrary;
 namespace JsBind.Net.Tests.Tests
 {
     [TestClass(Description = "Delegate Tests")]
-    public class DelegateTests
+    public class DelegateTests(BindingTestLibrary bindingTestLibrary)
     {
-        private readonly BindingTestLibrary bindingTestLibrary;
-
-        public DelegateTests(BindingTestLibrary bindingTestLibrary)
-        {
-            this.bindingTestLibrary = bindingTestLibrary;
-        }
+        private readonly BindingTestLibrary bindingTestLibrary = bindingTestLibrary;
 
         [Fact(Description = "Async ValueTask delegate reference can be invoked from JS")]
         public async Task AsyncValueTaskDelegateReferenceCanBeInvoked()
@@ -91,10 +86,7 @@ namespace JsBind.Net.Tests.Tests
         public void DelegateReferenceWithExceptionCanBeInvoked()
         {
             // Arrange
-            Action testDelegate = () =>
-            {
-                ThrowExceptionInTest("A test exception");
-            };
+            Action testDelegate = () => ThrowExceptionInTest("A test exception");
 
             // Act
             Action action = () => bindingTestLibrary.TestInvokeDelegate(testDelegate);
@@ -132,10 +124,8 @@ namespace JsBind.Net.Tests.Tests
         public void DelegateReferenceCanBeInvokedWithMissingParameters()
         {
             // Arrange
-            Func<int, string, BindingTestLibrary, string> testDelegate = (a, b, c) =>
-            {
-                return $"{a},{(b is null ? "null" : "notnull")},{(c is null ? "null" : "notnull")}";
-            };
+            Func<int, string, BindingTestLibrary, string> testDelegate = (a, b, c)
+                => $"{a},{(b is null ? "null" : "notnull")},{(c is null ? "null" : "notnull")}";
 
             // Act
             var result = bindingTestLibrary.TestInvokeDelegate<string>(testDelegate);
@@ -148,10 +138,8 @@ namespace JsBind.Net.Tests.Tests
         public void DelegateReferenceCanBeInvokedWithPartiallyMissingParameters()
         {
             // Arrange
-            Func<int, string, BindingTestLibrary, string> testDelegate = (a, b, c) =>
-            {
-                return $"{a},{(b is null ? "null" : "notnull")},{(c is null ? "null" : "notnull")}";
-            };
+            Func<int, string, BindingTestLibrary, string> testDelegate = (a, b, c)
+                => $"{a},{(b is null ? "null" : "notnull")},{(c is null ? "null" : "notnull")}";
 
             // Act
             var result = bindingTestLibrary.TestInvokeDelegateWithParams<string>(testDelegate, 100, "test");
@@ -160,9 +148,6 @@ namespace JsBind.Net.Tests.Tests
             result.ShouldBe("100,notnull,null");
         }
 
-        private static void ThrowExceptionInTest(string message)
-        {
-            throw new InvalidOperationException(message);
-        }
+        private static void ThrowExceptionInTest(string message) => throw new InvalidOperationException(message);
     }
 }

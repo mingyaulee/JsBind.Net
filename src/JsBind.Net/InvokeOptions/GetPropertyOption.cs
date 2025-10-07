@@ -21,7 +21,7 @@ namespace JsBind.Net.InvokeOptions
     /// <summary>
     /// Invoke option to get property value. In sync with Modules\InvokeOptions\GetPropertyOption.js
     /// </summary>
-    internal class GetPropertyOption : InvokeOptionWithReturnValue, IGetPropertyOption
+    internal class GetPropertyOption(string? accessPath, string? propertyName) : InvokeOptionWithReturnValue, IGetPropertyOption
     {
         /// <summary>
         /// Fully qualified function name for getting property value.
@@ -30,16 +30,10 @@ namespace JsBind.Net.InvokeOptions
 
         /// <inheritdoc />
         [JsonPropertyName("accessPath")]
-        public string? AccessPath { get; set; }
+        public string? AccessPath { get; set; } = accessPath;
 
         /// <inheritdoc />
         [JsonPropertyName("propertyName")]
-        public string? PropertyName { get; set; }
-
-        public GetPropertyOption(string? accessPath, string? propertyName)
-        {
-            AccessPath = accessPath;
-            PropertyName = propertyName;
-        }
+        public string? PropertyName { get; set; } = propertyName;
     }
 }

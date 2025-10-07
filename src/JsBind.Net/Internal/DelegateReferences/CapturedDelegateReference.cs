@@ -168,7 +168,7 @@ namespace JsBind.Net.Internal.DelegateReferences
             var argumentTypes = invokeMethod.GetParameters().Select(p => p.ParameterType).ToArray();
             if (invokeWrapper.Args is null || !invokeWrapper.Args.Any())
             {
-                return argumentTypes.Select(argumentType => argumentType.GetDefaultValue()).ToArray();
+                return [.. argumentTypes.Select(argumentType => argumentType.GetDefaultValue())];
             }
 
             var options = invokeWrapper.JsonSerializerOptions!;

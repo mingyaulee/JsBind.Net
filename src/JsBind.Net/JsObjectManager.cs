@@ -149,9 +149,7 @@ namespace JsBind.Net
         }
 
         private static bool IsArrayItemRootObjectReference(BindingBase? arrayItem)
-        {
-            return AccessPaths.Split(arrayItem?.InternalGetAccessPath())?.Length == 2;
-        }
+            => AccessPaths.Split(arrayItem?.InternalGetAccessPath())?.Length == 2;
 
         private static bool IsDisposableRootObjectReference(BindingBase? bindingBase, out IJsRuntimeAdapter? jsRuntime, out string? referenceId)
         {

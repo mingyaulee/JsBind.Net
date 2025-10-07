@@ -11,9 +11,7 @@ namespace JsBind.Net.Internal.JsonConverters
     internal class InvokeArgumentConverter : JsonConverter<InvokeArgument?>
     {
         public override InvokeArgument? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-        {
-            throw new NotImplementedException();
-        }
+            => throw new NotImplementedException();
 
         public override void Write(Utf8JsonWriter writer, InvokeArgument? value, JsonSerializerOptions options)
         {

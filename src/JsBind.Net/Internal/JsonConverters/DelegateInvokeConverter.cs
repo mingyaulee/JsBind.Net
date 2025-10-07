@@ -22,8 +22,6 @@ namespace JsBind.Net.Internal.JsonConverters
         }
 
         public override void Write(Utf8JsonWriter writer, DelegateInvokeWrapper? value, JsonSerializerOptions options)
-        {
-            throw new NotImplementedException();
-        }
+            => throw new NotImplementedException();
     }
 }

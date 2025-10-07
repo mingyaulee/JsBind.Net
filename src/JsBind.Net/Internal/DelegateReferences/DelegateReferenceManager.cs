@@ -13,7 +13,7 @@ namespace JsBind.Net.Internal.DelegateReferences
     /// </summary>
     internal static class DelegateReferenceManager
     {
-        private static readonly Dictionary<Guid, CapturedDelegateReference> delegateReferences = new();
+        private static readonly Dictionary<Guid, CapturedDelegateReference> delegateReferences = [];
 
         /// <summary>
         /// Gets or creates an instance of <see cref="DelegateReference" /> representing the delegate.
@@ -43,11 +43,7 @@ namespace JsBind.Net.Internal.DelegateReferences
         /// <param name="jsRuntime">The JS runtime instance to identify session.</param>
         /// <returns>All instances of <see cref="CapturedDelegateReference" /> in the session.</returns>
         public static IEnumerable<CapturedDelegateReference> GetCapturedDelegateReferences(IJsRuntimeAdapter jsRuntime)
-        {
-            return delegateReferences.Values
-                .Where(delegateReference => delegateReference.JsRuntime.IsJsRuntimeEqual(jsRuntime))
-                .ToList();
-        }
+            => [.. delegateReferences.Values.Where(delegateReference => delegateReference.JsRuntime.IsJsRuntimeEqual(jsRuntime))];
 
         /// <summary>
         /// Gets an instance of <see cref="CapturedDelegateReference" /> representing the captured delegate.
@@ -56,13 +52,11 @@ namespace JsBind.Net.Internal.DelegateReferences
         /// <param name="jsRuntime">The JS runtime instance to identify session.</param>
         /// <returns>An instance of <see cref="CapturedDelegateReference" /> representing the captured delegate.</returns>
         public static CapturedDelegateReference? GetCapturedDelegateReference(Delegate delegateObject, IJsRuntimeAdapter jsRuntime)
-        {
-            return delegateReferences.Values
+            => delegateReferences.Values
                 .FirstOrDefault(delegateReference =>
                     delegateReference.DelegateObject.Equals(delegateObject) &&
                     delegateReference.JsRuntime.IsJsRuntimeEqual(jsRuntime)
                 );
-        }
 
         /// <summary>
         /// Gets an instance of <see cref="CapturedDelegateReference" /> representing the captured delegate.
@@ -84,9 +78,7 @@ namespace JsBind.Net.Internal.DelegateReferences
         /// </summary>
         /// <param name="delegateId">The delegate identifier.</param>
         public static void RemoveCapturedDelegateReference(Guid delegateId)
-        {
-            delegateReferences.Remove(delegateId);
-        }
+            => delegateReferences.Remove(delegateId);
 
         private static void ProcessDelegateArgumentTypesAndReturnType(Type delegateType, out IEnumerable<ObjectBindingConfiguration?>? argumentBindings, out bool isAsync)
         {
@@ -115,7 +107,7 @@ namespace JsBind.Net.Internal.DelegateReferences
                 argumentTypes = argumentTypes.Take(argumentTypes.Count() - 1);
             }
 
-            argumentBindings = argumentTypes.Select(argumentType => argumentType.GetBindingConfiguration(jsBindOptions.BindingConfigurationProvider)).ToList();
+            argumentBindings = [.. argumentTypes.Select(argumentType => argumentType.GetBindingConfiguration(jsBindOptions.BindingConfigurationProvider))];
         }
     }
 }

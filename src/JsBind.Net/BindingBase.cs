@@ -45,9 +45,7 @@ namespace JsBind.Net
         /// </summary>
         /// <param name="accessPath">The access path.</param>
         protected void SetAccessPath(string accessPath)
-        {
-            this.accessPath = accessPath;
-        }
+            => this.accessPath = accessPath;
 
         /// <summary>
         /// Additional action during initialization
@@ -148,9 +146,7 @@ namespace JsBind.Net
 
         /// <inheritdoc />
         public override bool Equals(object? obj)
-        {
-            return Equals(this, obj as BindingBase);
-        }
+            => Equals(this, obj as BindingBase);
 
         /// <summary>
         /// Determines whether the current object is the same instance as the other object in JavaScript.
@@ -202,19 +198,13 @@ namespace JsBind.Net
 
         /// <inheritdoc />
         public override int GetHashCode()
-        {
-            return GetHashCode(this);
-        }
+            => GetHashCode(this);
 
         private static bool Equals(BindingBase? x, BindingBase? y)
-        {
-            return x?.InternalGetAccessPath() == y?.InternalGetAccessPath();
-        }
+            => x?.InternalGetAccessPath() == y?.InternalGetAccessPath();
 
         private static int GetHashCode(BindingBase? obj)
-        {
-            return obj?.InternalGetAccessPath()?.GetHashCode() ?? "globalThis".GetHashCode();
-        }
+            => obj?.InternalGetAccessPath()?.GetHashCode() ?? "globalThis".GetHashCode();
 
         #endregion Equality check methods
     }

@@ -8,24 +8,15 @@ namespace JsBind.Net.Internal.JsonConverters
     /// <summary>
     /// Writes delegate as delegate reference to be revived in JavaScript.
     /// </summary>
-    internal class WriteDelegateReferenceConverter : JsonConverter<Delegate?>
+    internal class WriteDelegateReferenceConverter(IJsRuntimeAdapter jsRuntime) : JsonConverter<Delegate?>
     {
-        private readonly IJsRuntimeAdapter jsRuntime;
-
-        public WriteDelegateReferenceConverter(IJsRuntimeAdapter jsRuntime)
-        {
-            this.jsRuntime = jsRuntime;
-        }
+        private readonly IJsRuntimeAdapter jsRuntime = jsRuntime;
 
         public override bool CanConvert(Type typeToConvert)
-        {
-            return typeof(Delegate).IsAssignableFrom(typeToConvert);
-        }
+            => typeof(Delegate).IsAssignableFrom(typeToConvert);
 
         public override Delegate? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-        {
-            throw new NotImplementedException();
-        }
+            => throw new NotImplementedException();
 
         public override void Write(Utf8JsonWriter writer, Delegate? value, JsonSerializerOptions options)
         {

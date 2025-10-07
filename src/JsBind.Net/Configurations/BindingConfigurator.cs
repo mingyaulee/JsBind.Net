@@ -5,23 +5,13 @@ namespace JsBind.Net.Configurations
     /// <summary>
     /// The configurator for type binding.
     /// </summary>
-    public class BindingConfigurator : IBindingConfigurator
+    /// <param name="bindingConfigurationProvider">The binding configuration provider.</param>
+    public class BindingConfigurator(IBindingConfigurationProvider bindingConfigurationProvider) : IBindingConfigurator
     {
-        private readonly IBindingConfigurationProvider bindingConfigurationProvider;
-
-        /// <summary>
-        /// Creates a new instance of <see cref="BindingConfigurator" />.
-        /// </summary>
-        /// <param name="bindingConfigurationProvider">The binding configuration provider.</param>
-        public BindingConfigurator(IBindingConfigurationProvider bindingConfigurationProvider)
-        {
-            this.bindingConfigurationProvider = bindingConfigurationProvider;
-        }
+        private readonly IBindingConfigurationProvider bindingConfigurationProvider = bindingConfigurationProvider;
 
         /// <inheritdoc />
         public ITypedBindingConfigurator Bind<T>()
-        {
-            return new TypedBindingConfigurator<T>(bindingConfigurationProvider);
-        }
+            => new TypedBindingConfigurator<T>(bindingConfigurationProvider);
     }
 }

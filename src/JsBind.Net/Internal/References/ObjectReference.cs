@@ -5,16 +5,11 @@ namespace JsBind.Net.Internal.References
     /// <summary>
     /// Object refence class to be serialized and passed to JavaScript.
     /// </summary>
-    internal class ObjectReference : ReferenceBase
+    internal class ObjectReference(string? accessPath) : ReferenceBase
     {
         public override ReferenceType ReferenceType => ReferenceType.Object;
 
         [JsonPropertyName("accessPath")]
-        public string? AccessPath { get; }
-
-        public ObjectReference(string? accessPath)
-        {
-            AccessPath = accessPath;
-        }
+        public string? AccessPath { get; } = accessPath;
     }
 }

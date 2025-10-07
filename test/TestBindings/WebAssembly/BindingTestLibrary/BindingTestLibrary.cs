@@ -26,7 +26,7 @@ namespace TestBindings.WebAssembly.BindingTestLibrary
 
         public void TestInvokeDelegate(Delegate del) => InvokeVoid("testInvokeDelegate", del);
         public TResult TestInvokeDelegate<TResult>(Delegate del) => Invoke<TResult>("testInvokeDelegate", del);
-        public TResult TestInvokeDelegateWithParams<TResult>(Delegate del, params object[] args) => Invoke<TResult>("testInvokeDelegate", new object[] { del }.Concat(args).ToArray());
+        public TResult TestInvokeDelegateWithParams<TResult>(Delegate del, params object[] args) => Invoke<TResult>("testInvokeDelegate", [del, .. args]);
         public ValueTask TestInvokeDelegateAsync(Delegate del) => InvokeVoidAsync("testInvokeDelegateAsync", del);
         public ValueTask<TResult> TestInvokeDelegateAsync<TResult>(Delegate del) => InvokeAsync<TResult>("testInvokeDelegateAsync", del);
 

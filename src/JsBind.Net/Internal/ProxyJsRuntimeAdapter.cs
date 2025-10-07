@@ -13,9 +13,6 @@ namespace JsBind.Net.Internal
         public override IJsBindOptions JsBindOptions => jsRuntime!.JsBindOptions;
         public override IJSRuntime JsRuntime => jsRuntime!.JsRuntime;
 
-        public void SetJsRuntime(JsRuntimeAdapter jsRuntime)
-        {
-            this.jsRuntime = jsRuntime;
-        }
+        public void SetJsRuntime(JsRuntimeAdapter jsRuntime) => this.jsRuntime = jsRuntime;
     }
 }

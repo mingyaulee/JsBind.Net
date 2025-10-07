@@ -56,7 +56,7 @@ namespace JsBind.Net.Internal.DelegateReferences
                 (isTask ? "AsTask" : string.Empty) +
                 (isAsync ? "Async" : string.Empty);
 
-            var genericParameterTypes = invokeMethod.GetParameters().Select(p => p.ParameterType).Concat(isVoid ? Enumerable.Empty<Type>() : new[] { returnType }).ToArray();
+            var genericParameterTypes = invokeMethod.GetParameters().Select(p => p.ParameterType).Concat(isVoid ? [] : [returnType]).ToArray();
             MethodInfo methodInfo;
             if (genericParameterTypes.Length > 0)
             {

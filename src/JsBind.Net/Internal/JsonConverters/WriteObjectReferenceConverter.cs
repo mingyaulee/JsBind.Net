@@ -13,14 +13,10 @@ namespace JsBind.Net.Internal.JsonConverters
         where T : BindingBase
     {
         public override bool CanConvert(Type typeToConvert)
-        {
-            return typeof(BindingBase).IsAssignableFrom(typeToConvert);
-        }
+            => typeof(BindingBase).IsAssignableFrom(typeToConvert);
 
         public override T? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-        {
-            throw new NotImplementedException();
-        }
+            => throw new NotImplementedException();
 
         public override void Write(Utf8JsonWriter writer, T? value, JsonSerializerOptions options)
         {

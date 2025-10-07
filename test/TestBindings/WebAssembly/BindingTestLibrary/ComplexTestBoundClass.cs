@@ -15,20 +15,11 @@ namespace TestBindings.WebAssembly.BindingTestLibrary
         {
             public string Property { get; set; }
 
-            public bool Equals(NestedClass other)
-            {
-                return Property == other.Property;
-            }
+            public bool Equals(NestedClass other) => Property == other.Property;
 
-            public override bool Equals(object obj)
-            {
-                return obj is NestedClass other && Equals(other);
-            }
+            public override bool Equals(object obj) => obj is NestedClass other && Equals(other);
 
-            public override int GetHashCode()
-            {
-                return Property?.GetHashCode() ?? 0;
-            }
+            public override int GetHashCode() => Property?.GetHashCode() ?? 0;
         }
 
         public class NestedClassList : List<NestedClass> { }

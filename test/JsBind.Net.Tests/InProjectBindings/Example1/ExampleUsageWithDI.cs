@@ -1,16 +1,9 @@
 ﻿namespace JsBind.Net.Tests.InProjectBindings.Example1
 {
-    public class ExampleUsageWithDI
+    public class ExampleUsageWithDI(LocalStorage localStorage, SessionStorage sessionStorage)
     {
-        private readonly LocalStorage localStorage;
-        private readonly SessionStorage sessionStorage;
-
-        public ExampleUsageWithDI(LocalStorage localStorage, SessionStorage sessionStorage)
-        {
-            // Assuming LocalStorage and SessionStorage have been registered in the dependency container
-            this.localStorage = localStorage;
-            this.sessionStorage = sessionStorage;
-        }
+        private readonly LocalStorage localStorage = localStorage;
+        private readonly SessionStorage sessionStorage = sessionStorage;
 
         public void UseStorage()
         {

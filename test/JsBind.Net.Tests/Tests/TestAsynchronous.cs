@@ -4,16 +4,10 @@ using TestBindings.Server;
 namespace JsBind.Net.Tests.Tests
 {
     [TestClass(Description = "Asynchronous (Server)")]
-    public class TestAsynchronous
+    public class TestAsynchronous(Window window, Document document)
     {
-        private readonly Window window;
-        private readonly Document document;
-
-        public TestAsynchronous(Window window, Document document)
-        {
-            this.window = window;
-            this.document = document;
-        }
+        private readonly Window window = window;
+        private readonly Document document = document;
 
         [Fact(Description = "Property should be initialized from JSON deserializer")]
         public async Task PropertyShouldBeInitializedFromJsonDeserializer()
@@ -115,7 +109,7 @@ namespace JsBind.Net.Tests.Tests
         public async Task SetPropertyValueWithPrimitiveValue()
         {
             // Arrange
-            var variableName = "v_" + Guid.NewGuid().ToString().Substring(0, 8);
+            var variableName = "v_" + Guid.NewGuid().ToString()[..8];
             var variableValue = 3000;
 
             // Act
@@ -130,7 +124,7 @@ namespace JsBind.Net.Tests.Tests
         public async Task SetPropertyValueWithReferenceValue()
         {
             // Arrange
-            var variableName = "v_" + Guid.NewGuid().ToString().Substring(0, 8);
+            var variableName = "v_" + Guid.NewGuid().ToString()[..8];
             var variableValue = document;
 
             // Act

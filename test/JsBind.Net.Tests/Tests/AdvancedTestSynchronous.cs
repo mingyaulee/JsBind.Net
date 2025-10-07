@@ -5,16 +5,10 @@ using TestBindings.WebAssembly.BindingTestLibrary;
 namespace JsBind.Net.Tests.Tests
 {
     [TestClass(Description = "Advanced Synchronous (WebAssembly)")]
-    public class AdvancedTestSynchronous
+    public class AdvancedTestSynchronous(BindingTestLibrary bindingTestLibrary, Window window)
     {
-        private readonly BindingTestLibrary bindingTestLibrary;
-        private readonly Window window;
-
-        public AdvancedTestSynchronous(BindingTestLibrary bindingTestLibrary, Window window)
-        {
-            this.bindingTestLibrary = bindingTestLibrary;
-            this.window = window;
-        }
+        private readonly BindingTestLibrary bindingTestLibrary = bindingTestLibrary;
+        private readonly Window window = window;
 
         [Fact(Description = "Plain object binding can be passed as argument")]
         public void PlainObjectBindingCanBePassedAsArgument()

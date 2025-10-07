@@ -13,7 +13,7 @@ namespace JsBind.Net.BindingConfigurations
     /// </summary>
     internal class BindingConfigurationProvider : IBindingConfigurationProvider
     {
-        private readonly Dictionary<Type, BindingConfiguration?> bindingConfigurations = new();
+        private readonly Dictionary<Type, BindingConfiguration?> bindingConfigurations = [];
 
         /// <inheritdoc />
         public BindingConfiguration? Get(Type type)
@@ -59,13 +59,10 @@ namespace JsBind.Net.BindingConfigurations
 
         /// <inheritdoc />
         public IEnumerable<string> GetDeclaredProperties(Type type)
-        {
-            return GetTypeProperties(type).Keys;
-        }
+            => GetTypeProperties(type).Keys;
 
         private static Dictionary<string, PropertyInfo> GetTypeProperties(Type type)
-        {
-            return type
+            => type
                 .GetProperties(BindingFlags.Public | BindingFlags.Instance)
                 .Where(propertyInfo =>
                 {
@@ -96,11 +93,10 @@ namespace JsBind.Net.BindingConfigurations
                     return true;
                 })
                 .ToDictionary(
-                    propertyInfo => GetPropertyName(propertyInfo),
+                    GetPropertyName,
                     propertyInfo => propertyInfo,
                     StringComparer.OrdinalIgnoreCase
                 );
-        }
 
         private BindingConfiguration? GetArrayBindingConfiguration(Type? type)
         {
@@ -124,7 +120,7 @@ namespace JsBind.Net.BindingConfigurations
             }
             else if (!type.IsIterableType())
             {
-                bindAttributes = new[] { new BindAllPropertiesAttribute() };
+                bindAttributes = [new BindAllPropertiesAttribute()];
             }
 
             if (!bindAttributes.Any())
@@ -164,8 +160,8 @@ namespace JsBind.Net.BindingConfigurations
 
             var bindingConfiguration = new BindingConfiguration()
             {
-                IncludeProperties = attributeBindingConfigurations.SelectMany(bc => bc.IncludeProperties ?? Enumerable.Empty<string>()),
-                ExcludeProperties = attributeBindingConfigurations.SelectMany(bc => bc.ExcludeProperties ?? Enumerable.Empty<string>()),
+                IncludeProperties = attributeBindingConfigurations.SelectMany(bc => bc.IncludeProperties ?? []),
+                ExcludeProperties = attributeBindingConfigurations.SelectMany(bc => bc.ExcludeProperties ?? []),
                 IsBindingBase = typeof(BindingBase).IsAssignableFrom(type)
             };
             Add(type, bindingConfiguration);

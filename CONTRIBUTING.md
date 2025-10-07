@@ -49,10 +49,5 @@ In .Net, [JSON converters](src/JsBind.Net/Internal/JsonConverters) are used to r
 ### JsBind.Net.Extensions.DependencyInjection
 This package provides the service registration in the Microsoft dependency injection container.
 
-### Use a Consistent Coding Style
-- 4 spaces (C#) or 2 spaces (XML/JSON/JS) for indentation rather than tabs.
-- Every `if`, `else`, `for`, `foreach`, `while` etc should have its own opening and closing bracket, even if it is a single line statement.
-- Every code file changed should be formatted properly (CTRL+K, CTRL+D in VS or ALT+SHIFT+F in VS Code).
-
 ## License
 By contributing, you agree that your contributions will be licensed under its MIT License.

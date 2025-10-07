@@ -4,23 +4,15 @@ using TestBindings.WebAssembly;
 namespace JsBind.Net.Tests.Tests
 {
     [TestClass(Description = "Synchronous (WebAssembly)")]
-    public class TestSynchronous
+    public class TestSynchronous(Window window, Document document)
     {
-        private readonly Window window;
-        private readonly Document document;
-
-        public TestSynchronous(Window window, Document document)
-        {
-            this.window = window;
-            this.document = document;
-        }
+        private readonly Window window = window;
+        private readonly Document document = document;
 
         [Fact(Description = "Property should be initialized")]
-        public void PropertyShouldBeInitialized()
-        {
+        public void PropertyShouldBeInitialized() =>
             // Assert
             window.Origin.ShouldNotBeNullOrEmpty();
-        }
 
         [Fact(Description = "Property should be initialized from JSON deserializer")]
         public void PropertyShouldBeInitializedFromJsonDeserializer()
@@ -122,7 +114,7 @@ namespace JsBind.Net.Tests.Tests
         public void SetPropertyValueWithPrimitiveValue()
         {
             // Arrange
-            var variableName = "v_" + Guid.NewGuid().ToString().Substring(0, 8);
+            var variableName = "v_" + Guid.NewGuid().ToString()[..8];
             var variableValue = 3000;
 
             // Act
@@ -137,7 +129,7 @@ namespace JsBind.Net.Tests.Tests
         public void SetPropertyValueWithReferenceValue()
         {
             // Arrange
-            var variableName = "v_" + Guid.NewGuid().ToString().Substring(0, 8);
+            var variableName = "v_" + Guid.NewGuid().ToString()[..8];
             var variableValue = document;
 
             // Act

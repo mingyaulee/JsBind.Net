@@ -18,15 +18,9 @@ namespace JsBind.Net.InvokeOptions
         }
 
         /// <inheritdoc />
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return EnumerableValue.GetEnumerator();
-        }
+        IEnumerator IEnumerable.GetEnumerator() => EnumerableValue.GetEnumerator();
 
         /// <inheritdoc />
-        public IEnumerator<object?> GetEnumerator()
-        {
-            return EnumerableValue.GetEnumerator();
-        }
+        public IEnumerator<object?> GetEnumerator() => EnumerableValue.GetEnumerator();
     }
 }

@@ -5,23 +5,18 @@ namespace JsBind.Net
     /// <summary>
     /// Exception thrown by JsBind.
     /// </summary>
-    public sealed class JsBindException : Exception
+    /// <remarks>
+    /// Creates a new instance of <see cref="JsBindException" />.
+    /// </remarks>
+    /// <param name="message">The error message.</param>
+    /// <param name="previousStackTrace">The previous stack trace.</param>
+    public sealed class JsBindException(string? message, string? previousStackTrace) : Exception(message)
     {
         private string? jsBindStackTrace;
-        private readonly string? previousStackTrace;
+        private readonly string? previousStackTrace = previousStackTrace;
 
         /// <inheritdoc />
         public override string? StackTrace => GetStackTrace();
-
-        /// <summary>
-        /// Creates a new instance of <see cref="JsBindException" />.
-        /// </summary>
-        /// <param name="message">The error message.</param>
-        /// <param name="previousStackTrace">The previous stack trace.</param>
-        public JsBindException(string? message, string? previousStackTrace) : base(message)
-        {
-            this.previousStackTrace = previousStackTrace;
-        }
 
         private string? GetStackTrace()
         {

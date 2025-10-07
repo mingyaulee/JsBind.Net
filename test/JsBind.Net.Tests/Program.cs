@@ -1,9 +1,5 @@
 ﻿using JsBind.Net.Tests.Infrastructure;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Net.Http;
-using System.Threading.Tasks;
 
 namespace JsBind.Net.Tests
 {
@@ -14,13 +10,12 @@ namespace JsBind.Net.Tests
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
 
-            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
-
-            builder.Services.AddTestBindings();
-            builder.Services.AddServerTestBindings();
-
-            builder.Services.AddScoped<ITestFactory, TestFactory>();
-            builder.Services.AddScoped<ITestRunner, TestRunner>();
+            builder.Services
+                .AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) })
+                .AddTestBindings()
+                .AddServerTestBindings()
+                .AddScoped<ITestFactory, TestFactory>()
+                .AddScoped<ITestRunner, TestRunner>();
 
             await builder.Build().RunAsync();
         }

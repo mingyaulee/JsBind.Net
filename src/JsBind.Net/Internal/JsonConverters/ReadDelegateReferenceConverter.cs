@@ -9,21 +9,13 @@ namespace JsBind.Net.Internal.JsonConverters
     /// <summary>
     /// Reads the delegate reference object from JavaScript and convert it into a DotNet delegate and keeps track of all references for initialization.
     /// </summary>
-    internal class ReadDelegateReferenceConverter : JsonConverter<Delegate?>
+    internal class ReadDelegateReferenceConverter(IJsRuntimeAdapter jsRuntime, JsonSerializerOptions jsonSerializerOptions) : JsonConverter<Delegate?>
     {
-        private readonly IJsRuntimeAdapter jsRuntime;
-        private readonly JsonSerializerOptions jsonSerializerOptions;
-
-        public ReadDelegateReferenceConverter(IJsRuntimeAdapter jsRuntime, JsonSerializerOptions jsonSerializerOptions)
-        {
-            this.jsRuntime = jsRuntime;
-            this.jsonSerializerOptions = jsonSerializerOptions;
-        }
+        private readonly IJsRuntimeAdapter jsRuntime = jsRuntime;
+        private readonly JsonSerializerOptions jsonSerializerOptions = jsonSerializerOptions;
 
         public override bool CanConvert(Type typeToConvert)
-        {
-            return typeof(Delegate).IsAssignableFrom(typeToConvert);
-        }
+            => typeof(Delegate).IsAssignableFrom(typeToConvert);
 
         public override Delegate? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
@@ -43,8 +35,6 @@ namespace JsBind.Net.Internal.JsonConverters
         }
 
         public override void Write(Utf8JsonWriter writer, Delegate? value, JsonSerializerOptions options)
-        {
-            throw new NotImplementedException();
-        }
+            => throw new NotImplementedException();
     }
 }

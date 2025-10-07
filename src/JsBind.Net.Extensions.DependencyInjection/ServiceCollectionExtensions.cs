@@ -3,7 +3,9 @@ using System.Linq;
 using JsBind.Net;
 using JsBind.Net.Configurations;
 
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace Microsoft.Extensions.DependencyInjection
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 {
     /// <summary>
     /// Extension method for service registration.
@@ -30,19 +32,18 @@ namespace Microsoft.Extensions.DependencyInjection
             if (configurator is null)
             {
                 configurator = new JsBindOptionsConfigurator();
-                services.AddTransient<IJsRuntimeAdapter, JsRuntimeAdapter>();
-                services.AddSingleton(configurator);
-                services.AddSingleton(configurator.Options);
+                services
+                    .AddTransient<IJsRuntimeAdapter, JsRuntimeAdapter>()
+                    .AddSingleton(configurator)
+                    .AddSingleton(configurator.Options);
             }
             configAction?.Invoke(configurator);
             return services;
         }
 
         private static JsBindOptionsConfigurator? GetRegisteredConfigurator(IServiceCollection services)
-        {
-            return services
+            => services
                 .FirstOrDefault(service => service.ServiceType == typeof(JsBindOptionsConfigurator))
                 ?.ImplementationInstance as JsBindOptionsConfigurator;
-        }
     }
 }

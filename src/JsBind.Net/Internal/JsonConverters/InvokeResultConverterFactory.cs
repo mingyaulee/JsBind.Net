@@ -10,9 +10,7 @@ namespace JsBind.Net.Internal.JsonConverters
     internal class InvokeResultConverterFactory : JsonConverterFactory
     {
         public override bool CanConvert(Type typeToConvert)
-        {
-            return typeof(InvokeResultWithValue).IsAssignableFrom(typeToConvert);
-        }
+            => typeof(InvokeResultWithValue).IsAssignableFrom(typeToConvert);
 
         public override JsonConverter CreateConverter(Type typeToConvert, JsonSerializerOptions options)
         {

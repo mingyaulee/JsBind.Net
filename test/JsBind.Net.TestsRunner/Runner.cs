@@ -52,10 +52,7 @@ namespace JsBind.Net.TestsRunner
                 var browser = await playwright.Chromium.LaunchAsync(new() { Headless = false });
                 var page = await browser.NewPageAsync();
                 var consoleMessages = new List<string>();
-                page.Console += (_, message) =>
-                {
-                    consoleMessages.Add(message.Text);
-                };
+                page.Console += (_, message) => consoleMessages.Add(message.Text);
                 await LaunchTestPage(page);
                 await WaitForTestToFinish(page, consoleMessages);
 

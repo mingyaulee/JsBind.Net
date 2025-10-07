@@ -46,15 +46,11 @@ namespace JsBind.Net
 
         /// <inheritdoc />
         public TValue? Invoke<TValue>(string identifier, InvokeOptionWithReturnValue invokeOption)
-        {
-            return (TValue?)InvokeInternal<TValue>(identifier, invokeOption, typeof(TValue));
-        }
+            => (TValue?)InvokeInternal<TValue>(identifier, invokeOption, typeof(TValue));
 
         /// <inheritdoc />
         public async ValueTask<TValue?> InvokeAsync<TValue>(string identifier, InvokeOptionWithReturnValue invokeOption)
-        {
-            return (TValue?)await InvokeAsyncInternal<TValue>(identifier, invokeOption, typeof(TValue)).ConfigureAwait(false);
-        }
+            => (TValue?)await InvokeAsyncInternal<TValue>(identifier, invokeOption, typeof(TValue)).ConfigureAwait(false);
 
         /// <inheritdoc />
         public void InvokeVoid(string identifier, InvokeOption invokeOption)
@@ -65,7 +61,7 @@ namespace JsBind.Net
             {
                 invokeResult = ((IJSInProcessRuntime)JsRuntime).Invoke<InvokeResult?>(identifier, invokeOption);
             }
-            else if (invokeOption is DisposeObjectOption || invokeOption is DisposeDelegateOption)
+            else if (invokeOption is DisposeObjectOption or DisposeDelegateOption)
             {
                 // If we are disposing without using in process JS runtime, invoke asynchronously but do not wait for it.
 #pragma warning disable CA2012 // Use ValueTasks correctly

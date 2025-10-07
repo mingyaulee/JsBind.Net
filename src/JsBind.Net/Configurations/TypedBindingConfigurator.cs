@@ -8,9 +8,10 @@ namespace JsBind.Net.Configurations
     /// The configurator for binding of type <typeparamref name="T" />.
     /// </summary>
     /// <typeparam name="T">The type configured.</typeparam>
-    public class TypedBindingConfigurator<T> : ITypedBindingConfigurator
+    /// <param name="bindingConfigurationProvider">The binding configuration provider.</param>
+    public class TypedBindingConfigurator<T>(IBindingConfigurationProvider bindingConfigurationProvider) : ITypedBindingConfigurator
     {
-        private readonly IBindingConfigurationProvider bindingConfigurationProvider;
+        private readonly IBindingConfigurationProvider bindingConfigurationProvider = bindingConfigurationProvider;
         private BindingConfiguration? bindingConfiguration;
         private BindingConfiguration BindingConfiguration
         {
@@ -26,32 +27,17 @@ namespace JsBind.Net.Configurations
             }
         }
 
-        /// <summary>
-        /// Creates a new instance of <see cref="BindingConfigurator" />.
-        /// </summary>
-        /// <param name="bindingConfigurationProvider">The binding configuration provider.</param>
-        public TypedBindingConfigurator(IBindingConfigurationProvider bindingConfigurationProvider)
-        {
-            this.bindingConfigurationProvider = bindingConfigurationProvider;
-        }
-
         /// <inheritdoc />
         public void IncludeDeclaredProperties()
-        {
-            AddIncludeProperties(bindingConfigurationProvider.GetDeclaredProperties(typeof(T)));
-        }
+            => AddIncludeProperties(bindingConfigurationProvider.GetDeclaredProperties(typeof(T)));
 
         /// <inheritdoc />
         public void IncludeProperties(params string[] properties)
-        {
-            AddIncludeProperties(properties);
-        }
+            => AddIncludeProperties(properties);
 
         /// <inheritdoc />
         public void ExcludeProperties(params string[] properties)
-        {
-            BindingConfiguration.ExcludeProperties = properties;
-        }
+            => BindingConfiguration.ExcludeProperties = properties;
 
         private void AddIncludeProperties(IEnumerable<string> includeProperties)
         {
@@ -61,7 +47,7 @@ namespace JsBind.Net.Configurations
             }
             else
             {
-                BindingConfiguration.IncludeProperties = BindingConfiguration.IncludeProperties.Concat(includeProperties).ToList();
+                BindingConfiguration.IncludeProperties = [.. BindingConfiguration.IncludeProperties, .. includeProperties];
             }
         }
     }

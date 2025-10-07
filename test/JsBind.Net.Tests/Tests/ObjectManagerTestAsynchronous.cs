@@ -5,22 +5,13 @@ using TestBindings.Server.BindingTestLibrary;
 namespace JsBind.Net.Tests.Tests
 {
     [TestClass(Description = "Object Manager Synchronous (WebAssembly)")]
-    public class ObjectManagerTestAsynchronous
+    public class ObjectManagerTestAsynchronous(Document document, BindingTestLibrary bindingTestLibrary, IJsRuntimeAdapter jsRuntime)
     {
-        private readonly Document document;
-        private readonly BindingTestLibrary bindingTestLibrary;
-        private readonly IJsRuntimeAdapter jsRuntime;
-        private readonly Func<ValueTask<int>> getObjectReferencesCount;
-        private readonly Func<ValueTask<int>> getDelegateReferencesCount;
-
-        public ObjectManagerTestAsynchronous(Document document, BindingTestLibrary bindingTestLibrary, IJsRuntimeAdapter jsRuntime)
-        {
-            this.document = document;
-            this.bindingTestLibrary = bindingTestLibrary;
-            this.jsRuntime = jsRuntime;
-            getObjectReferencesCount = () => Any.From("JsBindNet", jsRuntime).InvokeFunctionAsync<int>("getObjectReferencesCount");
-            getDelegateReferencesCount = () => Any.From("JsBindNet", jsRuntime).InvokeFunctionAsync<int>("getDelegateReferencesCount");
-        }
+        private readonly Document document = document;
+        private readonly BindingTestLibrary bindingTestLibrary = bindingTestLibrary;
+        private readonly IJsRuntimeAdapter jsRuntime = jsRuntime;
+        private readonly Func<ValueTask<int>> getObjectReferencesCount = () => Any.From("JsBindNet", jsRuntime).InvokeFunctionAsync<int>("getObjectReferencesCount");
+        private readonly Func<ValueTask<int>> getDelegateReferencesCount = () => Any.From("JsBindNet", jsRuntime).InvokeFunctionAsync<int>("getDelegateReferencesCount");
 
         [Fact(Description = "Dispose object reference")]
         public async Task DisposeObjectReference()

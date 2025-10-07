@@ -16,7 +16,7 @@ namespace JsBind.Net.InvokeOptions
     /// <summary>
     /// Invoke option to convert object type. In sync with Modules\InvokeOptions\ConvertObjectTypeOption.js
     /// </summary>
-    internal class ConvertObjectTypeOption : InvokeOptionWithReturnValue, IConvertObjectTypeOption
+    internal class ConvertObjectTypeOption(string? accessPath) : InvokeOptionWithReturnValue, IConvertObjectTypeOption
     {
         /// <summary>
         /// Fully qualified function name for converting object type.
@@ -25,11 +25,6 @@ namespace JsBind.Net.InvokeOptions
 
         /// <inheritdoc />
         [JsonPropertyName("accessPath")]
-        public string? AccessPath { get; set; }
-
-        public ConvertObjectTypeOption(string? accessPath)
-        {
-            AccessPath = accessPath;
-        }
+        public string? AccessPath { get; set; } = accessPath;
     }
 }
