@@ -19,7 +19,7 @@
     </None>
   </ItemGroup>
 
-  <Target Name="BundleJsContent" BeforeTargets="BeforeBuild" Condition="'$(Configuration)' == 'Debug'">
+  <Target Name="BundleJsContent" BeforeTargets="Build" Condition="'$(Configuration)' == 'Debug'">
     <Exec Command="npm install --prefer-offline --no-audit --progress=false &amp;&amp; npm run bundle" WorkingDirectory="$(ProjectDir)content" />
   </Target>
 
