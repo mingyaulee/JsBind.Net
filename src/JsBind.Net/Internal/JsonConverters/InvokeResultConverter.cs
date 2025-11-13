@@ -18,10 +18,7 @@ internal class InvokeResultConverter<TValue> : JsonConverter<InvokeResult<TValue
         var proxyJsRuntime = new ProxyJsRuntimeAdapter();
         ConvertersFactory.AddReadConverters(options, cloneOptions, proxyJsRuntime);
         var invokeResult = JsonSerializer.Deserialize<InvokeResultWithValue<TValue>>(ref reader, cloneOptions);
-        if (invokeResult is not null)
-        {
-            invokeResult.ProxyJsRuntime = proxyJsRuntime;
-        }
+        invokeResult?.ProxyJsRuntime = proxyJsRuntime;
         return invokeResult;
     }
 
