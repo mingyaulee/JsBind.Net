@@ -1,7 +1,6 @@
 # JsBind.Net
 [![Nuget](https://img.shields.io/nuget/v/JsBind.Net?style=for-the-badge&color=blue)](https://www.nuget.org/packages/JsBind.Net/)
 [![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/mingyaulee/JsBind.Net/JsBind.Net-Build.yml?branch=main&style=for-the-badge&color=blue)](https://github.com/mingyaulee/JsBind.Net/actions/workflows/JsBind.Net-Build.yml)
-[![Sonar Tests](https://img.shields.io/sonar/coverage/JsBind.Net?server=https%3A%2F%2Fsonarcloud.io&style=for-the-badge)](https://sonarcloud.io/dashboard?id=JsBind.Net)
 [![Sonar Quality Gate](https://img.shields.io/sonar/quality_gate/JsBind.Net?server=https%3A%2F%2Fsonarcloud.io&style=for-the-badge)](https://sonarcloud.io/dashboard?id=JsBind.Net)
 
 A package for creating binding from .Net to JavaScript.
