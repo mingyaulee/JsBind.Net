@@ -40,7 +40,6 @@ internal class WriteObjectReferenceConverter<T> : JsonConverter<T>
             cloneOptions.Converters.Remove(cloneOptions.Converters.OfType<WriteObjectReferenceConverterFactory>().Single());
             cloneOptions.Converters.Add(new WriteObjectReferenceConverterFactory()
             {
-                SkipConvertOnce = true,
                 SkipConvertType = typeof(T)
             });
             JsonSerializer.Serialize(writer, (object?)value, cloneOptions);

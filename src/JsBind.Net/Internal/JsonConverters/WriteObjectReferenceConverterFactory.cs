@@ -10,23 +10,14 @@ namespace JsBind.Net.Internal.JsonConverters;
 internal class WriteObjectReferenceConverterFactory : JsonConverterFactory
 {
     /// <summary>
-    /// This is a workaround to tell the converter factory to skip the next CanConvert check just once.
-    /// So the default object serializer will be used instead of this converter.
-    /// </summary>
-    public bool SkipConvertOnce { get; set; }
-
-    /// <summary>
-    /// This is a workaround to tell the converter factory to skip the next CanConvert check just once for this type.
-    /// So the default object serializer will be used instead of this converter.
+    /// Binding type to serialize as a plain object instead of a JavaScript object reference.
     /// </summary>
     public Type? SkipConvertType { get; set; }
 
     public override bool CanConvert(Type typeToConvert)
     {
-        if (SkipConvertOnce && typeToConvert == SkipConvertType)
+        if (typeToConvert == SkipConvertType)
         {
-            SkipConvertOnce = false;
-            SkipConvertType = null;
             return false;
         }
 
