@@ -42,7 +42,7 @@ internal class WriteObjectReferenceConverter<T> : JsonConverter<T>
             {
                 SkipConvertType = typeof(T)
             });
-            JsonSerializer.Serialize(writer, (object?)value, cloneOptions);
+            JsonSerializer.Serialize(writer, value, cloneOptions);
         }
     }
 }
